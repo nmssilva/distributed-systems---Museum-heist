@@ -6,23 +6,28 @@
 package Thieves;
 
 import Logger.Log;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 /**
  *
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public class Thief extends Thread {
+
+public class Thief extends Thread  { //implements IThief
 
     private ThievesState state;
     private final int id;
     //private Room Room;
+    private final int str;
     private Log log;
 
     public Thief(ThievesState state, int id, Log log) {
         this.state = ThievesState.OUTSIDE;
         this.id = id;
         this.log = log;
+        this.str = ThreadLocalRandom.current().nextInt(2,7);
     }
 
     private void handACanvas() {

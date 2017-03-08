@@ -13,14 +13,10 @@ import Logger.Log;
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public class MasterThief extends Thread{
-    private MasterThiefState state;
-    private Log log;
 
-    public MasterThief(MasterThiefState state, Log log) {
-        this.state = MasterThiefState.PLANNING_THE_HEIST;
-        this.log = log;
-    }
+public class MasterThief extends Thread{ //implements IMasterThief
+    private MasterThiefState state = MasterThiefState.PLANNING_THE_HEIST;
+    private Log log;
     
     private void startOperations(){
         this.state = MasterThiefState.DECIDING_WHAT_TO_DO;
