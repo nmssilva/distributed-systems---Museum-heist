@@ -5,12 +5,10 @@
  */
 package Logger;
 
-import genclass.*;
 /**
  *
  * @author Pedro Coelho
- * @author Nuno Silva
  */
-public class Log implements Ilog {
+interface Ilog {
     
 }
