@@ -24,6 +24,7 @@ public class MasterThief extends Thread{ //implements IMasterThief
     
     private void prepareAssaultParty(){
         this.state = MasterThiefState.ASSEMBLING_A_GROUP;
+        
     }
     
     private void sendAssaultParty(){
