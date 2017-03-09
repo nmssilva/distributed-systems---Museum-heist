@@ -5,8 +5,13 @@
  */
 package MuseumHeist;
 
+import AssaultParty.AssaultParty;
+import GenRepOfInfo.GenRepOfInfo;
 import Logger.Log;
 import MasterThief.MasterThief;
+import MasterThiefCtrlCollSite.MasterThiefCtrlCollSite;
+import Museum.Museum;
+import OrdThievesConcSite.OrdThievesConcSite;
 import Thieves.Thief;
 
 /**
@@ -23,14 +28,25 @@ public class MuseumHeist {
     public static void main(String[] args) {
         
         final int   K = 3,      /* Número de elementos da assault party */
-                    M = 7,      /* Número máximo de peças de bagagem por passageiro */
+                    M = 7,      /* Número de ladrões incluindo ladroa chefe */
                     N = 5,      /* Número de rooms */
                     Q = 3;      /* Número de paintings */
         
         Log loging;
-        MasterThief masterThief;    /* Ladroa mestre */
+        Museum museum;  /* Museu */
+        GenRepOfInfo genrepofinfo;  /* General Repository of Information */
+        OrdThievesConcSite ordthievesconcsite;  /* Ordinary Thieves Concentration Site */
+        MasterThiefCtrlCollSite mtctrlcollsite; /* Master Thief Control and Collection Site */
         
-        Thief[] thieves = new Thief[M-1];   /* Array de ladrões exluindo o master thief (M-1) */
+        MasterThief masterThief;    /* Ladroa chefe */
+        AssaultParty[] assaultparties = new AssaultParty[(M-1)/K];   /* Array de assault parties */
+        
+        for( int i = 0; i < assaultparties.length ; i++){
+            assaultparties[i] = new AssaultParty(K);
+            for ( int j = 0; j < K ; j++){
+                assaultparties[i].getParty()[j] = new Thief(j+(i*K));
+            }
+        }
         
     }
     

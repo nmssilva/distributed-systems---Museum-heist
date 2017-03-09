@@ -19,14 +19,12 @@ public class Thief extends Thread  { //implements IThief
 
     private ThievesState state;
     private final int id;
-    //private Room Room;
     private final int str;
     private Log log;
 
-    public Thief(ThievesState state, int id, Log log) {
+    public Thief(int id) {
         this.state = ThievesState.OUTSIDE;
         this.id = id;
-        this.log = log;
         this.str = ThreadLocalRandom.current().nextInt(2,7);
     }
 

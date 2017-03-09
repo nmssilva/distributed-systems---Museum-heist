@@ -5,6 +5,8 @@
  */
 package AssaultParty;
 
+import Thieves.Thief;
+
 /**
  *
  * @author Nuno Silva
@@ -15,11 +17,16 @@ package AssaultParty;
 public class AssaultParty {
     
     private int nelem;  /* numero de elementos da assault party */
+    private Thief[] party; /* grupo de ladroes */
 
     public AssaultParty(int nelem) {
         this.nelem = nelem;
+        this.party = new Thief[nelem];
     }
     
+    public Thief[] getParty(){
+        return party;
+    }
     
     
 }
