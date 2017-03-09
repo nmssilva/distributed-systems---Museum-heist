@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package museumheist;
+package MuseumHeist;
 
 import Logger.Log;
 import MasterThief.MasterThief;
