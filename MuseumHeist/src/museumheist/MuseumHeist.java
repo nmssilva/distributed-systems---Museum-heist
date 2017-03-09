@@ -24,7 +24,7 @@ public class MuseumHeist {
         
         final int   K = 3,      /* Número de elementos da assault party */
                     M = 7,      /* Número máximo de peças de bagagem por passageiro */
-                    N = 6,      /* Número de rooms */
+                    N = 5,      /* Número de rooms */
                     Q = 3;      /* Número de paintings */
         
         Log loging;

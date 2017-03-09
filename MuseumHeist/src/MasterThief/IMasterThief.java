@@ -8,6 +8,7 @@ package MasterThief;
 /**
  *
  * @author Nuno Silva
+ * @author Pedro Coelho
  */
 public interface IMasterThief {
     
