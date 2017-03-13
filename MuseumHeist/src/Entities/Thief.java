@@ -16,43 +16,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Thief extends Thread  { //implements IThief
 
-    private ThievesState state;
+    private final static int OUTSIDE = 0,
+                            CRAWLING_INWARDS = 1,
+                            AT_A_ROOM = 2,
+                            CRAWLING_OUTWARDS = 3,
+                            AT_COLLECTION_SITE = 4;
+    
+    private int state;
     private final int id;
     private final int str;
 
     public Thief(int id) {
-        this.state = ThievesState.OUTSIDE;
+        this.state = OUTSIDE;
         this.id = id;
-        this.str = ThreadLocalRandom.current().nextInt(2,7);
-    }
-
-    private void handACanvas() {
-        this.state = ThievesState.OUTSIDE;
-    }
-
-    private void amINeeded() {
-        this.state = ThievesState.OUTSIDE;
-    }
-
-    private void prepareExcursion() {
-        this.state = ThievesState.CRAWLING_INWARDS;
-    }
-
-    private void crawlIn() {
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void rollACanvas() {
-        this.state = ThievesState.AT_A_ROOM;
-
-    }
-
-    private void reverseDirection() {
-        this.state = ThievesState.CRAWLING_OUTWARDS;
-    }
-
-    private void crawlOut() {
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        this.str = (int) (Math.random() * 4 + 2);
     }
 
 }

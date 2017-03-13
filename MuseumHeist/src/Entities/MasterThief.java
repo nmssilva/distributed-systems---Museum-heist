@@ -12,35 +12,12 @@ package Entities;
  */
 
 public class MasterThief extends Thread{ //implements IMasterThief
-    private MasterThiefState state = MasterThiefState.PLANNING_THE_HEIST;
     
-    private void startOperations(){
-        this.state = MasterThiefState.DECIDING_WHAT_TO_DO;
-    }
+    private final static int PLANNING_HEIST = 0,
+                            DECIDING_WHAT_DO = 1,
+                            ASSEMBLE_GROUP = 2,
+                            WAITING_ARRIVAL = 3,
+                            PRESENT_REPORT = 4;
     
-    private void prepareAssaultParty(){
-        this.state = MasterThiefState.ASSEMBLING_A_GROUP;
-        
-    }
-    
-    private void sendAssaultParty(){
-        this.state = MasterThiefState.DECIDING_WHAT_TO_DO;
-    }
-    
-    private void appraiseSit(){
-        this.state = MasterThiefState.DECIDING_WHAT_TO_DO;
-    }
-    
-    private void takeARest(){        
-        this.state = MasterThiefState.WAINTING_FOR_GROUP_ARRIVAL;
-    }
-    
-    private void collectCanvas(){
-        this.state = MasterThiefState.DECIDING_WHAT_TO_DO;
-    }
-    
-    private void sumUpResults(){        
-        this.state = MasterThiefState.PRESENTING_THE_REPORT;
-    }
-    
+    private int state = PLANNING_HEIST; 
 }

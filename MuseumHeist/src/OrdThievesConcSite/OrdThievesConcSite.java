@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package OrdThievesConcSite;
 
 /**
@@ -10,8 +6,16 @@ package OrdThievesConcSite;
  * @author Nuno Silva
  */
 public class OrdThievesConcSite {
-    private final static int OUTSIDE = 0,
-                            CRAWLING_INWARDS = 1,
-                            AT_A_ROOM = 2,
-                            CRAWLING_OUTWARDS = 3;
+    
+    
+    /**
+   *  Número de ladrões presentes no local de concentração
+   *
+   *    @serialField nThieves
+   */
+
+   private int nThieves = 0;
+    
+    
+    
 }
