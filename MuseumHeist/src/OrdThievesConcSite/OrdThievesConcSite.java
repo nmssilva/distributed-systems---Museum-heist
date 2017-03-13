@@ -10,5 +10,8 @@ package OrdThievesConcSite;
  * @author Nuno Silva
  */
 public class OrdThievesConcSite {
-    
+    private final static int OUTSIDE = 0,
+                            CRAWLING_INWARDS = 1,
+                            AT_A_ROOM = 2,
+                            CRAWLING_OUTWARDS = 3;
 }

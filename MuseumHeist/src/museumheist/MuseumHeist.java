@@ -39,12 +39,7 @@ public class MuseumHeist {
         MasterThief masterThief;    /* Ladroa chefe */
         AssaultParty[] assaultparties = new AssaultParty[(M-1)/K];   /* Array de assault parties */
         
-        for( int i = 0; i < assaultparties.length ; i++){
-            assaultparties[i] = new AssaultParty(K);
-            for ( int j = 0; j < K ; j++){
-                assaultparties[i].getParty()[j] = new Thief(j+(i*K));
-            }
-        }
+       
         
     }
     
