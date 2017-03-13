@@ -5,7 +5,7 @@
  */
 package AssaultParty;
 
-import Thieves.Thief;
+import Entities.Thief;
 
 /**
  *

@@ -3,24 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MasterThief;
+package Entities;
 
 /**
- * This enum represents the state of master thief entity
+ * This enum represents the state of thieves entity
  *
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public enum MasterThiefState {
-    PLANNING_THE_HEIST("PTH"),
-    DECIDING_WHAT_TO_DO("DWTD"),
-    ASSEMBLING_A_GROUP("AAG"),
-    WAINTING_FOR_GROUP_ARRIVAL("WFGA"),
-    PRESENTING_THE_REPORT("PTR");
+public enum ThievesState {
+    OUTSIDE("O"),
+    CRAWLING_INWARDS("CI"),
+    AT_A_ROOM("AAR"),
+    CRAWLING_OUTWARDS("CO");
 
     private final String acronym;
 
-    private MasterThiefState(String acronym) {
+    private ThievesState(String acronym) {
         this.acronym = acronym;
     }
 

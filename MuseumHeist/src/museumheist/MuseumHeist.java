@@ -7,12 +7,11 @@ package MuseumHeist;
 
 import AssaultParty.AssaultParty;
 import GenRepOfInfo.GenRepOfInfo;
-import Logger.Log;
-import MasterThief.MasterThief;
+import Entities.MasterThief;
 import MasterThiefCtrlCollSite.MasterThiefCtrlCollSite;
 import Museum.Museum;
 import OrdThievesConcSite.OrdThievesConcSite;
-import Thieves.Thief;
+import Entities.Thief;
 
 /**
  *
@@ -32,7 +31,6 @@ public class MuseumHeist {
                     N = 5,      /* Número de rooms */
                     Q = 3;      /* Número de paintings */
         
-        Log loging;
         Museum museum;  /* Museu */
         GenRepOfInfo genrepofinfo;  /* General Repository of Information */
         OrdThievesConcSite ordthievesconcsite;  /* Ordinary Thieves Concentration Site */

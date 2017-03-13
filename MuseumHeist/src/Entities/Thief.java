@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Thieves;
+package Entities;
 
-import Logger.Log;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -20,7 +19,6 @@ public class Thief extends Thread  { //implements IThief
     private ThievesState state;
     private final int id;
     private final int str;
-    private Log log;
 
     public Thief(int id) {
         this.state = ThievesState.OUTSIDE;
