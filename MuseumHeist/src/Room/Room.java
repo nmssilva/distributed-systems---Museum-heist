@@ -21,6 +21,10 @@ public class Room {
         this.distance = distance;
         this.Q = Q;
     }
+
+    public boolean removePainting() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
     

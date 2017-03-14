@@ -5,6 +5,8 @@
  */
 package Museum;
 
+import Room.Room;
+
 /**
  *
  * @author Nuno Silva
@@ -13,12 +15,27 @@ package Museum;
  */
 public class Museum {
     
-    private int nrooms;     /* numero de rooms que o museu tem */
+    private Room[] rooms;     /* array de rooms que o museu tem */
 
     public Museum(int nrooms) {
-        this.nrooms = nrooms;
+        this.rooms = new Room [nrooms];
     }
     
-    
+    /**
+    *  Operação de rollCanvas
+    *
+    *    @param roomId identificação da sala
+    *
+    *    @return <li> true, se o thief for necessário
+    *            <li> false, em caso contrário
+    */
+
+    public synchronized boolean rollACanvas (int roomId)
+    {
+        if(this.rooms[roomId].removePainting())
+            return true;
+        else
+            return false;
+    }
     
 }
