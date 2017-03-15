@@ -15,11 +15,11 @@ public class Room {
     
     private int id;         /* identificador do quarto */
     private int distance;   /* distance from the gathering site */
-    private int Q;          /* number of paintings */    
+    private int nPaintings; /* number of paintings */    
     
-    public Room(int distance, int Q) {
+    public Room(int distance, int nPaint) {
         this.distance = distance;
-        this.Q = Q;
+        this.nPaintings = nPaint;
     }
 
     public boolean removePainting() {
