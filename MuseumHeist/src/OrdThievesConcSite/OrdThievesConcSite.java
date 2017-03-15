@@ -9,15 +9,10 @@ import GenRepOfInfo.MemFIFO;
  */
 public class OrdThievesConcSite {
 
-    /**
-     * Número de ladrões presentes no local de concentração
-     *
-     * @serialField nThieves
-     */
     private int nThieves = 0;
 
     private int nMax;
-    private MemFIFO waitQueue;
+        private MemFIFO waitQueue;
     private boolean needed = false;
     private int neededCounter = 0;
     private int masterThiefWaitPrepareExcursion = 0;  // ??????
