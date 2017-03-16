@@ -5,6 +5,8 @@
  */
 package Entities;
 
+import static GenRepOfInfo.Heist.*;
+
 /**
  *
  * @author Pedro Coelho
@@ -12,12 +14,6 @@ package Entities;
  */
 
 public class MasterThief extends Thread{ //implements IMasterThief
-    
-    private final static int PLANNING_HEIST = 0,
-                            DECIDING_WHAT_DO = 1,
-                            ASSEMBLE_GROUP = 2,
-                            WAITING_ARRIVAL = 3,
-                            PRESENT_REPORT = 4;
-    
-    private int state = PLANNING_HEIST; 
+  
+    private int state = PLANNING_THE_HEIST; 
 }

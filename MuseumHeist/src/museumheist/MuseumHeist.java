@@ -6,12 +6,10 @@
 package MuseumHeist;
 
 import AssaultParty.AssaultParty;
-import GenRepOfInfo.GenRepOfInfo;
 import Entities.MasterThief;
 import MasterThiefCtrlCollSite.MasterThiefCtrlCollSite;
 import Museum.Museum;
 import OrdThievesConcSite.OrdThievesConcSite;
-import Entities.Thief;
 
 /**
  *
@@ -26,18 +24,11 @@ public class MuseumHeist {
      */
     public static void main(String[] args) {
         
-        final int   K = 3,      /* Número de elementos da assault party */
-                    M = 7,      /* Número de ladrões incluindo ladroa chefe */
-                    N = 5,      /* Número de rooms */
-                    Q = 3;      /* Número de paintings */
-        
         Museum museum;  /* Museu */
-        GenRepOfInfo genrepofinfo;  /* General Repository of Information */
         OrdThievesConcSite ordthievesconcsite;  /* Ordinary Thieves Concentration Site */
         MasterThiefCtrlCollSite mtctrlcollsite; /* Master Thief Control and Collection Site */
         
         MasterThief masterThief;    /* Ladroa chefe */
-        AssaultParty[] assaultparties = new AssaultParty[(M-1)/K];   /* Array de assault parties */
         
        
         
