@@ -5,43 +5,78 @@
  */
 package MasterThiefCtrlCollSite;
 
+import AssaultParty.AssaultParty;
+import static GenRepOfInfo.Heist.*;
+import Museum.IMuseum;
+
 /**
  *
  * @author Nuno Silva
  */
 public class MasterThiefCtrlCollSite {
 
-    // declaração de variáveis
-    private boolean heistEnd = false;
+    private int nPaintings;
+    private int MasterThiefState;
+    private AssaultParty[] assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
+    
+    private IMuseum museum;
 
-    // construtor
-    public MasterThiefCtrlCollSite() {
+    public MasterThiefCtrlCollSite(IMuseum museum) {
+        this.nPaintings = 0;
+        this.MasterThiefState = PLANNING_THE_HEIST;
+        this.museum = museum;
+
+//        // inicializar AssaultParties vazias
+//        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+//            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+//                this.assaultParties[i][j].setThiefID(-1);
+//                this.assaultParties[i][j].setPosition(-1);
+//            }
+//        }
+    }
+
+    public synchronized void startOfOperations() {
+        this.MasterThiefState = DECIDING_WHAT_TO_DO;
+    }
+
+    public synchronized int getAssaultRoom() {
+        return this.museum.nextRoom();
+    }
+
+
+//    private synchronized int[] getPartyNotFull() {
+//        int emptySlot[] = {-1, -1};
+//
+//        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+//            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+//                if (this.assaultParties[i].getThiefid() == -1) {
+//                    emptySlot[0] = i;
+//                    emptySlot[1] = j;
+//                    return emptySlot;
+//                }
+//            }
+//        }
+//
+//        return emptySlot;
+//    }
+//    
+//    
+//    public synchronized boolean addAssaultThiefToParty(int thiefID) {
+//        int emptySlot[] = this.getPartyNotFull();
+//
+//        if (emptySlot[0] != -1) {
+//            this.assaultParties[emptySlot[0]][emptySlot[1]].setThiefID(thiefID);
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+    public synchronized void prepareAssaultParty() {
 
     }
 
-    // procedimentos do monitor
-    public synchronized boolean startOperations() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public synchronized void sendAssaultParty() {
 
-    public synchronized boolean sendAssaultParty() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public synchronized boolean waitForHandACanvas() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public synchronized boolean collectCanvas() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public synchronized boolean sumUpResults() {
-        //if()  //missing conditions
-        return this.heistEnd;
-    }
-
-    public void handCanvas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

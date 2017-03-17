@@ -11,5 +11,11 @@ package Museum;
  * @author Pedro Coelho
  */
 public interface IMuseum {
+
+    public int nextRoom();
+
+    public boolean rollACanvas(int roomID);
+
+    public int getDistOutside(int roomID);
     
 }

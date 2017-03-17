@@ -5,43 +5,75 @@
  */
 package Entities;
 
-import AssaultParty.AssaultParty;
 import static GenRepOfInfo.Heist.*;
-import MasterThiefCtrlCollSite.MasterThiefCtrlCollSite;
-import Museum.Museum;
-import OrdThievesConcSite.OrdThievesConcSite;
+import OrdThievesConcSite.IOrdThievesConcSite;
 
 /**
  *
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public class Thief extends Thread { //implements IThief
 
+public class Thief extends Thread implements Comparable<Thief> { //implements IThief
+
+    private int thiefid;
+    private int maxDisp;
     private int state;
-    private final int thiefid;
-    private final int maxDisp;
-    private final int position;
+    private int position;
+    private final IOrdThievesConcSite cs;
 
-    // monitores
-    private OrdThievesConcSite cs;
-
-    public Thief(int id, OrdThievesConcSite cs, AssaultParty ass, Museum museum, MasterThiefCtrlCollSite mtcs) {
-        this.state = OUTSIDE;
+    public Thief(int id, int maxDisp, IOrdThievesConcSite cs) {
         this.thiefid = id;
-        this.maxDisp = (int) (Math.random() * (THIEVES_MAX_DISPLACEMENT + 1 - THIEVES_MIN_DISPLACEMENT)) + THIEVES_MIN_DISPLACEMENT;
+        this.maxDisp = maxDisp;
         this.cs = cs;
-        this.position = 0;
+    }
+    
+    public int getMaxDisp() {
+        return maxDisp;
     }
 
-    // ciclo de vida
+    public int getThiefid() {
+        return thiefid;
+    }
+
+    public void setThiefID(int thiefID) {
+        this.thiefid = thiefID;
+    }
+    
+    public int getPosition() {
+        return position;
+    }
+    
+    public void setPosition(int i) {
+        this.position = i;
+    }
+    
+    public void setMaxDisp(int maxDisp) {
+        this.maxDisp = maxDisp;
+    }
+
     @Override
     public void run() {
-        
-        
+        // diz que está ready e fica waiting
+        cs.amReady(this.thiefid);
+
+        boolean heistOver = false;
+
+        while (!heistOver) {
+            switch (this.state) {
+                case OUTSIDE:
+                    if (!this.cs.getBusyAssaultThief(this.thiefid) && this.cs.getAssaultParty(this.thiefid) == -1) {
+                        this.cs.amINeeded(this.thiefid);
+                    } else {
+                        
+                    }
+
+            }
+        }
     }
 
-    private void waitForSendAssaultParty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public int compareTo(Thief o) {
+        return (this.position - o.position);
     }
 }

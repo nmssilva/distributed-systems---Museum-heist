@@ -10,5 +10,13 @@ package OrdThievesConcSite;
  * @author Nuno Silva
  */
 public interface IOrdThievesConcSite {
+
+    public void amReady(int thiefid);
+
+    public boolean getBusyAssaultThief(int thiefid);
+
+    public int getAssaultParty(int thiefid);
+
+    public void amINeeded(int thiefid);
     
 }

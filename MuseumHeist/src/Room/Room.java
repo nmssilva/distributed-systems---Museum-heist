@@ -17,16 +17,30 @@ public class Room {
     private int distance;   /* distance from the gathering site */
     private int nPaintings; /* number of paintings */    
     
-    public Room(int distance, int nPaint) {
+    public Room(int distance, int nPaint, int id) {
         this.distance = distance;
         this.nPaintings = nPaint;
+        this.id = id;
     }
 
-    public boolean removePainting() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getId() {
+        return id;
     }
-    
-    
-    
+
+    public int getNPaintings() {
+        return nPaintings;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setnPaintings(int nPaintings) {
+        this.nPaintings = nPaintings;
+    }
+
+    public void setDistance(int dist) {
+        this.distance = dist;
+    }
     
 }

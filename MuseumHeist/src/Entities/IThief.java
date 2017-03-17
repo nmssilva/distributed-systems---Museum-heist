@@ -11,19 +11,6 @@ package Entities;
  */
 public interface IThief {
     
-    public void handACanvas();
 
-    public void amINeeded();
-
-    public void prepareExcursion();
-
-    public void crawlIn();
-
-    public void rollACanvas();
-    
-    public void reverseDirection();
-
-    public void crawlOut();
-    
     
 }

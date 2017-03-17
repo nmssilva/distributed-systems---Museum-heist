@@ -1,6 +1,5 @@
 package OrdThievesConcSite;
 
-import AssaultParty.AssaultParty;
 import static GenRepOfInfo.Heist.*;
 import GenRepOfInfo.MemFIFO;
 
@@ -16,19 +15,20 @@ public class OrdThievesConcSite {
     private boolean[] busyAssaultThief = new boolean[THIEVES_NUMBER];
     private int nAssaultThievesCs;
     private int maxDispAssaultThief[] = new int[THIEVES_NUMBER];
-    private int assaultParty[] = new int[THIEVES_NUMBER];
+    private int assaultParty[] = new int[THIEVES_NUMBER];  //array de thiefs na concentration site
 
     // construtor
     public OrdThievesConcSite(int nThief, int nMax) {
         this.nAssaultThievesCs = 0;
+        this.waitQueue = new MemFIFO(THIEVES_NUMBER);
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             this.assaultThiefstate[i] = OUTSIDE;
             this.busyAssaultThief[i] = false;
             this.assaultParty[i] = -1;
             this.maxDispAssaultThief[i] = (int) (Math.random() * (THIEVES_MAX_DISPLACEMENT + 1 - THIEVES_MIN_DISPLACEMENT)) + THIEVES_MIN_DISPLACEMENT;
-            this.waitQueue = new MemFIFO(THIEVES_NUMBER);
         }
+
     }
 
     public int getAssaultParty(int id) {
@@ -40,7 +40,7 @@ public class OrdThievesConcSite {
     public synchronized void amINeeded(int thiefID) {
         notifyAll();
 
-        while (!this.busyAssaultThief[thiefID] && this.assaultThiefstate[thiefID] != HEIST_END) {
+        while (!this.busyAssaultThief[thiefID] && this.assaultThiefstate[thiefID] != HEIST_END) { //???
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -49,7 +49,7 @@ public class OrdThievesConcSite {
         }
     }
 
-    public synchronized void waitAssaultThief(int thiefID) {
+    public synchronized void waitAssaultThief(int thiefID) {  //master thief waits to assemble assaultparty
         while (this.nAssaultThievesCs < MAX_ASSAULT_PARTY_THIEVES) {
             try {
                 wait();
@@ -61,7 +61,7 @@ public class OrdThievesConcSite {
         notifyAll();
     }
 
-    public synchronized void waitThievesEnd(int thiefID) {
+    public synchronized void waitThievesEnd(int thiefID) {  //master thief waits for all thiefs to return
         while (this.nAssaultThievesCs < THIEVES_NUMBER) {
             try {
                 wait();
@@ -70,54 +70,54 @@ public class OrdThievesConcSite {
             }
         }
         for (int i = 0; i < THIEVES_NUMBER; i++) {
-            this.assaultThiefstate[i] = HEIST_END;
+            this.assaultThiefstate[i] = HEIST_END; // heist ends
         }
 
         notifyAll();
     }
 
-    public synchronized void amReady(int thiefID) {
+    public synchronized void amReady(int thiefID) {  // thief is ready to assault
         if (!waitQueue.full()) {
             //this.busyAssaultThief[thiefID] = false;
-            this.waitQueue.write(thiefID);
-            this.nAssaultThievesCs++;
-            this.assaultParty[thiefID] = -1;
+            this.waitQueue.write(thiefID);      // thief waits in queue
+            this.nAssaultThievesCs++;           // number of thieves in CS ++
+            this.assaultParty[thiefID] = -1;    // thief goes out of concentration site
         } else {
-            System.out.println("ERRO!!");
+            System.out.println("ERROR!! Wait Queue full.");
         }
 
-        if (this.nAssaultThievesCs >= MAX_ASSAULT_PARTY_THIEVES) {
+        if (this.nAssaultThievesCs >= MAX_ASSAULT_PARTY_THIEVES) {  // number of thieves sufficient to assemble party
             notifyAll();
         } else {
             try {
-                wait();
+                wait(); // block if otherwise
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
         }
     }
-    
+
     public synchronized int getNAssaultThievesCs() {
         return this.nAssaultThievesCs;
     }
-    
+
     public synchronized int getStateAssaultThiefState(int thiefID) {
         return this.assaultThiefstate[thiefID];
     }
-    
-    public synchronized void callAssaultThief(int assaultParty) {
+
+    public synchronized void callAssaultThief(int thiefid) {
         int id = -1;
 
         if (!waitQueue.empty()) {
-            id = ((Integer) this.waitQueue.read()).intValue();
+            id = ((Integer) this.waitQueue.read());
             this.nAssaultThievesCs--;
             this.busyAssaultThief[id] = true;
-            this.assaultParty[id] = assaultParty;
+            this.assaultParty[id] = thiefid; //thief returns
 
             notifyAll();
         }
     }
-    
+
     public synchronized boolean getBusyAssaultThief(int thiefID) {
         return this.busyAssaultThief[thiefID];
     }
@@ -145,9 +145,9 @@ public class OrdThievesConcSite {
 
         this.amReady(thiefID);
     }
-    
+
     public synchronized int getMaxDisp(int thiefID) {
         return this.maxDispAssaultThief[thiefID];
     }
-    
+
 }

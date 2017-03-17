@@ -49,7 +49,7 @@ public class Log {
     /**
      * This is a singleton, this is important to return the Log instance.
      *
-     * @return log intance, this is a singleton.
+     * @return log instance, this is a singleton.
      */
     public synchronized static Log getInstance() {
         return instance;
