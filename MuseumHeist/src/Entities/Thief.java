@@ -6,7 +6,7 @@
 package Entities;
 
 import static GenRepOfInfo.Heist.*;
-import OrdThievesConcSite.IOrdThievesConcSite;
+import Monitors.IOrdThievesConcSite;
 
 /**
  *
@@ -62,12 +62,18 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
         while (!heistOver) {
             switch (this.state) {
                 case OUTSIDE:
-                    if (!this.cs.getBusyAssaultThief(this.thiefid) && this.cs.getAssaultParty(this.thiefid) == -1) {
-                        this.cs.amINeeded(this.thiefid);
-                    } else {
-                        
-                    }
-
+                    break;
+                case CRAWLING_INWARDS:
+                    break;
+                case AT_A_ROOM:
+                    break;
+                case CRAWLING_OUTWARDS:
+                    break;
+                case AT_COLLECTION_SITE:
+                    break;
+                case HEIST_END:
+                    heistOver = true;
+                    break;
             }
         }
     }

@@ -3,80 +3,142 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MasterThiefCtrlCollSite;
+package Monitors;
 
-import AssaultParty.AssaultParty;
+import Entities.Thief;
 import static GenRepOfInfo.Heist.*;
-import Museum.IMuseum;
 
 /**
  *
  * @author Nuno Silva
  */
-public class MasterThiefCtrlCollSite {
+public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite{
 
     private int nPaintings;
     private int MasterThiefState;
-    private AssaultParty[] assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
-    
-    private IMuseum museum;
+    private Thief[][] assaultparties = new Thief[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES][MAX_ASSAULT_PARTY_THIEVES];
+    private boolean[] emptyRooms = new boolean[ROOMS_NUMBER];
 
-    public MasterThiefCtrlCollSite(IMuseum museum) {
+    private final IMuseum museum;
+    private IOrdThievesConcSite cs;
+
+    public MasterThiefCtrlCollSite(Museum museum) {
         this.nPaintings = 0;
         this.MasterThiefState = PLANNING_THE_HEIST;
         this.museum = museum;
 
-//        // inicializar AssaultParties vazias
-//        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
-//            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-//                this.assaultParties[i][j].setThiefID(-1);
-//                this.assaultParties[i][j].setPosition(-1);
-//            }
-//        }
+        // inicializar AssaultParties vazias
+        Thief tmpThief = new Thief(-1, -1, this.cs);
+
+        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+                assaultparties[i][j] = tmpThief;
+            }
+        }
+
+        // salas com quadros inicialmente
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            this.emptyRooms[i] = false;
+        }
     }
 
-    public synchronized void startOfOperations() {
+    @Override
+    public boolean[] getEmptyRooms() {
+        return emptyRooms;
+    }
+
+    @Override
+    public synchronized void startOperations() {
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        notifyAll();
     }
 
     public synchronized int getAssaultRoom() {
         return this.museum.nextRoom();
     }
 
+    public synchronized boolean addAssaultThiefToParty(Thief thief) {
+        int emptySlot[] = this.getPartyNotFull();
 
-//    private synchronized int[] getPartyNotFull() {
-//        int emptySlot[] = {-1, -1};
-//
-//        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
-//            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-//                if (this.assaultParties[i].getThiefid() == -1) {
-//                    emptySlot[0] = i;
-//                    emptySlot[1] = j;
-//                    return emptySlot;
-//                }
-//            }
-//        }
-//
-//        return emptySlot;
-//    }
-//    
-//    
-//    public synchronized boolean addAssaultThiefToParty(int thiefID) {
-//        int emptySlot[] = this.getPartyNotFull();
-//
-//        if (emptySlot[0] != -1) {
-//            this.assaultParties[emptySlot[0]][emptySlot[1]].setThiefID(thiefID);
-//            return true;
-//        }
-//
-//        return false;
-//    }
+        if (emptySlot[0] != -1) {
+            this.assaultparties[emptySlot[0]][emptySlot[1]] = thief;
+            return true;
+        }
 
-    public synchronized void prepareAssaultParty() {
-
+        return false;
     }
 
-    public synchronized void sendAssaultParty() {
+    @Override
+    public synchronized int[] getPartyNotFull() {
+        int emptySlot[] = {-1, -1};
 
+        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+                if (this.assaultparties[i][j].getThiefid() == -1) {
+                    emptySlot[0] = i;
+                    emptySlot[1] = j;
+                    return emptySlot;
+                }
+            }
+        }
+
+        return emptySlot;
+    }
+
+    public synchronized boolean getPartiesFull() {
+        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+                if (this.assaultparties[i][j].getThiefid() == -1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public synchronized int checkRoomWithPaintings() {
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            if (emptyRooms[i] != false) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public synchronized void prepareAssaultParty() {
+        this.MasterThiefState = ASSEMBLING_A_GROUP;
+        notifyAll();
+    }
+
+    @Override
+    public synchronized void sendAssaultParty() {
+        this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        notifyAll();
+    }
+
+    @Override
+    public synchronized void takeARest() {
+        this.MasterThiefState = WAITING_FOR_ARRIVAL;
+        notifyAll();
+    }
+    
+    @Override
+    public synchronized void sumUpResults() {
+        this.MasterThiefState = PRESENTING_THE_REPORT;
+        notifyAll();
+    }
+    
+    @Override
+    public synchronized void appraiseSit(){
+        this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        notifyAll();
+    }
+        
+    @Override
+    public synchronized void collectCanvas(){
+        this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        notifyAll();
     }
 }

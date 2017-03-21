@@ -26,6 +26,7 @@ public class Log {
     private final File log;
     private static PrintWriter pw;
     private static Log instance = null;
+    private int MasterThiefState;
 
     private Log(String filename) {
         if (filename.length() == 0) {
@@ -54,7 +55,7 @@ public class Log {
     public synchronized static Log getInstance() {
         return instance;
     }
-
+    
     /**
      * This method writes the head of the logging file.
      */
@@ -86,5 +87,10 @@ public class Log {
         pw.println("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30");
         pw.flush();
         pw.close();
+    }
+
+    public void setMasterThiefState(int state) {
+        this.MasterThiefState = state;
+        pw.println("Master Thief State:" + state);
     }
 }

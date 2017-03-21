@@ -5,11 +5,11 @@
  */
 package MuseumHeist;
 
-import AssaultParty.AssaultParty;
+import Monitors.AssaultParty;
 import Entities.MasterThief;
-import MasterThiefCtrlCollSite.MasterThiefCtrlCollSite;
-import Museum.Museum;
-import OrdThievesConcSite.OrdThievesConcSite;
+import Monitors.MasterThiefCtrlCollSite;
+import Monitors.Museum;
+import Monitors.OrdThievesConcSite;
 
 /**
  *

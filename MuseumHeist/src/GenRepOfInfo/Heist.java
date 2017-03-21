@@ -10,7 +10,7 @@ package GenRepOfInfo;
  * @author Nuno Silva
  */
 public class Heist {
-    // Estados do AssaultThief
+    // Estados do Thief
     public final static int OUTSIDE = 0,
                             CRAWLING_INWARDS = 1,
                             AT_A_ROOM = 2,
@@ -22,10 +22,10 @@ public class Heist {
     public final static int PLANNING_THE_HEIST = 0,
                             DECIDING_WHAT_TO_DO = 1,
                             ASSEMBLING_A_GROUP = 2,
-                            WAITING_FOR_GROUP_ARRIVAL = 3,
+                            WAITING_FOR_ARRIVAL = 3,
                             PRESENTING_THE_REPORT = 4;
     
-    // Total number of AssaultThieves in the Hesit
+    // Total number of Thieves in the Hesit
     public static final int THIEVES_NUMBER = 6;   
     // Thieves max displacement
     public static final int THIEVES_MAX_DISPLACEMENT = 6;

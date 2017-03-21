@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package OrdThievesConcSite;
+package Monitors;
 
 /**
  *
@@ -18,5 +18,7 @@ public interface IOrdThievesConcSite {
     public int getAssaultParty(int thiefid);
 
     public void amINeeded(int thiefid);
+    
+    public void callAssaultThief(int thiefid);
     
 }

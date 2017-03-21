@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package AssaultParty;
+package Monitors;
 
 import Entities.Thief;
 import static GenRepOfInfo.Heist.*;
-import Museum.IMuseum;
 import java.util.Arrays;
 
 /**
