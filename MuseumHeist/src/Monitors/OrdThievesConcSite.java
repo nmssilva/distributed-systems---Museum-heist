@@ -7,7 +7,7 @@ import GenRepOfInfo.MemFIFO;
  *
  * @author Nuno Silva
  */
-public class OrdThievesConcSite {
+public class OrdThievesConcSite implements IOrdThievesConcSite{
 
     // Declaração de variáveis
     private MemFIFO waitQueue;
@@ -19,7 +19,7 @@ public class OrdThievesConcSite {
     private boolean[] busyAssaultThief = new boolean[THIEVES_NUMBER];
 
     // construtor
-    public OrdThievesConcSite(int nThief, int nMax) {
+    public OrdThievesConcSite(){
         this.nAssaultThievesCs = 0;
         this.waitQueue = new MemFIFO(THIEVES_NUMBER);
 
@@ -27,16 +27,17 @@ public class OrdThievesConcSite {
             this.assaultThiefstate[i] = OUTSIDE;
             this.busyAssaultThief[i] = false;
             this.thievesInCs[i] = -1;
-            this.maxDispAssaultThief[i] = (int) (Math.random() * (THIEVES_MAX_DISPLACEMENT + 1 - THIEVES_MIN_DISPLACEMENT)) + THIEVES_MIN_DISPLACEMENT;
+            this.maxDispAssaultThief[i] = (int) (Math.random() * (MAX_DISPLACEMENT + 1 - MIN_DISPLACEMENT)) + MIN_DISPLACEMENT;
         }
 
     }
 
+    @Override
     public int getAssaultParty(int id) {
         return this.thievesInCs[id];
     }
 
-    // @Override
+    @Override
     public synchronized void amINeeded(int thiefid) {
         notifyAll();
 
@@ -76,6 +77,7 @@ public class OrdThievesConcSite {
         notifyAll();
     }
 
+    @Override
     public synchronized void amReady(int thiefid) {  // thief is ready to assault
         if (!waitQueue.full()) {
             this.waitQueue.write(thiefid);      // thief waits in queue
@@ -104,6 +106,7 @@ public class OrdThievesConcSite {
         return this.assaultThiefstate[thiefid];
     }
 
+    @Override
     public synchronized void callAssaultThief(int thiefid) {
 
         if (!waitQueue.empty()) {
@@ -116,6 +119,7 @@ public class OrdThievesConcSite {
         }
     }
 
+    @Override
     public synchronized boolean getBusyAssaultThief(int thiefid) {
         return this.busyAssaultThief[thiefid];
     }

@@ -13,4 +13,8 @@ package Monitors;
  */
 public interface IRoom {
     
+    public int getId();
+    
+    public int getDistance();
+
 }

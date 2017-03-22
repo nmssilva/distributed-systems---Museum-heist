@@ -28,13 +28,11 @@ public class Heist {
     // Total number of Thieves in the Hesit
     public static final int THIEVES_NUMBER = 6;   
     // Thieves max displacement
-    public static final int THIEVES_MAX_DISPLACEMENT = 6;
+    public static final int MAX_DISPLACEMENT = 6;
     // Thieves minimum displacement
-    public static final int THIEVES_MIN_DISPLACEMENT = 2;
+    public static final int MIN_DISPLACEMENT = 2;
     // Thieves maximum distance between them while crawling in
     public static final int THIEVES_MAX_DISTANCE = 3;
-    // Room maximum distance to Outside
-    public static final int ROOM_MAX_DISTANCE = 30;
     // Max number of AssaultThieves in an AssaultParty
     public static final int MAX_ASSAULT_PARTY_THIEVES = 3;
     // Total number of Rooms in the Museum

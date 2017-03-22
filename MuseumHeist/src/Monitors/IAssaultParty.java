@@ -5,11 +5,25 @@
  */
 package Monitors;
 
+import Entities.Thief;
+
 /**
  *
  * @author Pedro Coelho
  * @author Nuno Silva
  */
 public interface IAssaultParty {
-    
+    public IRoom getRoom();
+
+    public void prepareExcursion(int thiefid);
+
+    public void waitTurn(int thiefid);
+
+    public void crawlIn(Thief aThis);
+
+    public boolean rollACanvas();
+
+    public void crawlOut(Thief aThis);
+
+    public void reverseDirection();
 }

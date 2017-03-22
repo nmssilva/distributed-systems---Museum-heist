@@ -15,6 +15,8 @@ import static GenRepOfInfo.Heist.*;
 public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite{
 
     private int nPaintings;
+
+    
     private int MasterThiefState;
     private Thief[][] assaultparties = new Thief[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES][MAX_ASSAULT_PARTY_THIEVES];
     private boolean[] emptyRooms = new boolean[ROOMS_NUMBER];
@@ -26,9 +28,14 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite{
         this.nPaintings = 0;
         this.MasterThiefState = PLANNING_THE_HEIST;
         this.museum = museum;
-
+        
+        // salas com quadros inicialmente
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            this.emptyRooms[i] = false;
+        }
+        
         // inicializar AssaultParties vazias
-        Thief tmpThief = new Thief(-1, -1, this.cs);
+        Thief tmpThief = new Thief(-1, this.cs, this);
 
         for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
@@ -36,10 +43,6 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite{
             }
         }
 
-        // salas com quadros inicialmente
-        for (int i = 0; i < ROOMS_NUMBER; i++) {
-            this.emptyRooms[i] = false;
-        }
     }
 
     @Override
@@ -141,4 +144,11 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite{
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
     }
+    
+    @Override
+    public synchronized void handACanvas() {
+        this.nPaintings++;
+        notifyAll();
+    }
+    
 }
