@@ -6,6 +6,7 @@
 package Entities;
 
 import static GenRepOfInfo.Heist.*;
+import Monitors.AssaultParty;
 import Monitors.IOrdThievesConcSite;
 
 /**
@@ -21,6 +22,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
     private int state;
     private int position;
     private final IOrdThievesConcSite cs;
+    private AssaultParty ap;
 
     public Thief(int id, int maxDisp, IOrdThievesConcSite cs) {
         this.thiefid = id;
@@ -62,8 +64,11 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
         while (!heistOver) {
             switch (this.state) {
                 case OUTSIDE:
+                    
                     break;
                 case CRAWLING_INWARDS:
+                    this.ap.crawlIn(this.thiefid, this.position, this.maxDisp);
+                    
                     break;
                 case AT_A_ROOM:
                     break;

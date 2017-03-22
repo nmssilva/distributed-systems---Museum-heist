@@ -103,19 +103,19 @@ public class AssaultParty implements IAssaultParty {
         return this.museum.getDistOutside(this.roomID);
     }
 
-    public synchronized void crawlIn(Thief thief) {
+    public synchronized void crawlIn(int thiefid, int position, int maxDisp) {
 
         boolean FarOrOccupied = false;
         while (!FarOrOccupied) {
 
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES];
-            int myPos = thief.getPosition();
+            int myPos = position;
             int i;
             int indexPos = 0;
 
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
                 assaultThievesPos[i] = thieves[i].getPosition();
-                if (thief.getThiefid() == thieves[i].getThiefid()) {
+                if (thiefid == thieves[i].getThiefid()) {
                     indexPos = i;
                 }
             }
@@ -123,7 +123,7 @@ public class AssaultParty implements IAssaultParty {
             Arrays.sort(thieves);
 
             // prever maximo avanço
-            for (i = thief.getMaxDisp(); i >= THIEVES_MIN_DISPLACEMENT; i--) {
+            for (i = maxDisp; i >= THIEVES_MIN_DISPLACEMENT; i--) {
                 FarOrOccupied = false;
                 int[] posAfterMove = assaultThievesPos;
                 posAfterMove[indexPos] = myPos + i;
@@ -144,7 +144,7 @@ public class AssaultParty implements IAssaultParty {
                 if ((!FarOrOccupied)) {
                     if (myPos + i >= this.getDistOutsideRoom()) {
                         for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) { // pesquisar no array thieves o thief atual
-                            if (thief.getId() == thieves[j].getThiefid()) {
+                            if (thiefid == thieves[j].getThiefid()) {
                                 thieves[j].setPosition(this.getDistOutsideRoom()); // atualizar posiçao na sala
                                 assaultThievesPos[indexPos] = this.getDistOutsideRoom();
                             }
@@ -154,7 +154,7 @@ public class AssaultParty implements IAssaultParty {
                         inRoom[indexPos] = true;
                     } else {
                         for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                            if (thief.getId() == thieves[j].getThiefid()) {
+                            if (thiefid == thieves[j].getThiefid()) {
                                 thieves[j].setPosition(myPos + 1);
                                 assaultThievesPos[indexPos] = myPos + i;
                             }
