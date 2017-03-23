@@ -70,17 +70,9 @@ public class MasterThief extends Thread {
                         }
                     }
 
-                    //verificar se existe thieves para fazer uma nova assault party
-                    int nThievesFree = 0;
-                    for (int i = 0; i < THIEVES_NUMBER; i++) {
-                        if (this.cs.getFreeAssaultThief(i)) {
-                            nThievesFree++;
-                        }
-                    }
-                    System.out.println("nThievesFree:" + nThievesFree);
+                    // verificar se existe thieves para fazer uma nova assault party
                     // se sim, muda de estado
-                    if (nThievesFree >= MAX_ASSAULT_PARTY_THIEVES) {
-
+                    if (this.cs.getNAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES) {
                         appraise = false;
                         this.mtccs.prepareAssaultParty();
                         this.state = ASSEMBLING_A_GROUP;
@@ -103,11 +95,24 @@ public class MasterThief extends Thread {
                 case ASSEMBLING_A_GROUP:
                     System.out.println("Lady Master Thief is ASSEMBLING A GROUP");
 
-                    for (int i = 0; i < THIEVES_NUMBER; i++) {
-                        if (!this.cs.getFreeAssaultThief(i)) {
+                    int nThievesinAP = 0;
+                    int thievestobeinAP[] = new int[3];
+                    //
+                    for (int i = 0; nThievesinAP < MAX_ASSAULT_PARTY_THIEVES && i < THIEVES_NUMBER; i++) {
+                        if (this.cs.getFreeAssaultThief(i)) {
+                            thievestobeinAP[nThievesinAP] = i;
+                            nThievesinAP++;
+                        }
+                    }
+                    
+                    if(nThievesinAP == MAX_ASSAULT_PARTY_THIEVES){
+                        for(int i : thievestobeinAP){
                             this.cs.callAssaultThief(i);
                             this.mtccs.addThiefToParty(i);
                         }
+                    }
+                    else{
+                        System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
                     this.mtccs.sendAssaultParty();
                     this.state = DECIDING_WHAT_TO_DO;

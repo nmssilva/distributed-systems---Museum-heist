@@ -64,8 +64,12 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
 
     @Override
     public void run() {
+        
+        // flag para indicar thief livre
+        this.cs.setFreeAssaultThief(thiefid);
+        
         // diz que está ready e fica waiting
-        cs.amReady(this.thiefid);
+        this.cs.amReady(this.thiefid);
 
         boolean heistOver = false;
 

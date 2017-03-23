@@ -84,7 +84,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
             this.nAssaultThievesCs++;           // number of thieves in CS ++
             this.thievesInCs[thiefid] = -1;    // thief goes out of concentration site
         } else {
-            System.out.println("ERROR!! Wait Queue full.");
+            System.err.println("ERROR!! WaitQueue is full.");
         }
 
         if (this.nAssaultThievesCs >= MAX_ASSAULT_PARTY_THIEVES) {  // number of thieves sufficient to assemble party
@@ -98,6 +98,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
         }
     }
 
+    @Override
     public synchronized int getNAssaultThievesCs() {
         return this.nAssaultThievesCs;
     }
@@ -114,7 +115,6 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
             this.nAssaultThievesCs--;
             this.freeAssaultThief[id] = false;
             this.thievesInCs[id] = thiefid;
-
             notifyAll();
             
         }
@@ -122,11 +122,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
 
     @Override
     public synchronized boolean getFreeAssaultThief(int thiefid) {
-        System.out.print("FreeAssaultThief: [");
-        for(boolean i : this.freeAssaultThief){
-            System.out.print(i+", ");
-        }
-        System.out.println("]");
+        
         return this.freeAssaultThief[thiefid];
     }
     
@@ -134,11 +130,6 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     @Override
     public void setFreeAssaultThief(int thiefid) {
         this.freeAssaultThief[thiefid] = true;
-    }
-    
-
-    public synchronized boolean getAssaultThievesConcentrationSite() {
-        return !this.waitQueue.empty();
     }
 
     public synchronized void prepareExcursion(int thiefid) {

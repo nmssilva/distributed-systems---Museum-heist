@@ -27,7 +27,7 @@ public interface IMasterThiefCtrlCollSite {
 
     public boolean getPartiesFull();
     
-    public int[] getPartyNotFull();
+    public int[] getEmptySlotParty();
 
     public void collectCanvas();
     
