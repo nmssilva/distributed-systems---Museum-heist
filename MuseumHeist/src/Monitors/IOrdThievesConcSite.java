@@ -13,12 +13,14 @@ public interface IOrdThievesConcSite {
 
     public void amReady(int thiefid);
 
-    public boolean getBusyAssaultThief(int thiefid);
+    public boolean getFreeAssaultThief(int thiefid);
 
     public int getAssaultParty(int thiefid);
 
     public void amINeeded(int thiefid);
     
     public void callAssaultThief(int thiefid);
+
+    public void setFreeAssaultThief(int thiefid);
     
 }

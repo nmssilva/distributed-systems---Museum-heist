@@ -14,7 +14,7 @@ import Monitors.*;
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public class MasterThief extends Thread { //implements IMasterThief
+public class MasterThief extends Thread {
 
     private int state;
 
@@ -43,15 +43,17 @@ public class MasterThief extends Thread { //implements IMasterThief
         boolean heistOver = false;
 
         while (!heistOver) {
-            
+
             switch (this.state) {
-                
+
                 case PLANNING_THE_HEIST:
+                    System.out.println("Lady Master Thief is PLANNING THE HEIST");
                     this.mtccs.startOperations();
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
-                    
+
                 case DECIDING_WHAT_TO_DO:
+                    System.out.println("Lady Master Thief is DECIDING WHAT TO DO");
 
                     boolean appraise = true;
 
@@ -69,16 +71,23 @@ public class MasterThief extends Thread { //implements IMasterThief
                     }
 
                     //verificar se existe thieves para fazer uma nova assault party
+                    int nThievesFree = 0;
                     for (int i = 0; i < THIEVES_NUMBER; i++) {
-                        if (!this.cs.getBusyAssaultThief(i)) {
-                            appraise = false;
-                            this.mtccs.prepareAssaultParty();
-                            this.state = ASSEMBLING_A_GROUP;
+                        if (this.cs.getFreeAssaultThief(i)) {
+                            nThievesFree++;
                         }
+                    }
+                    System.out.println("nThievesFree:" + nThievesFree);
+                    // se sim, muda de estado
+                    if (nThievesFree >= MAX_ASSAULT_PARTY_THIEVES) {
+
+                        appraise = false;
+                        this.mtccs.prepareAssaultParty();
+                        this.state = ASSEMBLING_A_GROUP;
                     }
 
                     //verificar se as assault parties partiram
-                    if (this.mtccs.getPartyNotFull()[0] != -1) {
+                    if (this.mtccs.getPartiesFull()) {
                         appraise = false;
                         this.mtccs.takeARest();
                         this.state = WAITING_FOR_ARRIVAL;
@@ -92,29 +101,28 @@ public class MasterThief extends Thread { //implements IMasterThief
                     break;
 
                 case ASSEMBLING_A_GROUP:
+                    System.out.println("Lady Master Thief is ASSEMBLING A GROUP");
 
-                    int nThievesInAP = 0;
-                    int i = 0;
-
-                    while (nThievesInAP < MAX_ASSAULT_PARTY_THIEVES) {
-                        if (this.cs.getBusyAssaultThief(i)) {
+                    for (int i = 0; i < THIEVES_NUMBER; i++) {
+                        if (!this.cs.getFreeAssaultThief(i)) {
                             this.cs.callAssaultThief(i);
-                            nThievesInAP++;
+                            this.mtccs.addThiefToParty(i);
                         }
-                        i++;
                     }
                     this.mtccs.sendAssaultParty();
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
-                    
+
                 case WAITING_FOR_ARRIVAL:
+                    System.out.println("Lady Master Thief is WAITING FOR ARRIVAL");
                     this.mtccs.collectCanvas();
                     break;
-                    
+
                 case PRESENTING_THE_REPORT:
+                    System.out.println("Lady Master Thief is PRESENTING THE REPORT");
                     heistOver = true;
                     break;
-                    
+
             }
             if (!heistOver) {
                 this.log.setMasterThiefState(state);

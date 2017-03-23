@@ -25,10 +25,14 @@ public interface IMasterThiefCtrlCollSite {
     
     public void appraiseSit();
 
+    public boolean getPartiesFull();
+    
     public int[] getPartyNotFull();
 
     public void collectCanvas();
     
     public void handACanvas();
+    
+    public boolean addThiefToParty(int thiefid);
 
 }

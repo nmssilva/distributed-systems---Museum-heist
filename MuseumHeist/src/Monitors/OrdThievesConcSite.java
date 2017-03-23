@@ -16,7 +16,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     private int[] assaultThiefstate = new int[THIEVES_NUMBER];
     private int[] maxDispAssaultThief = new int[THIEVES_NUMBER];
     private int[] thievesInCs = new int[THIEVES_NUMBER];  //array de thiefs na concentration site
-    private boolean[] busyAssaultThief = new boolean[THIEVES_NUMBER];
+    private boolean[] freeAssaultThief = new boolean[THIEVES_NUMBER];
 
     // construtor
     public OrdThievesConcSite(){
@@ -25,7 +25,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             this.assaultThiefstate[i] = OUTSIDE;
-            this.busyAssaultThief[i] = false;
+            this.freeAssaultThief[i] = false;
             this.thievesInCs[i] = -1;
             this.maxDispAssaultThief[i] = (int) (Math.random() * (MAX_DISPLACEMENT + 1 - MIN_DISPLACEMENT)) + MIN_DISPLACEMENT;
         }
@@ -41,7 +41,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     public synchronized void amINeeded(int thiefid) {
         notifyAll();
 
-        while (!this.busyAssaultThief[thiefid] && this.assaultThiefstate[thiefid] != HEIST_END) { //???
+        while (this.freeAssaultThief[thiefid] && this.assaultThiefstate[thiefid] != HEIST_END) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -112,17 +112,30 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
         if (!waitQueue.empty()) {
             int id = ((Integer) this.waitQueue.read());
             this.nAssaultThievesCs--;
-            this.busyAssaultThief[id] = true;
-            this.thievesInCs[id] = thiefid; //thief returns
+            this.freeAssaultThief[id] = false;
+            this.thievesInCs[id] = thiefid;
 
             notifyAll();
+            
         }
     }
 
     @Override
-    public synchronized boolean getBusyAssaultThief(int thiefid) {
-        return this.busyAssaultThief[thiefid];
+    public synchronized boolean getFreeAssaultThief(int thiefid) {
+        System.out.print("FreeAssaultThief: [");
+        for(boolean i : this.freeAssaultThief){
+            System.out.print(i+", ");
+        }
+        System.out.println("]");
+        return this.freeAssaultThief[thiefid];
     }
+    
+    
+    @Override
+    public void setFreeAssaultThief(int thiefid) {
+        this.freeAssaultThief[thiefid] = true;
+    }
+    
 
     public synchronized boolean getAssaultThievesConcentrationSite() {
         return !this.waitQueue.empty();
@@ -141,7 +154,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     }
 
     public synchronized void indicarRegresso(int thiefid) {
-        //this.busyAssaultThief[thiefid] = false;
+        //this.freeAssaultThief[thiefid] = false;
         this.thievesInCs[thiefid] = -1;
         this.assaultThiefstate[thiefid] = OUTSIDE;
 
@@ -151,5 +164,6 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     public synchronized int getMaxDisp(int thiefid) {
         return this.maxDispAssaultThief[thiefid];
     }
+
 
 }

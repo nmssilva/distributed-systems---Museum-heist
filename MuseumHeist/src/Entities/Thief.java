@@ -29,7 +29,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
 
     public Thief(int id, IOrdThievesConcSite cs, IMasterThiefCtrlCollSite mtccs) {
         this.thiefid = id;
-        this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;; 
+        this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;;
         this.cs = cs;
         this.mtccs = mtccs;
     }
@@ -41,7 +41,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
     public void setState(int state) {
         this.state = state;
     }
-    
+
     public int getThiefid() {
         return thiefid;
     }
@@ -72,12 +72,14 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
         while (!heistOver) {
             switch (this.state) {
                 case OUTSIDE:
+                    System.out.println("Thief " + this.thiefid + " is OUTSIDE");
                     this.cs.amINeeded(this.thiefid); //blocking state
                     this.ap.prepareExcursion(this.thiefid);
                     this.state = CRAWLING_INWARDS;
                     break;
 
                 case CRAWLING_INWARDS:
+                    System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS");
                     while (this.position < this.ap.getRoom().getDistance()) {
                         this.ap.waitTurn(this.thiefid);
                         this.ap.crawlIn(this);
@@ -86,12 +88,14 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
                     break;
 
                 case AT_A_ROOM:
+                    System.out.println("Thief " + this.thiefid + " is AT A ROOM");
                     this.ap.rollACanvas();
                     this.ap.reverseDirection();
                     this.state = CRAWLING_OUTWARDS;
                     break;
 
                 case CRAWLING_OUTWARDS:
+                    System.out.println("Thief " + this.thiefid + " is CRAWLING OUTWARDS");
                     while (this.position > 0) {
                         this.ap.waitTurn(this.thiefid); //blocking state
                         this.ap.crawlOut(this);
@@ -100,6 +104,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
                     break;
 
                 case AT_COLLECTION_SITE:
+                    System.out.println("Thief " + this.thiefid + " is AT COLLECTION SITE");
                     this.mtccs.handACanvas();
                     if (areAllTrue(this.mtccs.getEmptyRooms())) {
                         this.state = HEIST_END;

@@ -11,19 +11,19 @@ package GenRepOfInfo;
  */
 public class Heist {
     // Estados do Thief
-    public final static int OUTSIDE = 0,
-                            CRAWLING_INWARDS = 1,
-                            AT_A_ROOM = 2,
-                            CRAWLING_OUTWARDS = 3,
-                            AT_COLLECTION_SITE = 4,
-                            HEIST_END = 5;
+    public final static int OUTSIDE = 1000,
+                            CRAWLING_INWARDS = 2000,
+                            AT_A_ROOM = 3000,
+                            CRAWLING_OUTWARDS = 4000,
+                            AT_COLLECTION_SITE = 4001,
+                            HEIST_END = 4002;
 
     // Estados do MasterThief
-    public final static int PLANNING_THE_HEIST = 0,
-                            DECIDING_WHAT_TO_DO = 1,
-                            ASSEMBLING_A_GROUP = 2,
-                            WAITING_FOR_ARRIVAL = 3,
-                            PRESENTING_THE_REPORT = 4;
+    public final static int PLANNING_THE_HEIST = 1000,
+                            DECIDING_WHAT_TO_DO = 2000,
+                            ASSEMBLING_A_GROUP = 3000,
+                            WAITING_FOR_ARRIVAL = 4000,
+                            PRESENTING_THE_REPORT = 5000;
     
     // Total number of Thieves in the Hesit
     public static final int THIEVES_NUMBER = 6;   

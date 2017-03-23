@@ -47,29 +47,37 @@ public class MuseumHeist {
         masterThief = new MasterThief(mtccs, cs, museum); // master theif
 
         masterThief.start(); // lady master thief starts!
+        System.out.println("Lady Master Thief begins!!");
 
         thieves = new Thief[THIEVES_NUMBER]; // thieves
 
         for (int i = 0; i < THIEVES_NUMBER; i++) { // start thieves!
             thieves[i] = new Thief(i, cs, mtccs);
             thieves[i].start();
+            System.out.println("Thief " + i + " begins!!");
         }
 
-       
-        try {
-            masterThief.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MuseumHeist.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             try {
                 thieves[i].join();
+                System.err.println("Thief " + i + " completed the heist!!");
             } catch (InterruptedException ex) {
                 Logger.getLogger(MuseumHeist.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
+        
+        try {
+            masterThief.join();
+            System.err.println("Lady Master Thief completed the heist!!");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MuseumHeist.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+
         log.writeEnd();
 
     }

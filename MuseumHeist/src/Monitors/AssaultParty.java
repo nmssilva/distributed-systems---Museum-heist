@@ -28,16 +28,13 @@ public class AssaultParty implements IAssaultParty {
     private int nThievesRoom;
     private boolean[] inRoom = new boolean[MAX_ASSAULT_PARTY_THIEVES];
     // Number of AssaultThieves in AssaultParty
-    private int nThieves;
-    // Number of Thieves in the last position
-    private int nThievesLastPos; // ????
+    private int nThievesInAP;
 
     public AssaultParty(IRoom room, IMuseum museum, Thief[] thieves) {
         this.room = room;
         this.museum = museum;
         this.nThievesRoom = 0;
-        this.nThieves = 0;
-        this.nThievesLastPos = 0;
+        this.nThievesInAP = 0;
         this.thieves = thieves;
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -47,9 +44,9 @@ public class AssaultParty implements IAssaultParty {
     }
 
     public synchronized boolean joinAssaultParty(int thiefid) {
-        if (this.nThieves < MAX_ASSAULT_PARTY_THIEVES) {
-            this.thieves[nThieves].setThiefID(thiefid);
-            this.nThieves++;
+        if (this.nThievesInAP < MAX_ASSAULT_PARTY_THIEVES) {
+            this.thieves[nThievesInAP].setThiefID(thiefid);
+            this.nThievesInAP++;
 
             return true;
         }
@@ -113,6 +110,7 @@ public class AssaultParty implements IAssaultParty {
         this.thieves[thiefid].setState(CRAWLING_INWARDS);
     }
 
+    @Override
     public synchronized void crawlIn(Thief thief) {
 
         boolean FarOrOccupied = false;
