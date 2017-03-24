@@ -27,8 +27,6 @@ public interface IAssaultParty {
     public void reverseDirection();
     
     public void setRoom(int room);
-
-    public void setThieves(int[] thieves);
     
     public int getDistOutsideRoom();
     

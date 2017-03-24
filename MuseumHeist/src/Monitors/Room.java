@@ -5,6 +5,10 @@
  */
 package Monitors;
 
+
+import static GenRepOfInfo.Heist.*;
+import java.util.Random;
+
 /**
  *
  * @author Nuno Silva
@@ -17,9 +21,9 @@ public class Room {
     private int distance;   /* distance from the gathering site */
     private int nPaintings; /* number of paintings */    
     
-    public Room(int distance, int nPaint, int id) {
-        this.distance = distance;
-        this.nPaintings = nPaint;
+    public Room(int id) {
+        this.distance =  new Random().nextInt((MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
+        this.nPaintings = new Random().nextInt((MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
         this.id = id;
     }
 

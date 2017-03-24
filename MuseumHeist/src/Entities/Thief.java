@@ -19,7 +19,7 @@ import java.util.Random;
  * @author Pedro Coelho
  * @author Nuno Silva
  */
-public class Thief extends Thread implements Comparable<Thief> { //implements IThief
+public class Thief extends Thread { //implements IThief
 
     private int thiefid;
     private int maxDisp;
@@ -33,7 +33,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
     public Thief(int id, IOrdThievesConcSite cs, IMasterThiefCtrlCollSite mtccs) {
         this.thiefid = id;
         this.ap = new IAssaultParty[THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES];
-        this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;;
+        this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;
         this.cs = cs;
         this.mtccs = mtccs;
         this.state = OUTSIDE;
@@ -131,11 +131,6 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
 
             }
         }
-    }
-
-    @Override
-    public int compareTo(Thief o) {
-        return (this.position - o.position);
     }
 
     public static boolean areAllTrue(boolean[] array) {

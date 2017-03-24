@@ -18,13 +18,9 @@ public class Museum implements IMuseum {
     private final Room[] rooms = new Room[ROOMS_NUMBER];
 
     public Museum() {
-        int nPaintings;
-        int distOutside;
 
         for (int i = 0; i < ROOMS_NUMBER; i++) {
-            nPaintings = (int) (Math.random() * (MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
-            distOutside = (int) (Math.random() * (MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
-            this.rooms[i] = new Room(distOutside, nPaintings, i);
+            this.rooms[i] = new Room(i);
         }
     }
 

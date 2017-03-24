@@ -141,8 +141,6 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     public synchronized void sendAssaultParty() {
         //dizer qual o room
         ap[getFreeAP()].setRoom(checkRoomWithPaintings());
-        //dizer qual o set de thieves
-        ap[getFreeAP()].setThieves(this.assaultparties[getFreeAP()]);
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
     }
