@@ -6,9 +6,12 @@
 package Entities;
 
 import static GenRepOfInfo.Heist.*;
+import Monitors.AssaultParty;
 import Monitors.IAssaultParty;
 import Monitors.IMasterThiefCtrlCollSite;
+import Monitors.IMuseum;
 import Monitors.IOrdThievesConcSite;
+import Monitors.Museum;
 import java.util.Random;
 
 /**
@@ -24,14 +27,21 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
 
     private int position;
     private final IOrdThievesConcSite cs;
-    private IAssaultParty ap;
+    private IAssaultParty[] ap;
     private IMasterThiefCtrlCollSite mtccs;
 
     public Thief(int id, IOrdThievesConcSite cs, IMasterThiefCtrlCollSite mtccs) {
         this.thiefid = id;
+        this.ap = new IAssaultParty[THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES];
         this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;;
         this.cs = cs;
         this.mtccs = mtccs;
+        this.state = OUTSIDE;
+        
+        for(int i = 0; i < THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES; i++){
+            ap[i] = new AssaultParty(i, new Museum() , new int[MAX_ASSAULT_PARTY_THIEVES]);
+        }
+        
     }
 
     public int getMaxDisp() {
@@ -61,7 +71,7 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
     public void setMaxDisp(int maxDisp) {
         this.maxDisp = maxDisp;
     }
-
+    
     @Override
     public void run() {
         
@@ -78,31 +88,33 @@ public class Thief extends Thread implements Comparable<Thief> { //implements IT
                 case OUTSIDE:
                     System.out.println("Thief " + this.thiefid + " is OUTSIDE");
                     this.cs.amINeeded(this.thiefid); //blocking state
-                    this.ap.prepareExcursion(this.thiefid);
+                    this.cs.prepareExcursion(this.thiefid);
                     this.state = CRAWLING_INWARDS;
                     break;
 
                 case CRAWLING_INWARDS:
                     System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS");
-                    while (this.position < this.ap.getRoom().getDistance()) {
-                        this.ap.waitTurn(this.thiefid);
-                        this.ap.crawlIn(this);
+                    
+                    while (this.position < this.ap[getParty(this.thiefid)].getDistOutsideRoom()) {
+                        this.ap[getParty(thiefid)].waitTurn(this.thiefid);
+                        this.ap[getParty(thiefid)].crawlIn(this);
                     }
+                    
                     this.state = AT_A_ROOM;
                     break;
 
                 case AT_A_ROOM:
                     System.out.println("Thief " + this.thiefid + " is AT A ROOM");
-                    this.ap.rollACanvas();
-                    this.ap.reverseDirection();
+                    this.ap[getParty(thiefid)].rollACanvas();
+                    this.ap[getParty(thiefid)].reverseDirection();
                     this.state = CRAWLING_OUTWARDS;
                     break;
 
                 case CRAWLING_OUTWARDS:
                     System.out.println("Thief " + this.thiefid + " is CRAWLING OUTWARDS");
                     while (this.position > 0) {
-                        this.ap.waitTurn(this.thiefid); //blocking state
-                        this.ap.crawlOut(this);
+                        this.ap[getParty(thiefid)].waitTurn(this.thiefid); //blocking state
+                        this.ap[getParty(thiefid)].crawlOut(this);
                     }
                     this.state = CRAWLING_OUTWARDS;
                     break;

@@ -7,19 +7,19 @@ import GenRepOfInfo.MemFIFO;
  *
  * @author Nuno Silva
  */
-public class OrdThievesConcSite implements IOrdThievesConcSite{
+public class OrdThievesConcSite implements IOrdThievesConcSite {
 
     // Declaração de variáveis
     private MemFIFO waitQueue;
     private int nAssaultThievesCs;
-    
+
     private int[] assaultThiefstate = new int[THIEVES_NUMBER];
     private int[] maxDispAssaultThief = new int[THIEVES_NUMBER];
     private int[] thievesInCs = new int[THIEVES_NUMBER];  //array de thiefs na concentration site
     private boolean[] freeAssaultThief = new boolean[THIEVES_NUMBER];
 
     // construtor
-    public OrdThievesConcSite(){
+    public OrdThievesConcSite() {
         this.nAssaultThievesCs = 0;
         this.waitQueue = new MemFIFO(THIEVES_NUMBER);
 
@@ -50,7 +50,8 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
         }
     }
 
-    public synchronized void waitAssaultThief(int thiefid) {  //master thief waits to assemble assaultparty
+    @Override
+    public synchronized void waitAssaultThief() {  //master thief waits to assemble assaultparty
         while (this.nAssaultThievesCs < MAX_ASSAULT_PARTY_THIEVES) {
             try {
                 wait();
@@ -116,22 +117,22 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
             this.freeAssaultThief[id] = false;
             this.thievesInCs[id] = thiefid;
             notifyAll();
-            
+
         }
     }
 
     @Override
     public synchronized boolean getFreeAssaultThief(int thiefid) {
-        
+
         return this.freeAssaultThief[thiefid];
     }
-    
-    
+
     @Override
     public void setFreeAssaultThief(int thiefid) {
         this.freeAssaultThief[thiefid] = true;
     }
 
+    @Override
     public synchronized void prepareExcursion(int thiefid) {
         this.assaultThiefstate[thiefid] = CRAWLING_INWARDS;
     }
@@ -155,6 +156,5 @@ public class OrdThievesConcSite implements IOrdThievesConcSite{
     public synchronized int getMaxDisp(int thiefid) {
         return this.maxDispAssaultThief[thiefid];
     }
-
 
 }

@@ -24,5 +24,9 @@ public interface IOrdThievesConcSite {
     public void setFreeAssaultThief(int thiefid);
 
     public int getNAssaultThievesCs();
+
+    public void waitAssaultThief();
+
+    public void prepareExcursion(int thiefid);
     
 }

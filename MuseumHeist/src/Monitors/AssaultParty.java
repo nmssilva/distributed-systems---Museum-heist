@@ -19,33 +19,39 @@ import java.util.Arrays;
 public class AssaultParty implements IAssaultParty {
 
     private int nAssaultThieves;
-    private final IRoom room;
+    private int room;
 
     private final IMuseum museum;
-    private Thief[] thieves = new Thief[MAX_ASSAULT_PARTY_THIEVES];
-    private boolean[] myTurn;
+    private int[] thievesid = new int[MAX_ASSAULT_PARTY_THIEVES];
+    private int[] thievespos = new int[MAX_ASSAULT_PARTY_THIEVES];
+    private boolean[] myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
     //
     private int nThievesRoom;
     private boolean[] inRoom = new boolean[MAX_ASSAULT_PARTY_THIEVES];
     // Number of AssaultThieves in AssaultParty
     private int nThievesInAP;
 
-    public AssaultParty(IRoom room, IMuseum museum, Thief[] thieves) {
+    public AssaultParty(int room, IMuseum museum, int[] thieves) {
         this.room = room;
         this.museum = museum;
         this.nThievesRoom = 0;
         this.nThievesInAP = 0;
-        this.thieves = thieves;
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            this.myTurn[i] = false;
+            if (i == 0) {
+                this.myTurn[i] = true;
+            } else {
+                this.myTurn[i] = false;
+            }
             this.inRoom[i] = false;
+            this.thievesid[i] = -1;
+            this.thievespos[i] = 0;
         }
     }
 
     public synchronized boolean joinAssaultParty(int thiefid) {
         if (this.nThievesInAP < MAX_ASSAULT_PARTY_THIEVES) {
-            this.thieves[nThievesInAP].setThiefID(thiefid);
+            this.thievesid[nThievesInAP] = thiefid;
             this.nThievesInAP++;
 
             return true;
@@ -57,7 +63,7 @@ public class AssaultParty implements IAssaultParty {
     // Get position in array [0,1,2]
     public synchronized int getPos(int thiefid) {
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            if (thieves[i].getThiefid() == thiefid) {
+            if (thievesid[i] == thiefid) {
                 return i;
             }
         }
@@ -67,7 +73,7 @@ public class AssaultParty implements IAssaultParty {
 
     @Override
     public synchronized boolean rollACanvas() {
-        return this.museum.rollACanvas(room.getId());
+        return this.museum.rollACanvas(room);
     }
 
     public synchronized int getNAssaultThieves() {
@@ -75,15 +81,15 @@ public class AssaultParty implements IAssaultParty {
     }
 
     @Override
-    public IRoom getRoom() {
+    public int getRoom() {
         return room;
     }
 
-    // Get position of AssaultThief in thieves
+    // Get position of AssaultThief in thievesid
     public synchronized int getPosition(int thiefid) {
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            if (thieves[i].getThiefid() == thiefid) {
-                return thieves[i].getPosition();
+            if (thievesid[i] == thiefid) {
+                return thievespos[i];
             }
         }
 
@@ -91,8 +97,18 @@ public class AssaultParty implements IAssaultParty {
     }
 
     @Override
+    public void setRoom(int room) {
+        this.room = room;
+    }
+
+    @Override
+    public void setThieves(int[] thieves) {
+        this.thievesid = thieves;
+    }
+
+    @Override
     public synchronized void waitTurn(int thiefid) {
-        while (!myTurn[thiefid]) {
+        while (!myTurn[getPosInParty(thiefid)]) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -102,12 +118,7 @@ public class AssaultParty implements IAssaultParty {
     }
 
     public int getDistOutsideRoom() {
-        return this.museum.getDistOutside(this.room.getId());
-    }
-
-    @Override
-    public void prepareExcursion(int thiefid) {
-        this.thieves[thiefid].setState(CRAWLING_INWARDS);
+        return this.museum.getDistOutside(this.room);
     }
 
     @Override
@@ -116,24 +127,27 @@ public class AssaultParty implements IAssaultParty {
         boolean FarOrOccupied = false;
         while (!FarOrOccupied) {
 
-            int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES];
             int myPos = thief.getPosition();
-            int i;
             int indexPos = 0;
 
-            for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-                assaultThievesPos[i] = thieves[i].getPosition();
-                if (thief.getThiefid() == thieves[i].getThiefid()) {
+            for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+                
+                if (thief.getThiefid() == thievesid[i]) {
                     indexPos = i;
                 }
             }
-
-            Arrays.sort(thieves);
+            
+            System.out.print("Crawl in positions AP#" + getParty(thief.getThiefid()) + " [ ");
+            for( int i : thievespos){
+                System.out.print(i + " ");
+            }
+            System.out.println("]");
+            Arrays.sort(thievesid);
 
             // prever maximo avanço
-            for (i = thief.getMaxDisp(); i >= MIN_DISPLACEMENT; i--) {
+            for (int i = thief.getMaxDisp(); i >= MIN_DISPLACEMENT; i--) {
                 FarOrOccupied = false;
-                int[] posAfterMove = assaultThievesPos;
+                int[] posAfterMove = thievespos;
                 posAfterMove[indexPos] = myPos + i;
                 Arrays.sort(posAfterMove);
 
@@ -141,7 +155,7 @@ public class AssaultParty implements IAssaultParty {
                     if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE)
                             || (posAfterMove[j + 1] - posAfterMove[j] == 0
                             && (posAfterMove[j + 1] != 0 || posAfterMove[j + 1] != this.getDistOutsideRoom()))) {
-                        //se posiçoes entre thieves for maior que 3, ou thieves lado a lado expecto na posiçao 0 e na sala
+                        //se posiçoes entre thievesid for maior que 3, ou thievesid lado a lado expecto na posiçao 0 e na sala
                         FarOrOccupied = true;
                         break;
                     }
@@ -151,10 +165,9 @@ public class AssaultParty implements IAssaultParty {
                 // avançar
                 if ((!FarOrOccupied)) {
                     if (myPos + i >= this.getDistOutsideRoom()) {
-                        for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) { // pesquisar no array thieves o thief atual
-                            if (thief.getThiefid() == thieves[j].getThiefid()) {
-                                thieves[j].setPosition(this.getDistOutsideRoom()); // atualizar posiçao na sala
-                                assaultThievesPos[indexPos] = this.getDistOutsideRoom();
+                        for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) { // pesquisar no array thievesid o thief atual
+                            if (thief.getThiefid() == thievesid[j]) {
+                                thievespos[j] = this.getDistOutsideRoom(); // atualizar posiçao na sala
                             }
                         }
 
@@ -162,9 +175,8 @@ public class AssaultParty implements IAssaultParty {
                         inRoom[indexPos] = true;
                     } else {
                         for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                            if (thief.getThiefid() == thieves[j].getThiefid()) {
-                                thieves[j].setPosition(myPos + 1);
-                                assaultThievesPos[indexPos] = myPos + i;
+                            if (thief.getThiefid() == thievesid[j]) {
+                                thievespos[j] = myPos + i;
                             }
                         }
                     }
@@ -173,6 +185,9 @@ public class AssaultParty implements IAssaultParty {
                 }
             }
         }
+        myTurn[getPosInParty(thief.getThiefid())] = false;
+        myTurn[(getPosInParty(thief.getThiefid())+1) % MAX_ASSAULT_PARTY_THIEVES] = true;
+        
         notifyAll();
     }
 
@@ -185,5 +200,4 @@ public class AssaultParty implements IAssaultParty {
     public void reverseDirection() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

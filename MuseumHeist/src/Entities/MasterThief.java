@@ -96,7 +96,7 @@ public class MasterThief extends Thread {
                     System.out.println("Lady Master Thief is ASSEMBLING A GROUP");
 
                     int nThievesinAP = 0;
-                    int thievestobeinAP[] = new int[3];
+                    int thievestobeinAP[] = new int[MAX_ASSAULT_PARTY_THIEVES];
                     //
                     for (int i = 0; nThievesinAP < MAX_ASSAULT_PARTY_THIEVES && i < THIEVES_NUMBER; i++) {
                         if (this.cs.getFreeAssaultThief(i)) {
@@ -105,22 +105,34 @@ public class MasterThief extends Thread {
                         }
                     }
                     
+                    int[] party = new int[MAX_ASSAULT_PARTY_THIEVES];
+                    int asd = 0; // DELETE THESE VARIABLES 
                     if(nThievesinAP == MAX_ASSAULT_PARTY_THIEVES){
                         for(int i : thievestobeinAP){
                             this.cs.callAssaultThief(i);
                             this.mtccs.addThiefToParty(i);
+                            party[asd] = i;
+                            asd++;
                         }
+                        System.out.print("Party assembled: [ " );
+                        for(int i : party){
+                            System.out.print(i + " ");
+                        }
+                        System.out.println("]" );
                     }
                     else{
                         System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
+                    
                     this.mtccs.sendAssaultParty();
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
 
                 case WAITING_FOR_ARRIVAL:
                     System.out.println("Lady Master Thief is WAITING FOR ARRIVAL");
+                    this.mtccs.waitArrival();
                     this.mtccs.collectCanvas();
+                    this.state = DECIDING_WHAT_TO_DO;
                     break;
 
                 case PRESENTING_THE_REPORT:

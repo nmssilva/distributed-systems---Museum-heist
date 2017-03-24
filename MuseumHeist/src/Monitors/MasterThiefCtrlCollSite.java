@@ -19,15 +19,19 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
 
     private int MasterThiefState;
     private int[][] assaultparties = new int[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES][MAX_ASSAULT_PARTY_THIEVES];
+    private boolean[] freeAP = new boolean[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
     private boolean[] emptyRooms = new boolean[ROOMS_NUMBER];
 
     private final IMuseum museum;
-    private IOrdThievesConcSite cs;
+    private final IOrdThievesConcSite cs;
+    private final IAssaultParty[] ap;
 
-    public MasterThiefCtrlCollSite(Museum museum) {
+    public MasterThiefCtrlCollSite(IMuseum museum, IOrdThievesConcSite cs) {
         this.nPaintings = 0;
         this.MasterThiefState = PLANNING_THE_HEIST;
         this.museum = museum;
+        this.cs = cs;
+        this.ap = new IAssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
 
         // salas com quadros inicialmente
         for (int i = 0; i < ROOMS_NUMBER; i++) {
@@ -39,6 +43,11 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
                 assaultparties[i][j] = -1;
             }
+        }
+
+        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+            ap[i] = new AssaultParty(-1, museum, assaultparties[i]);
+            freeAP[i] = true;
         }
 
     }
@@ -64,15 +73,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
 
         if (emptySlot[0] != -1) {
             this.assaultparties[emptySlot[0]][emptySlot[1]] = thiefid;
-            for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
-                
-                System.out.print("[");
-                
-                for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                    System.out.print(assaultparties[i][j] + " ");
-                }
-                System.out.println("]");
-            }
+            ASSAULT_PARTIES[emptySlot[0]][emptySlot[1]] = thiefid;
             return true;
         }
 
@@ -119,6 +120,18 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     }
 
     @Override
+    public synchronized void waitArrival() {
+        int nPaint = this.nPaintings;
+        while (this.nPaintings == nPaint) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MasterThiefCtrlCollSite.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Override
     public synchronized void prepareAssaultParty() {
         this.MasterThiefState = ASSEMBLING_A_GROUP;
         notifyAll();
@@ -126,8 +139,21 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
 
     @Override
     public synchronized void sendAssaultParty() {
+        //dizer qual o room
+        ap[getFreeAP()].setRoom(checkRoomWithPaintings());
+        //dizer qual o set de thieves
+        ap[getFreeAP()].setThieves(this.assaultparties[getFreeAP()]);
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
+    }
+    
+    public int getFreeAP(){
+        for(int i=0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
+            if(this.freeAP[i]){
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -145,6 +171,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     @Override
     public synchronized void appraiseSit() {
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        this.cs.waitAssaultThief();
         notifyAll();
     }
 
@@ -159,5 +186,4 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         this.nPaintings++;
         notifyAll();
     }
-
 }

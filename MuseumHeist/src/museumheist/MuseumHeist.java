@@ -40,8 +40,8 @@ public class MuseumHeist {
         log = Log.getInstance();
 
         museum = new Museum();
-        mtccs = new MasterThiefCtrlCollSite(museum);
         cs = new OrdThievesConcSite();
+        mtccs = new MasterThiefCtrlCollSite(museum,cs);
         assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
 
         masterThief = new MasterThief(mtccs, cs, museum); // master theif
@@ -51,8 +51,12 @@ public class MuseumHeist {
 
         thieves = new Thief[THIEVES_NUMBER]; // thieves
 
+        for (int i = 0; i < THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES ; i++) {
+            assaultParties[i] = new AssaultParty(-1, museum, ASSAULT_PARTIES[i]);
+        }
+        
         for (int i = 0; i < THIEVES_NUMBER; i++) { // start thieves!
-            thieves[i] = new Thief(i, cs, mtccs);
+            thieves[i] = new Thief(i, cs, mtccs); // no assault party yet
             thieves[i].start();
             System.out.println("Thief " + i + " begins!!");
         }

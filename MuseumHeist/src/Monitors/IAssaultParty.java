@@ -13,9 +13,8 @@ import Entities.Thief;
  * @author Nuno Silva
  */
 public interface IAssaultParty {
-    public IRoom getRoom();
-
-    public void prepareExcursion(int thiefid);
+    
+    public int getRoom();
 
     public void waitTurn(int thiefid);
 
@@ -26,4 +25,11 @@ public interface IAssaultParty {
     public void crawlOut(Thief aThis);
 
     public void reverseDirection();
+    
+    public void setRoom(int room);
+
+    public void setThieves(int[] thieves);
+    
+    public int getDistOutsideRoom();
+    
 }

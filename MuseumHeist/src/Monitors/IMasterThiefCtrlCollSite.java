@@ -35,4 +35,6 @@ public interface IMasterThiefCtrlCollSite {
     
     public boolean addThiefToParty(int thiefid);
 
+    public void waitArrival();
+
 }
