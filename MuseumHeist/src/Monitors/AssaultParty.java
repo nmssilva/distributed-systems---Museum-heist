@@ -47,7 +47,7 @@ public class AssaultParty implements IAssaultParty {
     public synchronized boolean rollACanvas() {
         return this.museum.rollACanvas(room);
     }
-    
+
     @Override
     public int getRoom() {
         return room;
@@ -62,7 +62,9 @@ public class AssaultParty implements IAssaultParty {
     public synchronized void waitTurn(int thiefid) {
         while (!myTurn[getPosInParty(thiefid)]) {
             try {
+                System.out.print("THIEF " + thiefid + " VAI DORMIR ");
                 wait();
+                System.out.print("THIEF " + thiefid + " SAIU ");
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -79,12 +81,16 @@ public class AssaultParty implements IAssaultParty {
 
         System.out.println("CRAWLING Thief#" + thief.getThiefid() + " with maxDisp: " + thief.getMaxDisp());
         boolean GoodToGo = true;
-
+        int i;
         while (GoodToGo) {
-            
-            for (int i = thief.getMaxDisp(); i >= MIN_DISPLACEMENT; i--) {
+
+            for (i = thief.getMaxDisp(); i > 0; i--) {
+
+                // nao há avanço
                 GoodToGo = true;
-                int[] posAfterMove = thievespos;
+                int[] posAfterMove = new int[MAX_ASSAULT_PARTY_THIEVES];
+
+                System.arraycopy(thievespos, 0, posAfterMove, 0, thievespos.length);
 
                 posAfterMove[getPosInParty(thief.getThiefid())] = thief.getPosition() + i;
                 Arrays.sort(posAfterMove);
@@ -92,8 +98,12 @@ public class AssaultParty implements IAssaultParty {
                 // verificar se um avanço i é legal
                 for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES - 1; j++) {
                     //se posiçoes entre thieves for maior que 3, ou thieves lado a lado expecto na posiçao 0 e na sala
-                    if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0)) {
-                        if (posAfterMove[j + 1] != 0 || posAfterMove[j + 1] != this.getDistOutsideRoom()) {
+                    if (posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) {
+                        GoodToGo = false;
+                    }
+
+                    if (posAfterMove[j + 1] == posAfterMove[j]) {
+                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.getDistOutsideRoom())) {
                             GoodToGo = false;
                         }
                     }
@@ -103,10 +113,11 @@ public class AssaultParty implements IAssaultParty {
                 if (GoodToGo) {
                     System.out.println("GOOD TO GO");
                     thievespos[getPosInParty(thief.getThiefid())] = thief.getPosition() + i;
+                    thief.setPosition(thief.getPosition() + i);
 
                     if (thief.getPosition() + i > this.getDistOutsideRoom()) {
                         thievespos[getPosInParty(thief.getThiefid())] = this.getDistOutsideRoom();
-
+                        thief.setPosition(this.getDistOutsideRoom());
                         this.nThievesRoom++;
                         inRoom[getPosInParty(thief.getThiefid())] = true;
 
@@ -114,17 +125,32 @@ public class AssaultParty implements IAssaultParty {
 
                     break;
                 }
-            }
 
-            System.out.print("Crawl in final positions AP#" + getParty(thief.getThiefid()) + " [ ");
-            for (int i : thievespos) {
-                System.out.print(i + " ");
             }
-            System.out.println("]");
         }
 
+        System.out.print("Crawl in final positions AP#" + getParty(thief.getThiefid()) + " [ ");
+        for (int x : thievespos) {
+            System.out.print(x + " ");
+        }
+        System.out.println("]");
+
         myTurn[getPosInParty(thief.getThiefid())] = false;
-        myTurn[(getPosInParty(thief.getThiefid()) + 1) % MAX_ASSAULT_PARTY_THIEVES] = true;
+        
+        
+        
+        int min = this.getDistOutsideRoom();
+        int minIndex = -1;
+        
+        for( int x = 0 ; x < MAX_ASSAULT_PARTY_THIEVES ; x++){
+            if(min >= this.thievespos[x]){
+                min = this.thievespos[x];
+                minIndex = x;
+            }
+        }
+        
+        System.out.println("MININDEX: " + minIndex);
+        myTurn[minIndex] = true;
 
         notifyAll();
     }
