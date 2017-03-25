@@ -23,12 +23,14 @@ public class MasterThief extends Thread {
     private final IMasterThiefCtrlCollSite mtccs;
     private final IOrdThievesConcSite cs;
     private final IMuseum museum;
+    private IAssaultParty[] ap;
 
-    public MasterThief(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IMuseum museum) {
+    public MasterThief(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IMuseum museum, AssaultParty[] ap) {
         this.mtccs = mtccs;
         this.cs = cs;
         this.museum = museum;
         this.log = Log.getInstance();
+        this.ap = ap;
 
         this.state = PLANNING_THE_HEIST;
 
@@ -114,16 +116,16 @@ public class MasterThief extends Thread {
                     } else {
                         System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
-                    this.mtccs.sendAssaultParty();
+                    this.mtccs.sendAssaultParty(this.mtccs.getFreeAP());
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
 
                 case WAITING_FOR_ARRIVAL:
                     System.out.println("Lady Master Thief is WAITING FOR ARRIVAL");
-                    while(this.cs.getNAssaultThievesCs() < MAX_ASSAULT_PARTY_THIEVES){
-                        
-                    this.mtccs.waitArrival();
-                    this.mtccs.collectCanvas();
+                    while (this.cs.getNAssaultThievesCs() < MAX_ASSAULT_PARTY_THIEVES) {
+
+                        this.mtccs.waitArrival();
+                        this.mtccs.collectCanvas();
                     }
                     this.state = DECIDING_WHAT_TO_DO;
                     break;

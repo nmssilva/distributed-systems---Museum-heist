@@ -129,11 +129,12 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     }
 
     @Override
-    public synchronized void sendAssaultParty() {
+    public synchronized void sendAssaultParty(int freeap) {
         //dizer qual o room
-        ap[getFreeAP()].setRoom(this.museum.nextRoom());
-        System.out.println("AP " + getFreeAP() + " goes to room " + ap[getFreeAP()].getRoom().getId());
-        freeAP[getFreeAP()] = false;
+        ap[freeap].setRoom(this.museum.nextRoom());
+        System.out.println("AP " + freeap + " goes to room " + ap[freeap].getRoom().getId());
+        freeAP[freeap] = false;
+        
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
     }
@@ -181,6 +182,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         System.out.println("TOTAL COLLECTED CANVAS: " + this.nPaintings);
         Thief thief = (Thief) Thread.currentThread();
         thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(true);
+        removeThiefFromParty(thief.getThiefid());
         if (!hasCanvas) {
             System.out.println("Canvas not recovered");
             thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(false);

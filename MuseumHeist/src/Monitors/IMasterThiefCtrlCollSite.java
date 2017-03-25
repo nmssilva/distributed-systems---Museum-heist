@@ -17,8 +17,6 @@ public interface IMasterThiefCtrlCollSite {
 
     public void prepareAssaultParty();
 
-    public void sendAssaultParty();
-
     public void takeARest();
 
     public void sumUpResults();
@@ -40,5 +38,7 @@ public interface IMasterThiefCtrlCollSite {
     public void waitArrival();
     
     public void setEmptyRooms(int i, boolean f);
+
+    public void sendAssaultParty(int freeAP);
 
 }

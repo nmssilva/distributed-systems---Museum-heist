@@ -72,4 +72,14 @@ public class Heist {
         }
         return -1;
     }
+    
+    public static void removeThiefFromParty(int thiefid){
+        for(int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
+            for(int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++){
+                if(ASSAULT_PARTIES[i][j] == thiefid){
+                    ASSAULT_PARTIES[i][j] = -1;
+                }
+            }
+        }
+    }
 }
