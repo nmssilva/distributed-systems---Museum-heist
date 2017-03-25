@@ -56,7 +56,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     public boolean[] getEmptyRooms() {
         return emptyRooms;
     }
-    
+
     @Override
     public void setEmptyRooms(int i, boolean f) {
         this.emptyRooms[i] = f;
@@ -134,15 +134,15 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         ap[freeap].setRoom(this.museum.nextRoom());
         System.out.println("AP " + freeap + " goes to room " + ap[freeap].getRoom().getId());
         freeAP[freeap] = false;
-        
+
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
     }
-    
+
     @Override
-    public int getFreeAP(){
-        for(int i=0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
-            if(this.freeAP[i]){
+    public int getFreeAP() {
+        for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
+            if (this.freeAP[i]) {
                 return i;
             }
         }
@@ -182,7 +182,10 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         System.out.println("TOTAL COLLECTED CANVAS: " + this.nPaintings);
         Thief thief = (Thief) Thread.currentThread();
         thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(true);
+        this.assaultparties[getParty(thief.getThiefid())][getPosInParty(thief.getThiefid())] = -1;
         removeThiefFromParty(thief.getThiefid());
+        this.cs.setFreeAssaultThief(thief.getThiefid());
+        this.cs.setnAssaultThievesCs(this.cs.getNAssaultThievesCs() + 1);
         if (!hasCanvas) {
             System.out.println("Canvas not recovered");
             thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(false);

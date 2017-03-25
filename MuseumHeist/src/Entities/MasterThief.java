@@ -74,7 +74,7 @@ public class MasterThief extends Thread {
                     }
 
                     // verificar se existe thieves para fazer uma nova assault party
-                    // se sim, muda de estado
+                    // se sim, forma uma party
                     if (this.cs.getNAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES) {
                         appraise = false;
                         this.mtccs.prepareAssaultParty();
@@ -107,7 +107,7 @@ public class MasterThief extends Thread {
                             nThievesinAP++;
                         }
                     }
-
+                    System.out.println( nThievesinAP + " THIEVES TO BE IN AP: " + Arrays.toString(thievestobeinAP));
                     if (nThievesinAP == MAX_ASSAULT_PARTY_THIEVES) {
                         for (int i : thievestobeinAP) {
                             this.cs.callAssaultThief(i);
@@ -122,10 +122,12 @@ public class MasterThief extends Thread {
 
                 case WAITING_FOR_ARRIVAL:
                     System.out.println("Lady Master Thief is WAITING FOR ARRIVAL");
-                    while (this.cs.getNAssaultThievesCs() < MAX_ASSAULT_PARTY_THIEVES) {
+                    while (!(this.cs.getNAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES)) {
 
                         this.mtccs.waitArrival();
                         this.mtccs.collectCanvas();
+                        System.out.println("CANVAS COLLECTED!!\nNassaultThievinCS: " +this.cs.getNAssaultThievesCs());
+                        
                     }
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
