@@ -19,7 +19,7 @@ public interface IOrdThievesConcSite {
     
     public void callAssaultThief(int thiefid);
 
-    public void setFreeAssaultThief(int thiefid);
+    public void setFreeAssaultThief(int thiefid, boolean f);
 
     public int getNAssaultThievesCs();
 

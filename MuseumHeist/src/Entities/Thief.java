@@ -87,7 +87,7 @@ public class Thief extends Thread { //implements IThief
     public void run() {
 
         // flag para indicar thief livre
-        this.cs.setFreeAssaultThief(thiefid);
+        this.cs.setFreeAssaultThief(thiefid,true);
 
         // diz que está ready e fica waiting
         this.cs.amReady(this.thiefid);

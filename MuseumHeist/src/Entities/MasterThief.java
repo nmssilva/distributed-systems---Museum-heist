@@ -113,10 +113,11 @@ public class MasterThief extends Thread {
                             this.cs.callAssaultThief(i);
                             this.mtccs.addThiefToParty(i);
                         }
+                        
+                    this.mtccs.sendAssaultParty(this.mtccs.getFreeAP());
                     } else {
                         System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
-                    this.mtccs.sendAssaultParty(this.mtccs.getFreeAP());
                   
                     System.out.println("SEND AP: " + Arrays.toString(thievestobeinAP) );
                     this.state = DECIDING_WHAT_TO_DO;

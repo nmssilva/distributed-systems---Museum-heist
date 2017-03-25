@@ -136,8 +136,8 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     }
 
     @Override
-    public void setFreeAssaultThief(int thiefid) {
-        this.freeAssaultThief[thiefid] = true;
+    public void setFreeAssaultThief(int thiefid, boolean f) {
+        this.freeAssaultThief[thiefid] = f;
     }
 
     @Override
