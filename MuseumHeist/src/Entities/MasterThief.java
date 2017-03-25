@@ -105,19 +105,13 @@ public class MasterThief extends Thread {
                             nThievesinAP++;
                         }
                     }
-                    
-                    int[] party = new int[MAX_ASSAULT_PARTY_THIEVES];
-                    int asd = 0; // DELETE THESE VARIABLES 
-                    if(nThievesinAP == MAX_ASSAULT_PARTY_THIEVES){
-                        for(int i : thievestobeinAP){
+
+                    if (nThievesinAP == MAX_ASSAULT_PARTY_THIEVES) {
+                        for (int i : thievestobeinAP) {
                             this.cs.callAssaultThief(i);
                             this.mtccs.addThiefToParty(i);
-                            party[asd] = i;
-                            asd++;
                         }
-                        System.out.print("Party assembled: " + Arrays.toString(party));
-                    }
-                    else{
+                    } else {
                         System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
                     this.mtccs.sendAssaultParty();
@@ -126,8 +120,11 @@ public class MasterThief extends Thread {
 
                 case WAITING_FOR_ARRIVAL:
                     System.out.println("Lady Master Thief is WAITING FOR ARRIVAL");
+                    while(this.cs.getNAssaultThievesCs() < MAX_ASSAULT_PARTY_THIEVES){
+                        
                     this.mtccs.waitArrival();
                     this.mtccs.collectCanvas();
+                    }
                     this.state = DECIDING_WHAT_TO_DO;
                     break;
 
@@ -142,5 +139,4 @@ public class MasterThief extends Thread {
             }
         }
     }
-
 }

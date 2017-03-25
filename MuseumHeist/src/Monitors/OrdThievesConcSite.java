@@ -1,5 +1,6 @@
 package Monitors;
 
+import Entities.Thief;
 import static GenRepOfInfo.Heist.*;
 import GenRepOfInfo.MemFIFO;
 
@@ -103,7 +104,12 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     public synchronized int getNAssaultThievesCs() {
         return this.nAssaultThievesCs;
     }
-
+   
+    @Override
+    public void setnAssaultThievesCs(int nAssaultThievesCs) {
+        this.nAssaultThievesCs = nAssaultThievesCs;
+    }
+    
     public synchronized int getStateAssaultThiefState(int thiefid) {
         return this.assaultThiefstate[thiefid];
     }
@@ -133,8 +139,10 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     }
 
     @Override
-    public synchronized void prepareExcursion(int thiefid) {
-        this.assaultThiefstate[thiefid] = CRAWLING_INWARDS;
+    public synchronized void prepareExcursion() {
+        Thief thief = (Thief) Thread.currentThread();
+        //thief.getAp()[getParty(thief.getThiefid())].setRoom();
+        this.assaultThiefstate[thief.getThiefid()] = CRAWLING_INWARDS;
     }
 
     public synchronized void regressarAssalto(int thiefid) {

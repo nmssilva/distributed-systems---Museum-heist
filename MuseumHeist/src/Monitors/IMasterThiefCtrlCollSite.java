@@ -24,6 +24,8 @@ public interface IMasterThiefCtrlCollSite {
     public void sumUpResults();
     
     public void appraiseSit();
+    
+    public int getFreeAP();
 
     public boolean getPartiesFull();
     
@@ -31,10 +33,12 @@ public interface IMasterThiefCtrlCollSite {
 
     public void collectCanvas();
     
-    public void handACanvas();
+    public void handACanvas(boolean hasCanvas, int i);
     
     public boolean addThiefToParty(int thiefid);
 
     public void waitArrival();
+    
+    public void setEmptyRooms(int i, boolean f);
 
 }

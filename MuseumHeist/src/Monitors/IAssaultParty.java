@@ -5,7 +5,6 @@
  */
 package Monitors;
 
-import Entities.Thief;
 
 /**
  *
@@ -20,7 +19,7 @@ public interface IAssaultParty {
 
     public boolean rollACanvas();
 
-    public void crawlOut(Thief aThis);
+    public void crawlOut();
 
     public void reverseDirection();
     

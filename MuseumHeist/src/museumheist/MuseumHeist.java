@@ -41,8 +41,8 @@ public class MuseumHeist {
 
         museum = new Museum();
         cs = new OrdThievesConcSite();
-        mtccs = new MasterThiefCtrlCollSite(museum,cs);
         assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
+        mtccs = new MasterThiefCtrlCollSite(museum,cs,assaultParties);
 
         masterThief = new MasterThief(mtccs, cs, museum); // master theif
 

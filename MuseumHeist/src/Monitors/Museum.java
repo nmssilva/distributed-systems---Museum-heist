@@ -32,6 +32,7 @@ public class Museum implements IMuseum {
     @Override
     public synchronized boolean rollACanvas(int nRoom) {
         int nPaintings = rooms[nRoom].getNPaintings();
+        System.out.println("Room " + nRoom + " has got " + nPaintings);
         if (nPaintings > 0) {
             rooms[nRoom].setnPaintings(nPaintings - 1);
             return true;
@@ -44,7 +45,10 @@ public class Museum implements IMuseum {
     public Room nextRoom() {
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             if (this.rooms[i].getNPaintings() != 0) {
-                return this.rooms[i];
+                if (this.rooms[i].isFree()) {
+                    this.rooms[i].setFree(false);
+                    return this.rooms[i];
+                }
             }
         }
 
@@ -54,7 +58,7 @@ public class Museum implements IMuseum {
     public synchronized int getNPaintings(int nRoom) {
         return this.rooms[nRoom].getNPaintings();
     }
-    
+
     public Room[] getRooms() {
         return rooms;
     }

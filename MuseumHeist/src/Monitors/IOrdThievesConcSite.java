@@ -11,8 +11,6 @@ package Monitors;
  */
 public interface IOrdThievesConcSite {
 
-    public void amReady(int thiefid);
-
     public boolean getFreeAssaultThief(int thiefid);
 
     public int getAssaultParty(int thiefid);
@@ -27,6 +25,10 @@ public interface IOrdThievesConcSite {
 
     public void waitAssaultThief();
 
-    public void prepareExcursion(int thiefid);
+    public void prepareExcursion();
+    
+    public void setnAssaultThievesCs(int nAssaultThievesCs);
+
+    public void amReady(int thiefid);
     
 }

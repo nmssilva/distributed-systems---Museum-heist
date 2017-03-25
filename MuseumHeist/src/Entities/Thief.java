@@ -9,9 +9,7 @@ import static GenRepOfInfo.Heist.*;
 import Monitors.AssaultParty;
 import Monitors.IAssaultParty;
 import Monitors.IMasterThiefCtrlCollSite;
-import Monitors.IMuseum;
 import Monitors.IOrdThievesConcSite;
-import Monitors.Museum;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -25,6 +23,7 @@ public class Thief extends Thread { //implements IThief
     private int thiefid;
     private int maxDisp;
     private int state;
+    private boolean hasCanvas;
 
     private int position;
     private IOrdThievesConcSite cs;
@@ -33,15 +32,28 @@ public class Thief extends Thread { //implements IThief
 
     public Thief(int id) {
         this.thiefid = id;
+        this.hasCanvas = false;
         this.ap = new IAssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
         this.maxDisp = new Random().nextInt((MAX_DISPLACEMENT - MIN_DISPLACEMENT) + 1) + MIN_DISPLACEMENT;
         this.state = OUTSIDE;
     }
 
-    public void setMonitors(IOrdThievesConcSite cs, IMasterThiefCtrlCollSite mtccs, AssaultParty[] assparty) {
+    public boolean getHasCanvas() {
+        return hasCanvas;
+    }
+
+    public void setHasCanvas(boolean hasCanvas) {
+        this.hasCanvas = hasCanvas;
+    }
+
+    public IAssaultParty[] getAp() {
+        return ap;
+    }
+    
+    public void setMonitors(IOrdThievesConcSite cs, IMasterThiefCtrlCollSite mtccs, AssaultParty[] ap) {
         this.cs = cs;
         this.mtccs = mtccs;
-        this.ap = assparty;
+        this.ap = ap;
     }
 
     public int getMaxDisp() {
@@ -88,23 +100,25 @@ public class Thief extends Thread { //implements IThief
                 case OUTSIDE:
                     System.out.println("Thief " + this.thiefid + " is OUTSIDE");
                     this.cs.amINeeded(this.thiefid); //blocking state
-                    this.cs.prepareExcursion(this.thiefid);
+                    this.cs.prepareExcursion();
                     this.state = CRAWLING_INWARDS;
                     break;
 
                 case CRAWLING_INWARDS:
-                    System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS");
-                    System.out.println("Party:" + Arrays.toString(ASSAULT_PARTIES[getParty(thiefid)]));
+                    System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS room " + this.ap[getParty(this.thiefid)].getDistOutsideRoom());
                     while (this.position < this.ap[getParty(this.thiefid)].getDistOutsideRoom()) {
                         this.ap[getParty(this.thiefid)].crawlIn();
                     }
-
                     this.state = AT_A_ROOM;
                     break;
 
                 case AT_A_ROOM:
                     System.out.println("Thief " + this.thiefid + " is AT A ROOM");
-                    this.ap[getParty(thiefid)].rollACanvas();
+                    if (this.ap[getParty(thiefid)].rollACanvas()) {
+
+                        System.out.println("Thief " + this.thiefid + " ROLLED CANVAS");
+                        setHasCanvas(true);
+                    }
                     this.ap[getParty(thiefid)].reverseDirection();
                     this.state = CRAWLING_OUTWARDS;
                     break;
@@ -112,14 +126,15 @@ public class Thief extends Thread { //implements IThief
                 case CRAWLING_OUTWARDS:
                     System.out.println("Thief " + this.thiefid + " is CRAWLING OUTWARDS");
                     while (this.position > 0) {
-                        this.ap[getParty(thiefid)].crawlOut(this);
+                        this.ap[getParty(thiefid)].crawlOut();
                     }
-                    this.state = CRAWLING_OUTWARDS;
+                    this.state = AT_COLLECTION_SITE;
                     break;
 
                 case AT_COLLECTION_SITE:
                     System.out.println("Thief " + this.thiefid + " is AT COLLECTION SITE");
-                    this.mtccs.handACanvas();
+                    this.mtccs.handACanvas(this.hasCanvas, this.ap[getParty(thiefid)].getRoom().getId());
+                    setHasCanvas(false);
                     if (areAllTrue(this.mtccs.getEmptyRooms())) {
                         this.state = HEIST_END;
                     } else {
