@@ -7,6 +7,7 @@ package Monitors;
 
 import Entities.Thief;
 import static GenRepOfInfo.Heist.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,11 +132,13 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     @Override
     public synchronized void sendAssaultParty(int freeap) {
         //dizer qual o room
+        System.out.println("FreeAP " + freeap);
         ap[freeap].setRoom(this.museum.nextRoom());
         System.out.println("AP " + freeap + " goes to room " + ap[freeap].getRoom().getId());
         freeAP[freeap] = false;
 
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
+        System.out.println("AP0 status: " + Arrays.toString(ASSAULT_PARTIES[0]) + "\nAP1 status: " + Arrays.toString(ASSAULT_PARTIES[1]));
         notifyAll();
     }
 
@@ -180,15 +183,26 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
             this.nPaintings++;
         }
         System.out.println("TOTAL COLLECTED CANVAS: " + this.nPaintings);
+        
         Thief thief = (Thief) Thread.currentThread();
-        thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(true);
-        this.assaultparties[getParty(thief.getThiefid())][getPosInParty(thief.getThiefid())] = -1;
-        removeThiefFromParty(thief.getThiefid());
-        this.cs.setFreeAssaultThief(thief.getThiefid());
-        this.cs.setnAssaultThievesCs(this.cs.getNAssaultThievesCs() + 1);
+        int partyid = getParty(thief.getThiefid());
+        
+        
+        this.freeAP[partyid] = true;
+        
+        thief.getAp()[partyid].getRoom().setFree(true); // libertar room
+        this.assaultparties[partyid][getPosInParty(thief.getThiefid())] = -1; //desassociar thief da ap
+        
+        removeThiefFromParty(thief.getThiefid()); // tirar thief da ap
+        
+        this.cs.setFreeAssaultThief(thief.getThiefid()); // libertar thief
+        
+        this.cs.setnAssaultThievesCs(this.cs.getNAssaultThievesCs() + 1); //incrementar thief na CS
+        
+        
         if (!hasCanvas) {
             System.out.println("Canvas not recovered");
-            thief.getAp()[getParty(thief.getThiefid())].getRoom().setFree(false);
+            thief.getAp()[partyid].getRoom().setFree(false);// bloquear room se estiver vazio
             this.emptyRooms[i] = true;
         }
         notifyAll();

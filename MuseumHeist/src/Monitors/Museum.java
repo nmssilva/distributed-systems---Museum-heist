@@ -44,6 +44,7 @@ public class Museum implements IMuseum {
     @Override
     public Room nextRoom() {
         for (int i = 0; i < ROOMS_NUMBER; i++) {
+            System.out.println("III: " + i);
             if (this.rooms[i].getNPaintings() != 0) {
                 if (this.rooms[i].isFree()) {
                     this.rooms[i].setFree(false);
