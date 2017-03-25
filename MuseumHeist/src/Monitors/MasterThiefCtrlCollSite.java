@@ -46,7 +46,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         }
 
         for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
-            ap[i] = new AssaultParty(-1, museum, assaultparties[i]);
+            ap[i] = new AssaultParty(museum, assaultparties[i]);
             freeAP[i] = true;
         }
 
@@ -63,7 +63,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         notifyAll();
     }
 
-    public synchronized int getAssaultRoom() {
+    public synchronized Room getAssaultRoom() {
         return this.museum.nextRoom();
     }
 
@@ -110,13 +110,8 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         return true;
     }
 
-    public synchronized int checkRoomWithPaintings() {
-        for (int i = 0; i < ROOMS_NUMBER; i++) {
-            if (emptyRooms[i] != false) {
-                return i;
-            }
-        }
-        return -1;
+    public synchronized Room checkRoomWithPaintings() {
+        return this.museum.nextRoom();
     }
 
     @Override

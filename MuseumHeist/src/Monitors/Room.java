@@ -15,7 +15,7 @@ import java.util.Random;
  * @author Pedro Coelho
  * 
  */
-public class Room {
+public class Room implements IRoom{
     
     private int id;         /* identificador do quarto */
     private int distance;   /* distance from the gathering site */

@@ -8,6 +8,7 @@ package Entities;
 import static GenRepOfInfo.Heist.*;
 import GenRepOfInfo.Log;
 import Monitors.*;
+import java.util.Arrays;
 
 /**
  *
@@ -114,16 +115,11 @@ public class MasterThief extends Thread {
                             party[asd] = i;
                             asd++;
                         }
-                        System.out.print("Party assembled: [ " );
-                        for(int i : party){
-                            System.out.print(i + " ");
-                        }
-                        System.out.println("]" );
+                        System.out.print("Party assembled: " + Arrays.toString(party));
                     }
                     else{
                         System.err.println("Less than 3 thieves. Assault Party not assembled.");
                     }
-                    
                     this.mtccs.sendAssaultParty();
                     this.state = DECIDING_WHAT_TO_DO;
                     break;

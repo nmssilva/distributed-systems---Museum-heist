@@ -12,10 +12,7 @@ package Monitors;
  */
 public interface IMuseum {
 
-    public int nextRoom();
+    public Room nextRoom();
 
-    public boolean rollACanvas(int roomID);
-
-    public int getDistOutside(int roomID);
-    
+    public boolean rollACanvas(int roomID);   
 }

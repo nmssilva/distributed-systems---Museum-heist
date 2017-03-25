@@ -41,18 +41,14 @@ public class Museum implements IMuseum {
     }
 
     @Override
-    public int nextRoom() {
+    public Room nextRoom() {
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             if (this.rooms[i].getNPaintings() != 0) {
-                return this.rooms[i].getId();
+                return this.rooms[i];
             }
         }
 
-        return -1;
-    }
-
-    public synchronized int getDistOutside(int nRoom) {
-        return this.rooms[nRoom].getDistance();
+        return null;
     }
 
     public synchronized int getNPaintings(int nRoom) {

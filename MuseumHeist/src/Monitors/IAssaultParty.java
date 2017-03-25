@@ -14,11 +14,9 @@ import Entities.Thief;
  */
 public interface IAssaultParty {
     
-    public int getRoom();
+    public Room getRoom();
 
-    public void waitTurn(int thiefid);
-
-    public void crawlIn(Thief aThis);
+    public void crawlIn();
 
     public boolean rollACanvas();
 
@@ -26,7 +24,7 @@ public interface IAssaultParty {
 
     public void reverseDirection();
     
-    public void setRoom(int room);
+    public void setRoom(Room room);
     
     public int getDistOutsideRoom();
     

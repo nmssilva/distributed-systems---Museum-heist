@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class AssaultParty implements IAssaultParty {
 
-    private int room;
+    private Room room;
 
     private final IMuseum museum;
     private int[] thievespos = new int[MAX_ASSAULT_PARTY_THIEVES];
@@ -27,8 +27,8 @@ public class AssaultParty implements IAssaultParty {
     private int nThievesRoom;
     private boolean[] inRoom = new boolean[MAX_ASSAULT_PARTY_THIEVES];
 
-    public AssaultParty(int room, IMuseum museum, int[] thieves) {
-        this.room = room;
+    public AssaultParty(IMuseum museum, int[] thieves) {
+        this.room = new Room(-1);
         this.museum = museum;
         this.nThievesRoom = 0;
 
@@ -45,47 +45,41 @@ public class AssaultParty implements IAssaultParty {
 
     @Override
     public synchronized boolean rollACanvas() {
-        return this.museum.rollACanvas(room);
+        return this.museum.rollACanvas(room.getId());
     }
 
     @Override
-    public int getRoom() {
-        return room;
+    public Room getRoom() {
+        return this.room;
     }
 
     @Override
-    public void setRoom(int room) {
+    public void setRoom(Room room) {
         this.room = room;
     }
 
     @Override
-    public synchronized void waitTurn(int thiefid) {
-        while (!myTurn[getPosInParty(thiefid)]) {
+    public int getDistOutsideRoom() {
+        return this.room.getDistance();
+    }
+
+    @Override
+    public synchronized void crawlIn() {
+        Thief thief = ((Thief) Thread.currentThread());
+        while (!myTurn[getPosInParty(thief.getThiefid())]) {
             try {
-                System.out.print("THIEF " + thiefid + " VAI DORMIR ");
                 wait();
-                System.out.print("THIEF " + thiefid + " SAIU ");
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
         }
-    }
 
-    @Override
-    public int getDistOutsideRoom() {
-        return this.museum.getDistOutside(this.room);
-    }
-
-    @Override
-    public synchronized void crawlIn(Thief thief) {
-
-        System.out.println("CRAWLING Thief#" + thief.getThiefid() + " with maxDisp: " + thief.getMaxDisp());
         boolean GoodToGo = true;
         int i;
         while (GoodToGo) {
 
             for (i = thief.getMaxDisp(); i > 0; i--) {
-
+                System.out.println("Thief " + thief.getThiefid() + " crawling in in room with distance " + this.getDistOutsideRoom());
                 // nao há avanço
                 GoodToGo = true;
                 int[] posAfterMove = new int[MAX_ASSAULT_PARTY_THIEVES];
@@ -111,11 +105,10 @@ public class AssaultParty implements IAssaultParty {
 
                 // avançar
                 if (GoodToGo) {
-                    System.out.println("GOOD TO GO");
                     thievespos[getPosInParty(thief.getThiefid())] = thief.getPosition() + i;
                     thief.setPosition(thief.getPosition() + i);
 
-                    if (thief.getPosition() + i > this.getDistOutsideRoom()) {
+                    if (thief.getPosition() > this.getDistOutsideRoom()) {
                         thievespos[getPosInParty(thief.getThiefid())] = this.getDistOutsideRoom();
                         thief.setPosition(this.getDistOutsideRoom());
                         this.nThievesRoom++;
@@ -129,29 +122,20 @@ public class AssaultParty implements IAssaultParty {
             }
         }
 
-        System.out.print("Crawl in final positions AP#" + getParty(thief.getThiefid()) + " [ ");
-        for (int x : thievespos) {
-            System.out.print(x + " ");
-        }
-        System.out.println("]");
-
         myTurn[getPosInParty(thief.getThiefid())] = false;
-        
-        
-        
+
         int min = this.getDistOutsideRoom();
         int minIndex = -1;
-        
-        for( int x = 0 ; x < MAX_ASSAULT_PARTY_THIEVES ; x++){
-            if(min >= this.thievespos[x]){
+
+        for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+            if (min >= this.thievespos[x]) {
                 min = this.thievespos[x];
                 minIndex = x;
             }
         }
-        
-        System.out.println("MININDEX: " + minIndex);
+        ;
         myTurn[minIndex] = true;
-
+        System.out.println("Party " + getParty(thief.getThiefid()) + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
 
