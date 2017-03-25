@@ -47,8 +47,11 @@ public class Museum implements IMuseum {
             if (this.rooms[i].getNPaintings() != 0) {
                 if (this.rooms[i].isFree()) {
                     this.rooms[i].setFree(false);
+                    System.out.println("RETURNING: " + i);
                     return this.rooms[i];
                 }
+            } else {
+                this.rooms[i].setFree(false);
             }
         }
 

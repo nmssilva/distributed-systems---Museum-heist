@@ -105,7 +105,7 @@ public class Thief extends Thread { //implements IThief
                     break;
 
                 case CRAWLING_INWARDS:
-                    System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS room " + this.ap[getParty(this.thiefid)].getDistOutsideRoom());
+                    System.out.println("Thief " + this.thiefid + " is CRAWLING INWARDS room " + this.ap[getParty(this.thiefid)].getRoom().getId());
                     while (this.position < this.ap[getParty(this.thiefid)].getDistOutsideRoom()) {
                         this.ap[getParty(this.thiefid)].crawlIn();
                     }

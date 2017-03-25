@@ -94,12 +94,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
                 }
             }
         }
-
         return true;
-    }
-
-    public synchronized Room checkRoomWithPaintings() {
-        return this.museum.nextRoom();
     }
 
     @Override
@@ -136,13 +131,14 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     @Override
     public synchronized void sendAssaultParty() {
         //dizer qual o room
-        ap[getFreeAP()].setRoom(checkRoomWithPaintings());
+        ap[getFreeAP()].setRoom(this.museum.nextRoom());
         System.out.println("AP " + getFreeAP() + " goes to room " + ap[getFreeAP()].getRoom().getId());
         freeAP[getFreeAP()] = false;
         this.MasterThiefState = DECIDING_WHAT_TO_DO;
         notifyAll();
     }
     
+    @Override
     public int getFreeAP(){
         for(int i=0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
             if(this.freeAP[i]){

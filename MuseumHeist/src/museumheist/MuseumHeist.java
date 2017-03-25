@@ -57,7 +57,7 @@ public class MuseumHeist {
         }
         
         for (int i = 0; i < THIEVES_NUMBER; i++) { // start thieves!
-            thieves[i] = new Thief(i); // no assault party yet
+            thieves[i] = new Thief(i); 
             thieves[i].setMonitors(cs, mtccs, assaultParties);
             thieves[i].start();
             System.out.println("Thief " + i + " begins!!");
