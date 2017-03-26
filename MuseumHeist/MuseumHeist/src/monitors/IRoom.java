@@ -3,18 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Monitors;
+package monitors;
 
 /**
  *
  * @author Nuno Silva
- * @author Pedro Coelho
- * 
  */
 public interface IRoom {
     
+    public int getDistance() ;
+    
+    public int getNPaintings();
+    
+    public void setnPaintings(int nPaintings);
+    
+    public void setFree(boolean f);
+    
     public int getId();
     
-    public int getDistance();
-
 }

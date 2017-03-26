@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Monitors;
+package monitors;
+
+import entities.MasterThief;
 
 /**
  *
@@ -13,32 +15,26 @@ public interface IMasterThiefCtrlCollSite {
 
     public void startOperations();
 
-    public boolean[] getEmptyRooms();
+    public void sumUpResults();
 
     public void prepareAssaultParty();
 
+    public boolean getPartiesFull();
+
     public void takeARest();
 
-    public void sumUpResults();
-    
     public void appraiseSit();
-    
-    public int getFreeAP();
 
-    public boolean getPartiesFull();
-    
-    public int[] getEmptySlotParty();
+    public void sendAssaultParty(IAssaultParty apToSend, IRoom room);
 
     public void collectCanvas();
     
-    public void handACanvas(boolean hasCanvas, int i);
+    public void waitForMaster();
     
-    public boolean addThiefToParty(int thiefid);
-
-    public void waitArrival();
+    public int getTotalPaintings();
     
-    public void setEmptyRooms(int i, boolean f);
-
-    public void sendAssaultParty(int freeAP);
-
+    public void handACanvas();
+    
+    public MasterThief getMasterthief();
+    
 }

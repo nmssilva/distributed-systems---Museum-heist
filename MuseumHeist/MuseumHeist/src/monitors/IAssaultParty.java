@@ -3,28 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Monitors;
+package monitors;
 
+import entities.Thief;
 
 /**
  *
- * @author Pedro Coelho
  * @author Nuno Silva
  */
 public interface IAssaultParty {
     
-    public Room getRoom();
+    public int getId();
+    
+    public boolean isFree();
+
+    public Thief[] getThieves();
+    
+    public void setThieves(Thief[] thieves);
+    
+    public void setFree(boolean free);
 
     public void crawlIn();
+    
+    public IRoom getRoom();
+
+    public void setRoom(IRoom room);
 
     public boolean rollACanvas();
 
+    public void reverseDirection();
+
     public void crawlOut();
 
-    public void reverseDirection();
-    
-    public void setRoom(Room room);
-    
-    public int getDistOutsideRoom();
-    
 }

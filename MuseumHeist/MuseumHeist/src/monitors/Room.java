@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Monitors;
+package monitors;
 
-
-import static GenRepOfInfo.Heist.*;
+import static GenRepOfInfo.Heist.MAX_DIST_OUTSIDE;
+import static GenRepOfInfo.Heist.MAX_PAINTINGS;
+import static GenRepOfInfo.Heist.MIN_DIST_OUTSIDE;
+import static GenRepOfInfo.Heist.MIN_PAINTINGS;
 import java.util.Random;
 
 /**
  *
  * @author Nuno Silva
- * @author Pedro Coelho
- * 
  */
 public class Room implements IRoom{
     
@@ -28,27 +28,32 @@ public class Room implements IRoom{
         this.id = id;
         this.free = true;
     }
-
+    
     public boolean isFree() {
         return free;
     }
     
+    @Override
     public void setFree(boolean f) {
         this.free = f;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public int getNPaintings() {
         return nPaintings;
     }
 
+    @Override
     public int getDistance() {
         return distance;
     }
 
+    @Override
     public void setnPaintings(int nPaintings) {
         this.nPaintings = nPaintings;
     }

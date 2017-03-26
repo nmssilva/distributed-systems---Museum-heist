@@ -3,63 +3,96 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Monitors;
+package monitors;
 
-import Entities.Thief;
+import entities.Thief;
 import static GenRepOfInfo.Heist.*;
 import java.util.Arrays;
 
 /**
  *
  * @author Nuno Silva
- * @author Pedro Coelho
- *
- *
  */
 public class AssaultParty implements IAssaultParty {
 
-    private Room room;
+    private int id;
+    private Thief thieves[];
+    private int thievespos[];
+    private boolean free;
+    private boolean myTurn[];
+    private IRoom room;
 
-    private final IMuseum museum;
-    private int[] thievespos = new int[MAX_ASSAULT_PARTY_THIEVES];
-    private boolean[] myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
-    //
-
-    public AssaultParty(IMuseum museum, int[] thieves) {
+    public AssaultParty(int id) {
+        this.id = id;
+        this.free = true;
+        
         this.room = new Room(-1);
-        this.museum = museum;
+        
+        this.thieves = new Thief[MAX_ASSAULT_PARTY_THIEVES];
+        this.thievespos = new int[MAX_ASSAULT_PARTY_THIEVES];
+        this.myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+            thieves[i] = new Thief(-1);
+            thievespos[i] = 0;
             this.myTurn[i] = (i == 0);
-            
-            this.thievespos[i] = 0;
         }
+
     }
 
     @Override
-    public synchronized boolean rollACanvas() {
-        return this.museum.rollACanvas(room.getId());
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
-    public Room getRoom() {
-        return this.room;
+    public Thief[] getThieves() {
+        return thieves;
     }
 
     @Override
-    public void setRoom(Room room) {
+    public void setThieves(Thief[] thieves) {
+        this.thieves = thieves;
+    }
+
+    public int[] getThievespos() {
+        return thievespos;
+    }
+
+    public void setThievespos(int[] thievespos) {
+        this.thievespos = thievespos;
+    }
+
+    @Override
+    public boolean isFree() {
+        return free;
+    }
+
+    @Override
+    public void setFree(boolean free) {
+        this.free = free;
+    }
+
+    @Override
+    public IRoom getRoom() {
+        return room;
+    }
+
+    @Override
+    public void setRoom(IRoom room) {
         this.room = room;
     }
 
     @Override
-    public int getDistOutsideRoom() {
-        return this.room.getDistance();
-    }
-
-    @Override
     public synchronized void crawlIn() {
+
         Thief thief = ((Thief) Thread.currentThread());
-        while (!myTurn[getPosInParty(thief.getThiefid())]) {
+
+        while (!myTurn[thief.getPosInParty()]) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -69,6 +102,7 @@ public class AssaultParty implements IAssaultParty {
 
         boolean GoodToGo = true;
         int i;
+
         while (GoodToGo) {
 
             for (i = thief.getMaxDisp(); i > 0; i--) {
@@ -77,7 +111,7 @@ public class AssaultParty implements IAssaultParty {
 
                 System.arraycopy(thievespos, 0, posAfterMove, 0, thievespos.length);
 
-                posAfterMove[getPosInParty(thief.getThiefid())] = thief.getPosition() + i;
+                posAfterMove[thief.getPosInParty()] = thief.getPosition() + i;
                 Arrays.sort(posAfterMove);
 
                 // verificar se um avanço i é ilegal
@@ -88,7 +122,7 @@ public class AssaultParty implements IAssaultParty {
                     }
 
                     if (posAfterMove[j + 1] == posAfterMove[j]) {
-                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.getDistOutsideRoom())) {
+                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.room.getDistance())) {
                             GoodToGo = false;
                         }
                     }
@@ -96,12 +130,12 @@ public class AssaultParty implements IAssaultParty {
 
                 // avançar
                 if (GoodToGo) {
-                    thievespos[getPosInParty(thief.getThiefid())] = thief.getPosition() + i;
+                    thievespos[thief.getPosInParty()] = thief.getPosition() + i;
                     thief.setPosition(thief.getPosition() + i);
 
-                    if (thief.getPosition() > this.getDistOutsideRoom()) {
-                        thievespos[getPosInParty(thief.getThiefid())] = this.getDistOutsideRoom();
-                        thief.setPosition(this.getDistOutsideRoom());
+                    if (thief.getPosition() > this.room.getDistance()) {
+                        thievespos[thief.getPosInParty()] = this.room.getDistance();
+                        thief.setPosition(this.room.getDistance());
                         GoodToGo = false;
                     }
 
@@ -111,9 +145,9 @@ public class AssaultParty implements IAssaultParty {
             }
         }
 
-        myTurn[getPosInParty(thief.getThiefid())] = false;
+        myTurn[thief.getPosInParty()] = false;
 
-        int min = this.getDistOutsideRoom();
+        int min = this.room.getDistance();
         int minIndex = 0;
 
         for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
@@ -124,21 +158,39 @@ public class AssaultParty implements IAssaultParty {
         }
 
         myTurn[minIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + getParty(thief.getThiefid()) + " positions " + Arrays.toString(thievespos));
+        System.out.println("Party " + thief.getAP().getId() + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
 
     @Override
-    public void reverseDirection() {
+    public boolean rollACanvas() {
+        
         Thief thief = (Thief) Thread.currentThread();
-        //thief.getAp()[getParty(thief.getThiefid())].setRoom();
-        thief.setState(CRAWLING_INWARDS);
+        
+        if (this.room.getNPaintings() > 0) {
+            this.room.setnPaintings(this.room.getNPaintings() - 1);
+            thief.setHasCanvas(true);
+            System.out.println("PAITING LEFT ROOM " + this.room.getId() + ": " + this.room.getNPaintings());
+            return true;
+        }
+        
+        return false;
     }
-    
+
+    @Override
+    public synchronized void reverseDirection() {
+        
+        Thief thief = (Thief) Thread.currentThread();
+        thief.setState(CRAWLING_INWARDS);
+        
+        notifyAll();
+    }
+
     @Override
     public synchronized void crawlOut() {
         Thief thief = ((Thief) Thread.currentThread());
-        while (!myTurn[getPosInParty(thief.getThiefid())]) {
+
+        while (!myTurn[thief.getPosInParty()]) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -148,6 +200,7 @@ public class AssaultParty implements IAssaultParty {
 
         boolean GoodToGo = true;
         int i;
+
         while (GoodToGo) {
 
             for (i = thief.getMaxDisp(); i > 0; i--) {
@@ -156,7 +209,7 @@ public class AssaultParty implements IAssaultParty {
 
                 System.arraycopy(thievespos, 0, posAfterMove, 0, thievespos.length);
 
-                posAfterMove[getPosInParty(thief.getThiefid())] = thief.getPosition() - i;
+                posAfterMove[thief.getPosInParty()] = thief.getPosition() - i;
                 Arrays.sort(posAfterMove);
 
                 // verificar se um avanço i é ilegal
@@ -167,7 +220,7 @@ public class AssaultParty implements IAssaultParty {
                     }
 
                     if (posAfterMove[j + 1] == posAfterMove[j]) {
-                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.getDistOutsideRoom())) {
+                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.room.getDistance())) {
                             GoodToGo = false;
                         }
                     }
@@ -175,11 +228,11 @@ public class AssaultParty implements IAssaultParty {
 
                 // avançar
                 if (GoodToGo) {
-                    thievespos[getPosInParty(thief.getThiefid())] = thief.getPosition() - i;
+                    thievespos[thief.getPosInParty()] = thief.getPosition() - i;
                     thief.setPosition(thief.getPosition() - i);
 
-                    if (thief.getPosition() < 0) {
-                        thievespos[getPosInParty(thief.getThiefid())] = 0;
+                    if (thief.getPosition() < 0 ) {
+                        thievespos[thief.getPosInParty()] = 0;
                         thief.setPosition(0);
                         GoodToGo = false;
                     }
@@ -190,7 +243,7 @@ public class AssaultParty implements IAssaultParty {
             }
         }
 
-        myTurn[getPosInParty(thief.getThiefid())] = false;
+        myTurn[thief.getPosInParty()] = false;
 
         int max = 0;
         int maxIndex = 0;
@@ -203,9 +256,8 @@ public class AssaultParty implements IAssaultParty {
         }
 
         myTurn[maxIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + getParty(thief.getThiefid()) + " positions " + Arrays.toString(thievespos));
+        System.out.println("Party " + thief.getAP().getId() + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
-
 
 }

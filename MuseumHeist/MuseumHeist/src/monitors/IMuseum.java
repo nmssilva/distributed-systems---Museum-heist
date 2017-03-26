@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entities;
+package monitors;
 
 /**
  *
  * @author Nuno Silva
  */
-public interface IThief {
-    
+public interface IMuseum {
 
+    public boolean[] getFreeRooms();
     
+    public Room[] getRooms();
+    
+    public int[] getNPaintingsRoom();
 }

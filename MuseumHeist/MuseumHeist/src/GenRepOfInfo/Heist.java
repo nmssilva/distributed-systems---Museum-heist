@@ -46,40 +46,43 @@ public class Heist {
     public static final int MAX_DIST_OUTSIDE = 30;
     // Minimum distance from the Room in the Museum to the Outside
     public static final int MIN_DIST_OUTSIDE = 15;
-
-    // Assault parties information
-    public static int[][] ASSAULT_PARTIES = new int[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES][MAX_ASSAULT_PARTY_THIEVES];
     
-    // função auxiliar para obtenção do ID da assaultparty
-    public static int getParty(int thiefid){
-        for(int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
-            for(int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++){
-                if(ASSAULT_PARTIES[i][j] == thiefid){
-                    return i;
-                }
+    //auxiliary functions
+    public static boolean areAllTrue(boolean[] array) {
+        for (boolean b : array) {
+            if (!b) {
+                return false;
             }
         }
-        return -1;
+        return true;
     }
     
-    public static int getPosInParty(int thiefid){
-        for(int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
-            for(int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++){
-                if(ASSAULT_PARTIES[i][j] == thiefid){
-                    return j;
-                }
+    public static boolean areAllFalse(boolean[] array) {
+        for (boolean b : array) {
+            if (b) {
+                return false;
             }
         }
-        return -1;
+        return true;
     }
     
-    public static void removeThiefFromParty(int thiefid){
-        for(int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++){
-            for(int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++){
-                if(ASSAULT_PARTIES[i][j] == thiefid){
-                    ASSAULT_PARTIES[i][j] = -1;
-                }
+    public static int countNotNull(Object[] array) {
+        int i = 0;
+        for (Object b : array) {
+            if (b != null) {
+                i++;
             }
         }
+        return i;
+    }
+    
+    public static int countNotZero(int[] array) {
+        int i = 0;
+        for (int b : array) {
+            if (b != 0) {
+                i++;
+            }
+        }
+        return i;
     }
 }
