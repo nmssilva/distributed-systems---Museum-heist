@@ -15,6 +15,9 @@ public class Museum implements IMuseum {
 
     private Room rooms[];
 
+    /**
+     * Constructor
+     */
     public Museum() {
         
         this.rooms = new Room[ROOMS_NUMBER];
@@ -24,6 +27,10 @@ public class Museum implements IMuseum {
         }
     }
 
+    /**
+     *
+     * @return gets boolean array. true room is free, false if not free.
+     */
     @Override
     public boolean[] getFreeRooms() {
         boolean[] free = new boolean[ROOMS_NUMBER];
@@ -33,6 +40,10 @@ public class Museum implements IMuseum {
         return free;
     }
     
+    /**
+     *
+     * @return gets int array with number of paintings of all rooms
+     */
     @Override
     public int[] getNPaintingsRoom(){
         int[] a = new int[ROOMS_NUMBER];
@@ -42,6 +53,10 @@ public class Museum implements IMuseum {
         return a;
     }
 
+    /**
+     *
+     * @return Rooms
+     */
     @Override
     public Room[] getRooms() {
         return rooms;

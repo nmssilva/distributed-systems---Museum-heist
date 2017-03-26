@@ -20,43 +20,69 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     private int totalPaintings;
     private MasterThief masterthief;
 
+    /**
+     *
+     * @return MasterThief
+     */
     public MasterThief getMasterthief() {
         return masterthief;
     }
 
+    /**
+     *  Constructor
+     */
     public MasterThiefCtrlCollSite() {
         this.totalPaintings = 0;
     }
 
+    /**
+     *
+     * @return Total Number Of paintings collected
+     */
     @Override
     public int getTotalPaintings() {
         return totalPaintings;
     }
 
-    
-    
+    /**
+     *
+     * @param masterThief sets Master Thief
+     */
     public void setMasterThief(MasterThief masterThief) {
         this.masterthief = masterThief;
     }
 
+    /**
+     * transits Master Thief state to DECIDING_WHAT_TO_DO
+     */
     @Override
     public synchronized void startOperations() {
         this.masterthief.setState(DECIDING_WHAT_TO_DO);
         notifyAll();
     }
 
+    /**
+     * transits Master Thief state to PRESENTING_THE_REPORT
+     */
     @Override
     public synchronized void sumUpResults() {
         this.masterthief.setState(PRESENTING_THE_REPORT);
         notifyAll();
     }
 
+    /**
+     * transits Master Thief state to ASSEMBLING_A_GROUP
+     */
     @Override
     public synchronized void prepareAssaultParty() {
         this.masterthief.setState(ASSEMBLING_A_GROUP);
         notifyAll();
     }
 
+    /**
+     *
+     * @return true if all parties are full, false if otherwise.
+     */
     @Override
     public boolean getPartiesFull() {
 
@@ -72,18 +98,29 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         return true;
     }
 
+    /**
+     * transits Master Thief state to WAITING_FOR_ARRIVAL
+     */
     @Override
     public synchronized void takeARest() {
         this.masterthief.setState(WAITING_FOR_ARRIVAL);
         notifyAll();
     }
 
+    /**
+     * transits Master Thief state to DECIDING_WHAT_TO_DO
+     */
     @Override
     public synchronized void appraiseSit() {
         this.masterthief.setState(DECIDING_WHAT_TO_DO);
         notifyAll();
     }
 
+    /**
+     *
+     * @param apToSend Assault Party to send
+     * @param room Room where Assault Party goes
+     */
     @Override
     public synchronized void sendAssaultParty(IAssaultParty apToSend, IRoom room) {
         notifyAll();
@@ -93,12 +130,18 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         }
     }
 
+    /**
+     * transits Master Thief state to DECIDING_WHAT_TO_DO
+     */
     @Override
     public synchronized void collectCanvas() {
         this.masterthief.setState(DECIDING_WHAT_TO_DO);
         notifyAll();
     }
 
+    /**
+     * thiefs wait for master if she is not in WAITING FOR ARRIVAL state
+     */
     @Override
     public synchronized void waitForMaster() {
 
@@ -113,6 +156,9 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         }
     }
 
+    /**
+     * thiefs hand a canvas in collection site
+     */
     @Override
     public synchronized void handACanvas() {
 

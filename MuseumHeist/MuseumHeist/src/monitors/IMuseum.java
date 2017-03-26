@@ -11,9 +11,21 @@ package monitors;
  */
 public interface IMuseum {
 
+    /**
+     *
+     * @return gets boolean array. true room is free, false if not free.
+     */
     public boolean[] getFreeRooms();
     
+    /**
+     *
+     * @return Rooms
+     */
     public Room[] getRooms();
     
+    /**
+     *
+     * @return gets int array with number of paintings of all rooms
+     */
     public int[] getNPaintingsRoom();
 }

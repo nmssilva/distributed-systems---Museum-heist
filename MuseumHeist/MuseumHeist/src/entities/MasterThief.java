@@ -29,6 +29,14 @@ public class MasterThief extends Thread {
     private Thief[] thieves;
     private Log log;
 
+    /**
+     *
+     * @param mtccs Master Thief Control Collection Site
+     * @param cs Concentration Site
+     * @param museum Museum
+     * @param ap Assault Parties
+     * @param thieves Thieves
+     */
     public MasterThief(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IMuseum museum, IAssaultParty[] ap, Thief[] thieves) {
         this.mtccs = mtccs;
         this.cs = cs;
@@ -40,14 +48,26 @@ public class MasterThief extends Thread {
 
     }
 
+    /**
+     *
+     * @param state state to be set
+     */
     public void setState(int state) {
         this.state = state;
     }
 
+    /**
+     *
+     * @return MasterThief state
+     */
     public int getMasterState() {
         return state;
     }
 
+    /**
+     *
+     * @return Assault Parties
+     */
     public IAssaultParty[] getAp() {
         return ap;
     }

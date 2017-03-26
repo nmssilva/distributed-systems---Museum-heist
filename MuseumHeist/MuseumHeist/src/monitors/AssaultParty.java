@@ -22,6 +22,10 @@ public class AssaultParty implements IAssaultParty {
     private boolean myTurn[];
     private IRoom room;
 
+    /**
+     *
+     * @param id Assault Party ID
+     */
     public AssaultParty(int id) {
         this.id = id;
         this.free = true;
@@ -40,53 +44,97 @@ public class AssaultParty implements IAssaultParty {
 
     }
 
+    /**
+     *
+     * @return Assault Party ID
+     */
     @Override
     public int getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id ID to be set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return array of thieves in party
+     */
     @Override
     public Thief[] getThieves() {
         return thieves;
     }
 
+    /**
+     *
+     * @param thieves array of thieves to be set
+     */
     @Override
     public void setThieves(Thief[] thieves) {
         this.thieves = thieves;
     }
 
+    /**
+     *
+     * @return array of thieves positions
+     */
     public int[] getThievespos() {
         return thievespos;
     }
 
+    /**
+     *
+     * @param thievespos sets thieves positions
+     */
     public void setThievespos(int[] thievespos) {
         this.thievespos = thievespos;
     }
 
+    /**
+     *
+     * @return returns true is Assault PArty is free. false if otherwise;
+     */
     @Override
     public boolean isFree() {
         return free;
     }
 
+    /**
+     *
+     * @param free true to set Assault party free (not used) or false if not
+     * free (with thieves)
+     */
     @Override
     public void setFree(boolean free) {
         this.free = free;
     }
 
+    /**
+     *
+     * @return gets Room where Assault Party is going
+     */
     @Override
     public IRoom getRoom() {
         return room;
     }
 
+    /**
+     *
+     * @param room sets Room where Assault Party is going
+     */
     @Override
     public void setRoom(IRoom room) {
         this.room = room;
     }
 
+    /**
+     * Crawl in function
+     */
     @Override
     public synchronized void crawlIn() {
 
@@ -162,6 +210,11 @@ public class AssaultParty implements IAssaultParty {
         notifyAll();
     }
 
+    /**
+     *
+     * @return true if room has painting, false otherwise
+     * 
+     */
     @Override
     public boolean rollACanvas() {
         
@@ -177,15 +230,21 @@ public class AssaultParty implements IAssaultParty {
         return false;
     }
 
+    /**
+     *  function to transit state to crawling outwards
+     */
     @Override
     public synchronized void reverseDirection() {
         
         Thief thief = (Thief) Thread.currentThread();
-        thief.setState(CRAWLING_INWARDS);
+        thief.setState(CRAWLING_OUTWARDS);
         
         notifyAll();
     }
 
+    /**
+     * crawl out function
+     */
     @Override
     public synchronized void crawlOut() {
         Thief thief = ((Thief) Thread.currentThread());

@@ -22,6 +22,10 @@ public class Room implements IRoom{
     private int nPaintings; /* number of paintings */    
     private boolean free;   /* assault party in room */
     
+    /**
+     * Constructor
+     * @param id Room ID
+     */
     public Room(int id) {
         this.distance =  new Random().nextInt((MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
         this.nPaintings = new Random().nextInt((MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
@@ -29,35 +33,63 @@ public class Room implements IRoom{
         this.free = true;
     }
     
+    /**
+     *
+     * @return true if room is free, false if otherwise
+     */
     public boolean isFree() {
         return free;
     }
     
+    /**
+     *
+     * @param f value to set room free
+     */
     @Override
     public void setFree(boolean f) {
         this.free = f;
     }
 
+    /**
+     *
+     * @return gets room ID
+     */
     @Override
     public int getId() {
         return id;
     }
 
+    /**
+     *
+     * @return gets number of painting remaining in room
+     */
     @Override
     public int getNPaintings() {
         return nPaintings;
     }
 
+    /**
+     *
+     * @return gets distance to room
+     */
     @Override
     public int getDistance() {
         return distance;
     }
 
+    /**
+     *
+     * @param nPaintings sets number of paintings in room
+     */
     @Override
     public void setnPaintings(int nPaintings) {
         this.nPaintings = nPaintings;
     }
 
+    /**
+     *
+     * @param dist distance to be set to room
+     */
     public void setDistance(int dist) {
         this.distance = dist;
     }

@@ -59,10 +59,11 @@ public class Log {
     /**
      * This is a singleton, this is important to return the Log instance.
      *
-     * @param mtccs
-     * @param cs
-     * @param ap
-     * @param museum
+     * @param mtccs Maser Thief Control and Collection Site
+     * @param cs Concentration Site
+     * @param ap AssaultParties
+     * @param museum Museum
+     * @param thieves Thieves
      * @return log instance, this is a singleton.
      */
     public synchronized static Log getInstance(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IAssaultParty[] ap, IMuseum museum, Thief [] thieves) {
@@ -256,6 +257,9 @@ public class Log {
 
     }
 
+    /**
+     *  Writes final results and legend.
+     */
     public synchronized void writeEnd() {
         pw.println("My friends, tonight's effort produced " + this.mtccs.getTotalPaintings() + " priceless paintings!\n");
         pw.println("\nLegend:");

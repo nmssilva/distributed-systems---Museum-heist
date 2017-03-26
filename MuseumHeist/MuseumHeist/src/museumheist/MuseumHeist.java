@@ -16,21 +16,26 @@ import monitors.*;
  *
  * @author Nuno Silva
  */
+
 public class MuseumHeist {
 
     /**
      * @param args the command line arguments
      */
     
-    private static MasterThief masterThief;
-    private static Thief[] thieves;
+    private static MasterThief masterThief;         // Master Thief
+    private static Thief[] thieves;                 // Thiefs
 
-    private static Log log;
-    private static AssaultParty[] assaultParties;
-    private static OrdThievesConcSite cs;
-    private static MasterThiefCtrlCollSite mtccs;
-    private static Museum museum;
+    private static Log log;                         // Log
+    private static AssaultParty[] assaultParties;   // Assault Parties
+    private static OrdThievesConcSite cs;           // Concentration Site
+    private static MasterThiefCtrlCollSite mtccs;   // Collection Site
+    private static Museum museum;                   // Museum
     
+    /**
+     * Main
+     * @param args
+     */
     public static void main(String[] args) {     
         
         // create Thieves
@@ -43,8 +48,6 @@ public class MuseumHeist {
          
         // START MONITORS
         
-        
-
         museum = new Museum();
         cs = new OrdThievesConcSite(thieves);
         assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];

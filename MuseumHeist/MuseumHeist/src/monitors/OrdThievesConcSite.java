@@ -21,36 +21,65 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     private Thief[] thievesInCs;
     private boolean incrementing;
 
+    /**
+     * Constructor
+     * @param thievesInCs array of thieves in Concentration Site
+     */
     public OrdThievesConcSite(Thief[] thievesInCs) {
         this.incrementing = false;
         this.nAssaultThievesCs = new AtomicInteger(0);
         this.thievesInCs = thievesInCs;
     }
 
+    /**
+     *
+     * @return gets number of thieves in concentration site
+     */
     @Override
     public synchronized AtomicInteger getnAssaultThievesCs() {
         return nAssaultThievesCs;
     }
 
+    /**
+     *
+     * @param nAssaultThievesCs number of thieves in concentration site to be set
+     */
     @Override
     public synchronized void setnAssaultThievesCs(AtomicInteger nAssaultThievesCs) {
         this.nAssaultThievesCs = nAssaultThievesCs;
     }
 
+    /**
+     *
+     * @return gets array of thieves in concentration site
+     */
     @Override
     public Thief[] getThievesInCs() {
         return thievesInCs;
     }
 
+    /**
+     *
+     * @param thieves array of thieves to be set in concentration site
+     */
     public void setThievesInCs(Thief[] thieves) {
         this.thievesInCs = thieves;
     }
 
+    /**
+     *
+     * @param thiefid Thief ID
+     * @return true if thief is free, false if otherwise
+     */
     @Override
     public boolean getFreeAssaultThief(int thiefid) {
         return thievesInCs[thiefid].isFree();
     }
 
+    /**
+     *
+     * @param thiefid thief ID
+     */
     @Override
     public synchronized void callAssaultThief(int thiefid) {
 
@@ -60,6 +89,9 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
 
     }
 
+    /**
+     * MasterThief waits for Thieves Arrival
+     */
     @Override
     public synchronized void waitForArrival() {
         notifyAll();
@@ -72,6 +104,9 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         }
     }
 
+    /**
+     * Thief waits to be needed
+     */
     @Override
     public synchronized void amINeeded() {
         Thief thief = (Thief) Thread.currentThread();
@@ -89,6 +124,9 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         }
     }
 
+    /**
+     * transits thief state to CRAWLING_INWARDS
+     */
     @Override
     public synchronized void prepareExcursion() {
         Thief thief = (Thief) Thread.currentThread();
@@ -96,6 +134,9 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         notifyAll();
     }
 
+    /**
+     * adds a thief to concentration site
+     */
     @Override
     public synchronized void addThieveToCS() {
         
@@ -112,6 +153,9 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         this.incrementing = false;
     }
     
+    /**
+     * removes thief from concentration site
+     */
     @Override
     public synchronized void removeThieveToCS() {
         
