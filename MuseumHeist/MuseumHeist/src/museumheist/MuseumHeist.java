@@ -8,6 +8,7 @@ package museumheist;
 import static GenRepOfInfo.Heist.*;
 import GenRepOfInfo.Log;
 import entities.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monitors.*;
@@ -43,7 +44,7 @@ public class MuseumHeist {
         thieves = new Thief[THIEVES_NUMBER]; // thieves
         
         for (int i = 0; i < THIEVES_NUMBER; i++) { // start thieves!
-            thieves[i] = new Thief(i); 
+            thieves[i] = new Thief(i);
         }   
          
         // START MONITORS
@@ -52,8 +53,6 @@ public class MuseumHeist {
         cs = new OrdThievesConcSite(thieves);
         assaultParties = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
         mtccs = new MasterThiefCtrlCollSite();
-        
-        log = Log.getInstance(mtccs, cs, assaultParties, museum, thieves);
         
         for(int i = 0; i < THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES; i++){
             assaultParties[i] = new AssaultParty(i);
@@ -67,7 +66,7 @@ public class MuseumHeist {
             System.out.println("Thief " + i + " begins!!");
         }   
         
-        cs.setThievesInCs(thieves);
+        cs.setThieves(thieves);
         
         //start MASTER THIEF
         masterThief = new MasterThief(mtccs, cs, museum, assaultParties, thieves);
@@ -76,6 +75,10 @@ public class MuseumHeist {
         
         masterThief.start(); // lady master thief starts!
         System.out.println("Lady Master Thief begins!!");
+        
+        System.out.println("THIEVES MAIN: " + thieves[0]);
+        
+        log = Log.getInstance(mtccs, cs, assaultParties, museum, thieves);
         
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             try {

@@ -6,7 +6,6 @@
 package monitors;
 
 import entities.Thief;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -18,7 +17,7 @@ public interface IOrdThievesConcSite {
      *
      * @return gets number of thieves in concentration site
      */
-    public AtomicInteger getnAssaultThievesCs();
+    public int getnAssaultThievesCs();
 
     /**
      *
@@ -37,13 +36,19 @@ public interface IOrdThievesConcSite {
      *
      * @param nAssaultThievesCs number of thieves in concentration site to be set
      */
-    public void setnAssaultThievesCs(AtomicInteger nAssaultThievesCs);
+    public void setnAssaultThievesCs(int nAssaultThievesCs);
     
     /**
      *
      * @return gets array of thieves in concentration site
      */
-    public Thief[] getThievesInCs();
+    public boolean[] getThievesInCs();
+    
+    /**
+     *
+     * @return gets array of thieves
+     */
+    public Thief[] getThieves();
 
     /**
      * Thief waits to be needed
@@ -59,15 +64,5 @@ public interface IOrdThievesConcSite {
      * transits thief state to CRAWLING_INWARDS
      */
     public void prepareExcursion();
-    
-    /**
-     * adds a thief to concentration site
-     */
-    public void addThieveToCS();
-    
-    /**
-     * removes a thief to concentration site
-     */
-    public void removeThieveToCS();
     
 }

@@ -37,7 +37,6 @@ public class AssaultParty implements IAssaultParty {
         this.myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            thieves[i] = new Thief(-1);
             thievespos[i] = 0;
             this.myTurn[i] = (i == 0);
         }
@@ -223,7 +222,7 @@ public class AssaultParty implements IAssaultParty {
         if (this.room.getNPaintings() > 0) {
             this.room.setnPaintings(this.room.getNPaintings() - 1);
             thief.setHasCanvas(true);
-            System.out.println("PAITING LEFT ROOM " + this.room.getId() + ": " + this.room.getNPaintings());
+            System.out.println("PAINTING LEFT ROOM " + this.room.getId() + ": " + this.room.getNPaintings());
             return true;
         }
         

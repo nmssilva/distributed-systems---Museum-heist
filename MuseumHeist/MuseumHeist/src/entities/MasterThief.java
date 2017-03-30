@@ -42,7 +42,8 @@ public class MasterThief extends Thread {
         this.cs = cs;
         this.museum = museum;
         this.ap = ap;
-        this.log = Log.getInstance(mtccs, cs, ap, museum , thieves);
+        this.thieves = thieves;
+        this.log = Log.getInstance(mtccs, cs, ap, museum, thieves);
 
         this.state = PLANNING_THE_HEIST;
 
@@ -74,6 +75,7 @@ public class MasterThief extends Thread {
 
     @Override
     public void run() {
+
         boolean heistOver = false;
 
         while (!heistOver) {
@@ -103,7 +105,7 @@ public class MasterThief extends Thread {
                     // verificar se existe thieves para fazer uma nova assault party
                     // se sim, forma uma party
                     System.out.println("N ASSAULT THIEVES CS: " + this.cs.getnAssaultThievesCs());
-                    if (countNotNull(this.cs.getThievesInCs()) >= MAX_ASSAULT_PARTY_THIEVES) {
+                    if (this.cs.getnAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES) {
                         appraise = false;
                         this.mtccs.prepareAssaultParty();
                         this.log.writeStatusLine();
@@ -155,11 +157,11 @@ public class MasterThief extends Thread {
                     Thief thievestobeinAP[] = new Thief[MAX_ASSAULT_PARTY_THIEVES];
 
                     for (int i = 0; i < THIEVES_NUMBER || nThievesinAP < MAX_ASSAULT_PARTY_THIEVES; i++) {
-                        Thief th = this.cs.getThievesInCs()[i];
+                        Thief th = this.cs.getThieves()[i];
                         if (th != null) {
                             thievestobeinAP[nThievesinAP] = th;
                             nThievesinAP++;
-                            if (nThievesinAP == 3) {
+                            if (nThievesinAP == MAX_ASSAULT_PARTY_THIEVES) {
                                 break;
                             }
 
@@ -172,22 +174,14 @@ public class MasterThief extends Thread {
                         this.cs.callAssaultThief(th.getThiefid());
                     }
 
-                    //this.mtccs.addThiefToParty(i);
                     apToSend.setThieves(thievestobeinAP);
                     apToSend.setRoom(roomToSend);
                     roomToSend.setFree(false);
 
                     this.mtccs.sendAssaultParty(apToSend, roomToSend);
 
-                    for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-                        this.cs.getnAssaultThievesCs().addAndGet(-1);
-                    }
+                    this.cs.setnAssaultThievesCs(this.cs.getnAssaultThievesCs() - MAX_ASSAULT_PARTY_THIEVES);
 
-                    System.out.println("Thieves in CS was " + (this.cs.getnAssaultThievesCs().get() + 3) + ". Now it's " + this.cs.getnAssaultThievesCs());
-                    for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-                        this.cs.getThievesInCs()[apToSend.getThieves()[i].getThiefid()] = null;
-                    }
-                    
                     this.log.writeStatusLine();
                     this.state = DECIDING_WHAT_TO_DO;
 
@@ -199,7 +193,7 @@ public class MasterThief extends Thread {
                     this.cs.waitForArrival();
 
                     this.mtccs.collectCanvas();
-                    
+
                     this.log.writeStatusLine();
 
                     this.state = DECIDING_WHAT_TO_DO;
@@ -211,7 +205,7 @@ public class MasterThief extends Thread {
                     this.log.writeEnd();
                     heistOver = true;
                     break;
-            }   
+            }
         }
     }
 

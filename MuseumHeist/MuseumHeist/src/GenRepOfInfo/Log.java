@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
@@ -32,9 +33,9 @@ public class Log {
 
     private static IMasterThiefCtrlCollSite mtccs;
     private static IOrdThievesConcSite cs;
-    private static IAssaultParty[] ap = new AssaultParty[THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES];
+    private static IAssaultParty[] ap = new AssaultParty[THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES];
     private static IMuseum museum;
-    
+
     private static Thief[] thieves = new Thief[THIEVES_NUMBER];
 
     private Log(String filename) {
@@ -66,7 +67,7 @@ public class Log {
      * @param thieves Thieves
      * @return log instance, this is a singleton.
      */
-    public synchronized static Log getInstance(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IAssaultParty[] ap, IMuseum museum, Thief [] thieves) {
+    public synchronized static Log getInstance(IMasterThiefCtrlCollSite mtccs, IOrdThievesConcSite cs, IAssaultParty[] ap, IMuseum museum, Thief[] thieves) {
         Log.mtccs = mtccs;
         Log.cs = cs;
         Log.ap = ap;
@@ -84,9 +85,9 @@ public class Log {
             pw.println("                               Heist to the Museum - Description of the internal state");
             pw.println("MstT   Thief 1     Thief 2     Thief 3     Thief 4     Thief 5     Thief 6");
             pw.println("Stat  Stat S MD   Stat S MD   Stat S MD   Stat S MD   Stat S MD   Stat S MD");
-            pw.println("                  Assault party 1                    Assault party 2                          Museum");
-            pw.println("           Elem 1     Elem 2    Elem 3        Elem 1    Elem 2    Elem 3       Room 1  Room 2  Room 3  Room 4  Room 5");
-            pw.println("    RId  Id Pos Cv  Id Pos Cv Id Pos Cv RId Id Pos Cv Id Pos Cv Id Pos Cv       NP DT   NP DT   NP DT   NP DT   NP DT");
+            pw.println("                  Assault party 1                        Assault party 2                             Museum");
+            pw.println("           Elem 1     Elem 2    Elem 3               Elem 1    Elem 2    Elem 3       Room 1  Room 2  Room 3  Room 4  Room 5");
+            pw.println("    RId  Id Pos Cv  Id Pos Cv Id Pos Cv       RId Id Pos Cv Id Pos Cv Id Pos Cv       NP DT   NP DT   NP DT   NP DT   NP DT");
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Logging.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,6 +104,7 @@ public class Log {
 
         //AP 0
         //thief 0
+        System.out.println("thief 0 log: " + thieves[0]);
         pw.print(thieves[0].getThiefState() + " ");
         String situation;
         if (thieves[0].getAP() == null) {
@@ -112,7 +114,7 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.print(thieves[0].getMaxDisp() + "    ");
-        
+
         //thief 1
         pw.print(thieves[1].getThiefState() + " ");
         if (thieves[1].getAP() == null) {
@@ -122,7 +124,7 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.print(thieves[1].getMaxDisp() + "    ");
-        
+
         //thief 2
         pw.print(thieves[2].getThiefState() + " ");
         if (thieves[2].getAP() == null) {
@@ -132,7 +134,7 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.print(thieves[2].getMaxDisp() + "    ");
-        
+
         //AP 1
         //thief 0
         pw.print(thieves[3].getThiefState() + " ");
@@ -143,7 +145,7 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.print(thieves[3].getMaxDisp() + "    ");
-        
+
         //thief 1
         pw.print(thieves[4].getThiefState() + " ");
         if (thieves[4].getAP() == null) {
@@ -153,7 +155,7 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.print(thieves[4].getMaxDisp() + "    ");
-        
+
         //thief 2
         pw.print(thieves[5].getThiefState() + " ");
         if (thieves[5].getAP() == null) {
@@ -163,102 +165,180 @@ public class Log {
         }
         pw.print(situation + " ");
         pw.println(thieves[5].getMaxDisp() + "    ");
-        
-        
-        
+
         //AP0
         pw.print("     ");
         pw.print(this.ap[0].getRoom().getId() + "    ");
         // thief 0
-        pw.print(this.ap[0].getThieves()[0].getThiefid() + "  ");
-        pw.print(this.ap[0].getThieves()[0].getPosition() + "  ");
-        if(this.ap[0].getThieves()[0].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+
+        try {
+            pw.print(this.ap[0].getThieves()[0].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[0].getThieves()[0].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[0].getThieves()[0].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
         // thief 1
-        pw.print(this.ap[0].getThieves()[1].getThiefid() + "  ");
-        pw.print(this.ap[0].getThieves()[1].getPosition() + "  ");
-        if(this.ap[0].getThieves()[1].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+        try {
+            pw.print(this.ap[0].getThieves()[1].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[0].getThieves()[1].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[0].getThieves()[1].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
         // thief 2
-        pw.print(this.ap[0].getThieves()[2].getThiefid() + "  ");
-        pw.print(this.ap[0].getThieves()[2].getPosition() + "  ");
-        if(this.ap[0].getThieves()[2].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+        try {
+            pw.print(this.ap[0].getThieves()[2].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[0].getThieves()[2].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[0].getThieves()[2].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
         //AP1
         pw.print("     ");
         pw.print(this.ap[1].getRoom().getId() + "    ");
         // thief 0
-        pw.print(this.ap[1].getThieves()[0].getThiefid() + "  ");
-        pw.print(this.ap[1].getThieves()[0].getPosition() + "  ");
-        if(this.ap[1].getThieves()[0].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+        try {
+            pw.print(this.ap[1].getThieves()[0].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[1].getThieves()[0].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[1].getThieves()[0].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
         // thief 1
-        pw.print(this.ap[1].getThieves()[1].getThiefid() + "  ");
-        pw.print(this.ap[1].getThieves()[1].getPosition() + "  ");
-        if(this.ap[1].getThieves()[1].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+        try {
+            pw.print(this.ap[1].getThieves()[1].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[1].getThieves()[1].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[1].getThieves()[1].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
+
         // thief 2
-        pw.print(this.ap[1].getThieves()[2].getThiefid() + "  ");
-        pw.print(this.ap[1].getThieves()[2].getPosition() + "  ");
-        if(this.ap[1].getThieves()[2].isHasCanvas()){
-            situation = "1";
-        } else {
-            situation = "0";
+        try {
+            pw.print(this.ap[1].getThieves()[2].getThiefid() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
         }
-        
-        pw.print(situation + "   ");
-        
+
+        try {
+            pw.print(this.ap[1].getThieves()[2].getPosition() + "  ");
+        } catch (NullPointerException e) {
+            pw.print("-1  ");
+        }
+        try {
+            if (this.ap[1].getThieves()[2].isHasCanvas()) {
+                situation = "1";
+            } else {
+                situation = "0";
+            }
+
+            
+        } catch (NullPointerException e) {
+            pw.print(situation + "-1   ");
+        }
+
+
         //MUSEUM
-        
         pw.print(this.museum.getRooms()[0].getNPaintings() + " ");
         pw.print(this.museum.getRooms()[0].getDistance() + "  ");
-        
+
         pw.print(this.museum.getRooms()[1].getNPaintings() + " ");
         pw.print(this.museum.getRooms()[1].getDistance() + "  ");
-        
+
         pw.print(this.museum.getRooms()[2].getNPaintings() + " ");
         pw.print(this.museum.getRooms()[2].getDistance() + "  ");
-        
+
         pw.print(this.museum.getRooms()[3].getNPaintings() + " ");
         pw.print(this.museum.getRooms()[3].getDistance() + "  ");
-        
+
         pw.print(this.museum.getRooms()[4].getNPaintings() + " ");
         pw.println(this.museum.getRooms()[4].getDistance() + "  ");
 
     }
 
     /**
-     *  Writes final results and legend.
+     * Writes final results and legend.
      */
     public synchronized void writeEnd() {
         pw.println("My friends, tonight's effort produced " + this.mtccs.getTotalPaintings() + " priceless paintings!\n");

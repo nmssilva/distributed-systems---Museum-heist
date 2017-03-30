@@ -22,13 +22,6 @@ public class Thief extends Thread {
     private int maxDisp;
     private int state;
 
-    /**
-     *
-     * @return Thief state
-     */
-    public int getThiefState() {
-        return state;
-    }
     private boolean hasCanvas;
     private boolean free;
     private int position;
@@ -65,6 +58,15 @@ public class Thief extends Thread {
         this.museum = museum;
     }
 
+    
+    /**
+     *
+     * @return Thief state
+     */
+    public int getThiefState() {
+        return state;
+    }
+    
     /**
      *
      * @return Maximum Displacement of Thief

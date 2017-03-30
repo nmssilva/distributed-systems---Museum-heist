@@ -7,7 +7,6 @@ package monitors;
 
 import static GenRepOfInfo.Heist.*;
 import entities.Thief;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,26 +16,36 @@ import java.util.logging.Logger;
  */
 public class OrdThievesConcSite implements IOrdThievesConcSite {
 
-    private AtomicInteger nAssaultThievesCs;
-    private Thief[] thievesInCs;
-    private boolean incrementing;
+    private int nAssaultThievesCs;
+    private Thief[] thieves = new Thief[THIEVES_NUMBER];
+    private boolean[] thievesInCs = new boolean[THIEVES_NUMBER];
 
     /**
      * Constructor
-     * @param thievesInCs array of thieves in Concentration Site
+     * @param thieves array of thieves in Concentration Site
      */
-    public OrdThievesConcSite(Thief[] thievesInCs) {
-        this.incrementing = false;
-        this.nAssaultThievesCs = new AtomicInteger(0);
-        this.thievesInCs = thievesInCs;
+    public OrdThievesConcSite(Thief[] thieves) {
+        this.nAssaultThievesCs = 0;
+        System.arraycopy(thieves, 0, this.thieves, 0, THIEVES_NUMBER);
     }
 
+    @Override
+    public boolean[] getThievesInCs() {
+        return thievesInCs;
+    }
+
+    public void setThievesInCs(int thiefid, boolean f) {
+        this.thievesInCs[thiefid] = f;
+    }
+
+    
+    
     /**
      *
      * @return gets number of thieves in concentration site
      */
     @Override
-    public synchronized AtomicInteger getnAssaultThievesCs() {
+    public synchronized int getnAssaultThievesCs() {
         return nAssaultThievesCs;
     }
 
@@ -45,25 +54,26 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
      * @param nAssaultThievesCs number of thieves in concentration site to be set
      */
     @Override
-    public synchronized void setnAssaultThievesCs(AtomicInteger nAssaultThievesCs) {
+    public synchronized void setnAssaultThievesCs(int nAssaultThievesCs) {
         this.nAssaultThievesCs = nAssaultThievesCs;
     }
 
     /**
      *
-     * @return gets array of thieves in concentration site
+     * @return gets array of thieves
      */
+
     @Override
-    public Thief[] getThievesInCs() {
-        return thievesInCs;
+    public Thief[] getThieves() {
+        return thieves;
     }
 
     /**
      *
-     * @param thieves array of thieves to be set in concentration site
+     * @param thieves array of thieves to be set
      */
-    public void setThievesInCs(Thief[] thieves) {
-        this.thievesInCs = thieves;
+    public void setThieves(Thief[] thieves) {
+        this.thieves = thieves;
     }
 
     /**
@@ -73,7 +83,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
      */
     @Override
     public boolean getFreeAssaultThief(int thiefid) {
-        return thievesInCs[thiefid].isFree();
+        return thieves[thiefid].isFree();
     }
 
     /**
@@ -82,9 +92,8 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
      */
     @Override
     public synchronized void callAssaultThief(int thiefid) {
-
-        this.thievesInCs[thiefid].setFree(false);
-        this.thievesInCs[thiefid] = null;
+        this.thievesInCs[thiefid] = false;
+        this.thieves[thiefid].setFree(false);
         notifyAll();
 
     }
@@ -95,7 +104,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     @Override
     public synchronized void waitForArrival() {
         notifyAll();
-        while (this.nAssaultThievesCs.get() < MAX_ASSAULT_PARTY_THIEVES) {
+        while (this.nAssaultThievesCs < MAX_ASSAULT_PARTY_THIEVES) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -111,8 +120,8 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     public synchronized void amINeeded() {
         Thief thief = (Thief) Thread.currentThread();
 
-        this.nAssaultThievesCs.incrementAndGet();
-        this.thievesInCs[thief.getThiefid()] = thief;
+        this.nAssaultThievesCs++;
+        this.thievesInCs[thief.getThiefid()] = true;
 
         notifyAll();
         while (thief.isFree()) {
@@ -133,43 +142,4 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         thief.setState(CRAWLING_INWARDS);
         notifyAll();
     }
-
-    /**
-     * adds a thief to concentration site
-     */
-    @Override
-    public synchronized void addThieveToCS() {
-        
-        while(incrementing){
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(OrdThievesConcSite.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        this.incrementing = true;
-        this.nAssaultThievesCs.set(this.nAssaultThievesCs.get()+1);
-        this.incrementing = false;
-    }
-    
-    /**
-     * removes thief from concentration site
-     */
-    @Override
-    public synchronized void removeThieveToCS() {
-        
-        while(incrementing){
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(OrdThievesConcSite.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        this.incrementing = true;
-        this.nAssaultThievesCs.set(this.nAssaultThievesCs.get()-1);
-        this.incrementing = false;
-    }
-
 }

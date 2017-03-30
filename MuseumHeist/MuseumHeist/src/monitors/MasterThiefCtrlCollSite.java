@@ -24,6 +24,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
      *
      * @return MasterThief
      */
+    @Override
     public MasterThief getMasterthief() {
         return masterthief;
     }
