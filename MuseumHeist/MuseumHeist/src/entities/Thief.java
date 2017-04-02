@@ -6,6 +6,7 @@
 package entities;
 
 import static GenRepOfInfo.Heist.*;
+import java.util.Arrays;
 import java.util.Random;
 import monitors.IAssaultParty;
 import monitors.IMasterThiefCtrlCollSite;
@@ -58,7 +59,6 @@ public class Thief extends Thread {
         this.museum = museum;
     }
 
-    
     /**
      *
      * @return Thief state
@@ -66,7 +66,7 @@ public class Thief extends Thread {
     public int getThiefState() {
         return state;
     }
-    
+
     /**
      *
      * @return Maximum Displacement of Thief
@@ -187,7 +187,7 @@ public class Thief extends Thread {
             switch (this.state) {
                 case OUTSIDE:
                     System.out.println("Thief " + this.thiefid + " is OUTSIDE");
-
+                    System.out.println("N thieves CS: " + this.cs.getnAssaultThievesCs());
                     this.cs.amINeeded(); //blocking state
                     this.cs.prepareExcursion();
                     this.state = CRAWLING_INWARDS;
@@ -231,11 +231,24 @@ public class Thief extends Thread {
                 case AT_COLLECTION_SITE:
                     System.out.println("Thief " + this.thiefid + " is AT_COLLECTION_SITE");
 
-                    //prever próximo estado
-                    int roomsWithPaint = countNotZero(this.museum.getNPaintingsRoom());
-                    boolean emptyRooms = areAllFalse(this.museum.getFreeRooms());
+                    getAP().getRoom().setFree(true);
 
-                    if (roomsWithPaint == 0 || emptyRooms) {
+                    int[] roomsWithPaint = this.museum.getNPaintingsRoom();
+                    //prever próximo estado
+                    for (int i = 0; i < ROOMS_NUMBER; i++) {
+                        if (!this.museum.getFreeRooms()[i]) {
+                            roomsWithPaint[i] = 0;
+                        }
+                    }
+                    if (getAP().getRoom().getId() > ROOMS_NUMBER - 1 - (THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES)) {
+                        for (int i = ROOMS_NUMBER - 1 - (THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES); i < ROOMS_NUMBER; i++) {
+                            if (i != getAP().getRoom().getId() ) {
+                                roomsWithPaint[i] = 0;
+                            }
+                        }
+                    }
+                    System.out.println("ROOMS WITH PAINT: " + Arrays.toString(roomsWithPaint));
+                    if (countNotZero(roomsWithPaint) == 0) {
                         this.state = HEIST_END;
                     } else {
                         this.state = OUTSIDE;
@@ -244,12 +257,11 @@ public class Thief extends Thread {
                     this.mtccs.waitForMaster();
                     this.mtccs.handACanvas();
 
-                    System.out.println("N thieves CS: " + this.cs.getnAssaultThievesCs());
-
                     break;
 
                 case HEIST_END:
                     System.out.println("Thief " + this.thiefid + " HEIST END");
+                    this.cs.heistComplete();
                     heistOver = true;
                     break;
             }

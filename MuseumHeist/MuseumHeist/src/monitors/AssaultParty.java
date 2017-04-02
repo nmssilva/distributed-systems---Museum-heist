@@ -205,7 +205,7 @@ public class AssaultParty implements IAssaultParty {
         }
 
         myTurn[minIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + thief.getAP().getId() + " positions " + Arrays.toString(thievespos));
+        System.out.println("Party " + this.id + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
 
@@ -314,7 +314,7 @@ public class AssaultParty implements IAssaultParty {
         }
 
         myTurn[maxIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + thief.getAP().getId() + " positions " + Arrays.toString(thievespos));
+        System.out.println("Party " + this.id + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
 

@@ -8,7 +8,6 @@ package museumheist;
 import static GenRepOfInfo.Heist.*;
 import GenRepOfInfo.Log;
 import entities.*;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monitors.*;
@@ -75,8 +74,6 @@ public class MuseumHeist {
         
         masterThief.start(); // lady master thief starts!
         System.out.println("Lady Master Thief begins!!");
-        
-        System.out.println("THIEVES MAIN: " + thieves[0]);
         
         log = Log.getInstance(mtccs, cs, assaultParties, museum, thieves);
         

@@ -34,12 +34,15 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         return thievesInCs;
     }
 
+    /**
+     *
+     * @param thiefid Thief ID
+     * @param f true to set thief in Concentration Site, false no unset
+     */
     public void setThievesInCs(int thiefid, boolean f) {
         this.thievesInCs[thiefid] = f;
     }
 
-    
-    
     /**
      *
      * @return gets number of thieves in concentration site
@@ -103,14 +106,18 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
      */
     @Override
     public synchronized void waitForArrival() {
-        notifyAll();
         while (this.nAssaultThievesCs < MAX_ASSAULT_PARTY_THIEVES) {
             try {
                 wait();
+                if(this.checkThievesEndHeist()){
+                    break;
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrdThievesConcSite.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        notifyAll();
     }
 
     /**
@@ -119,6 +126,7 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     @Override
     public synchronized void amINeeded() {
         Thief thief = (Thief) Thread.currentThread();
+        System.out.println("Thief "+ thief.getThiefid() + " AM I NEEDED?");
 
         this.nAssaultThievesCs++;
         this.thievesInCs[thief.getThiefid()] = true;
@@ -142,4 +150,26 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
         thief.setState(CRAWLING_INWARDS);
         notifyAll();
     }
+    
+    /**
+     * @return true if all thieves finished the heist. False if otherwise
+     */
+    @Override
+    public boolean checkThievesEndHeist() {
+        for(Thief th : this.thieves){
+            if( th.getThiefState() != HEIST_END){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Thief informs that he ended the heist
+     */
+    @Override
+    public synchronized void heistComplete() {
+        notifyAll();
+    }
+    
 }

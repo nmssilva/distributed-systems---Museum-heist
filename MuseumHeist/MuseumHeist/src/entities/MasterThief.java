@@ -25,6 +25,7 @@ public class MasterThief extends Thread {
     private IMasterThiefCtrlCollSite mtccs;
     private IOrdThievesConcSite cs;
     private IMuseum museum;
+
     private IAssaultParty[] ap;
     private Thief[] thieves;
     private Log log;
@@ -64,6 +65,14 @@ public class MasterThief extends Thread {
     public int getMasterState() {
         return state;
     }
+    
+    /**
+     *
+     * @return Museum
+     */
+    public IMuseum getMuseum() {
+        return museum;
+    }
 
     /**
      *
@@ -92,35 +101,37 @@ public class MasterThief extends Thread {
                 case DECIDING_WHAT_TO_DO:
                     System.out.println("Lady Master Thief is DECIDING_WHAT_TO_DO");
 
-                    boolean appraise = true;
-
+                    System.out.println("N ASSAULT THIEVES CS: " + this.cs.getnAssaultThievesCs());
+                    
                     // verificar se rooms estão vazios
-                    if (countNotZero(this.museum.getNPaintingsRoom()) == 0) {
+                    if (this.cs.checkThievesEndHeist()) {
                         this.mtccs.sumUpResults();
-                        appraise = false;
                         this.log.writeStatusLine();
                         this.state = PRESENTING_THE_REPORT;
                     }
 
                     // verificar se existe thieves para fazer uma nova assault party
                     // se sim, forma uma party
-                    System.out.println("N ASSAULT THIEVES CS: " + this.cs.getnAssaultThievesCs());
-                    if (this.cs.getnAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES) {
-                        appraise = false;
+                    
+                    else if (this.cs.getnAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES 
+                            && !this.mtccs.getPartiesFull() 
+                            && !areAllFalse(this.museum.getFreeRooms())
+                            && countNotZero(this.museum.getNPaintingsRoom()) > 0) {
                         this.mtccs.prepareAssaultParty();
                         this.log.writeStatusLine();
                         this.state = ASSEMBLING_A_GROUP;
                     }
 
+                    
+                    
                     //verificar se as assault parties partiram
-                    if (this.mtccs.getPartiesFull()) {
-                        appraise = false;
+                    else if (this.cs.getnAssaultThievesCs() < MAX_ASSAULT_PARTY_THIEVES) {
                         this.mtccs.takeARest();
                         this.log.writeStatusLine();
                         this.state = WAITING_FOR_ARRIVAL;
                     }
 
-                    if (appraise) {
+                    else {
                         this.mtccs.appraiseSit();
                         this.log.writeStatusLine();
                         this.state = DECIDING_WHAT_TO_DO;
@@ -142,7 +153,7 @@ public class MasterThief extends Thread {
                         }
                     }
 
-                    System.out.println("FREE ROOMS: " + Arrays.toString(this.museum.getFreeRooms()));
+                    System.out.println("FREE ROOMS: " + Arrays.toString(this.museum.getFreeRooms()) + "\nNPAINTING: " + Arrays.toString(this.museum.getNPaintingsRoom()));
 
                     for (int i = 0; i < ROOMS_NUMBER; i++) {
                         if (this.museum.getFreeRooms()[i] == true) {
@@ -158,7 +169,7 @@ public class MasterThief extends Thread {
 
                     for (int i = 0; i < THIEVES_NUMBER || nThievesinAP < MAX_ASSAULT_PARTY_THIEVES; i++) {
                         Thief th = this.cs.getThieves()[i];
-                        if (th != null) {
+                        if (cs.getThievesInCs()[i]) {
                             thievestobeinAP[nThievesinAP] = th;
                             nThievesinAP++;
                             if (nThievesinAP == MAX_ASSAULT_PARTY_THIEVES) {
@@ -205,7 +216,7 @@ public class MasterThief extends Thread {
                     this.log.writeEnd();
                     heistOver = true;
                     break;
-            }
+            }   
         }
     }
 

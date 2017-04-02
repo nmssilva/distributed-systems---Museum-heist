@@ -61,5 +61,18 @@ public class Museum implements IMuseum {
     public Room[] getRooms() {
         return rooms;
     }
+    
+    /**
+     *
+     * @return Total number of paintings in museum
+     */
+    @Override
+    public int getTotalNPainting() {
+        int cnt = 0;
+        for ( int i = 0; i < ROOMS_NUMBER ; i++){
+            cnt += this.rooms[i].getNPaintings();
+        }
+        return cnt;
+    }
 
 }

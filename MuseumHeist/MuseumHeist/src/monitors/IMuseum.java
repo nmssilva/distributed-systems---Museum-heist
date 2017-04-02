@@ -28,4 +28,10 @@ public interface IMuseum {
      * @return gets int array with number of paintings of all rooms
      */
     public int[] getNPaintingsRoom();
+    
+    /**
+     *
+     * @return Total number of paintings in museum
+     */
+    public int getTotalNPainting();
 }

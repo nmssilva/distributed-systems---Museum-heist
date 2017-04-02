@@ -19,6 +19,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
 
     private int totalPaintings;
     private MasterThief masterthief;
+    private boolean allCollected;
 
     /**
      *
@@ -29,11 +30,13 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         return masterthief;
     }
 
+
     /**
      *  Constructor
      */
     public MasterThiefCtrlCollSite() {
         this.totalPaintings = 0;
+        this.allCollected = false;
     }
 
     /**
@@ -62,6 +65,15 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         notifyAll();
     }
 
+    
+    /**
+     *
+     * @return true if all paintings were collected, false if otherwise
+     */
+    public boolean isAllCollected() {
+        return allCollected;
+    }
+    
     /**
      * transits Master Thief state to PRESENTING_THE_REPORT
      */
@@ -132,10 +144,13 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     }
 
     /**
-     * transits Master Thief state to DECIDING_WHAT_TO_DO
+     * transits Master Thief state to DECIDING_WHAT_TO_DO and check if all paintings were collected
      */
     @Override
     public synchronized void collectCanvas() {
+        if(this.masterthief.getMuseum().getTotalNPainting() == 0){
+            this.allCollected = true;
+        }
         this.masterthief.setState(DECIDING_WHAT_TO_DO);
         notifyAll();
     }
@@ -181,5 +196,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
 
         notifyAll();
     }
+
+
 
 }

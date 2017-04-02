@@ -104,7 +104,6 @@ public class Log {
 
         //AP 0
         //thief 0
-        System.out.println("thief 0 log: " + thieves[0]);
         pw.print(thieves[0].getThiefState() + " ");
         String situation;
         if (thieves[0].getAP() == null) {
@@ -174,13 +173,13 @@ public class Log {
         try {
             pw.print(this.ap[0].getThieves()[0].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[0].getThieves()[0].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[0].getThieves()[0].isHasCanvas()) {
@@ -191,20 +190,20 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print(situation + "X   ");
         }
 
         // thief 1
         try {
             pw.print(this.ap[0].getThieves()[1].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[0].getThieves()[1].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[0].getThieves()[1].isHasCanvas()) {
@@ -215,20 +214,20 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print(situation + "X   ");
         }
 
         // thief 2
         try {
             pw.print(this.ap[0].getThieves()[2].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[0].getThieves()[2].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[0].getThieves()[2].isHasCanvas()) {
@@ -239,7 +238,7 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print(situation + "X   ");
         }
 
         //AP1
@@ -249,13 +248,13 @@ public class Log {
         try {
             pw.print(this.ap[1].getThieves()[0].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[1].getThieves()[0].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[1].getThieves()[0].isHasCanvas()) {
@@ -266,20 +265,20 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print(situation + "X   ");
         }
 
         // thief 1
         try {
             pw.print(this.ap[1].getThieves()[1].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[1].getThieves()[1].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[1].getThieves()[1].isHasCanvas()) {
@@ -290,7 +289,7 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print(situation + "X   ");
         }
 
 
@@ -298,13 +297,13 @@ public class Log {
         try {
             pw.print(this.ap[1].getThieves()[2].getThiefid() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
 
         try {
             pw.print(this.ap[1].getThieves()[2].getPosition() + "  ");
         } catch (NullPointerException e) {
-            pw.print("-1  ");
+            pw.print("X  ");
         }
         try {
             if (this.ap[1].getThieves()[2].isHasCanvas()) {
@@ -315,7 +314,7 @@ public class Log {
 
             
         } catch (NullPointerException e) {
-            pw.print(situation + "-1   ");
+            pw.print("X   ");
         }
 
 

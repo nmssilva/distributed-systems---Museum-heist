@@ -65,4 +65,16 @@ public interface IOrdThievesConcSite {
      */
     public void prepareExcursion();
     
+    /**
+     *
+     * @return true if all thieves finished the heist. False if otherwise
+     */
+    public boolean checkThievesEndHeist();
+    
+    /**
+     * Thief informs that he ended the heist
+     */
+    public void heistComplete();
+    
+    
 }
