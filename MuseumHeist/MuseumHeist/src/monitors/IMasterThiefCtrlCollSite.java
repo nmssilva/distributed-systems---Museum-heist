@@ -78,4 +78,9 @@ public interface IMasterThiefCtrlCollSite {
      */
     public MasterThief getMasterthief();
     
+    /**
+     * thief leaves current party
+     */
+    public void leaveParty();
+    
 }

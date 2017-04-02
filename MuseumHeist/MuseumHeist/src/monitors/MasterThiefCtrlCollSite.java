@@ -8,6 +8,7 @@ package monitors;
 import static GenRepOfInfo.Heist.*;
 import entities.MasterThief;
 import entities.Thief;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,9 +31,8 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         return masterthief;
     }
 
-
     /**
-     *  Constructor
+     * Constructor
      */
     public MasterThiefCtrlCollSite() {
         this.totalPaintings = 0;
@@ -65,7 +65,6 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         notifyAll();
     }
 
-    
     /**
      *
      * @return true if all paintings were collected, false if otherwise
@@ -73,7 +72,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     public boolean isAllCollected() {
         return allCollected;
     }
-    
+
     /**
      * transits Master Thief state to PRESENTING_THE_REPORT
      */
@@ -100,15 +99,20 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     public boolean getPartiesFull() {
 
         MasterThief mt = (MasterThief) Thread.currentThread();
+        boolean[] parties = new boolean[THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES];
+        
+        for( boolean i : parties){
+            i = false;
+        }
 
         for (int i = 0; i < (THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES); i++) {
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                if (mt.getAp()[i].getThieves()[j] == null) {
-                    return false;
+                if (mt.getAp()[i].getThieves()[j] != null) {
+                    parties[i] = true;
                 }
             }
         }
-        return true;
+        return areAllTrue(parties);
     }
 
     /**
@@ -144,11 +148,12 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     }
 
     /**
-     * transits Master Thief state to DECIDING_WHAT_TO_DO and check if all paintings were collected
+     * transits Master Thief state to DECIDING_WHAT_TO_DO and check if all
+     * paintings were collected
      */
     @Override
     public synchronized void collectCanvas() {
-        if(this.masterthief.getMuseum().getTotalNPainting() == 0){
+        if (this.masterthief.getMuseum().getTotalNPainting() == 0) {
             this.allCollected = true;
         }
         this.masterthief.setState(DECIDING_WHAT_TO_DO);
@@ -173,7 +178,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
     }
 
     /**
-     * thiefs hand a canvas in collection site
+     * thief hands a canvas in collection site
      */
     @Override
     public synchronized void handACanvas() {
@@ -183,20 +188,24 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
         if (thief.isHasCanvas()) {
             this.totalPaintings++;
             System.out.println("TOTAL COLLECTED CANVAS: " + this.totalPaintings);
-            thief.getAP().getRoom().setFree(true);
-        } else {
-            System.out.println("Canvas not recovered");
-            thief.getAP().getRoom().setFree(false);
         }
-
+        System.out.println("THIEF " + thief.getThiefid() +
+                        " \nAP0: " + Arrays.toString(this.masterthief.getAp()[0].getThieves()) + 
+                        " \nAP1: " + Arrays.toString(this.masterthief.getAp()[1].getThieves()));
+        thief.getAP().getRoom().setFree(true);
         thief.getAP().setFree(true);
 
-        thief.getAP().getThieves()[thief.getPosInParty()] = null;
         thief.setFree(true);
 
         notifyAll();
     }
 
-
-
+    /**
+     * thief leaves current party
+     */
+    @Override
+    public synchronized void leaveParty() {
+        Thief thief = (Thief) Thread.currentThread();
+        thief.getAP().getThieves()[thief.getPosInParty()] = null;
+    }
 }

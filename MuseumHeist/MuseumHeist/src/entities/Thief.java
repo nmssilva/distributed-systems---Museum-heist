@@ -256,6 +256,7 @@ public class Thief extends Thread {
 
                     this.mtccs.waitForMaster();
                     this.mtccs.handACanvas();
+                    this.mtccs.leaveParty();
 
                     break;
 
