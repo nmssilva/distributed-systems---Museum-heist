@@ -101,7 +101,7 @@ public class MasterThief extends Thread {
                 case DECIDING_WHAT_TO_DO:
                     System.out.println("Lady Master Thief is DECIDING_WHAT_TO_DO");
                     
-                    // verificar se rooms estão vazios
+                    // verificar se thieves já acabaram heist
                     if (this.cs.checkThievesEndHeist()) {
                         this.mtccs.sumUpResults();
                         this.log.writeStatusLine();
@@ -145,7 +145,7 @@ public class MasterThief extends Thread {
                     IRoom roomToSend = null;
 
                     for (int i = 0; i < THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES; i++) {
-                        if (ap[i].isFree()) {
+                        if (!this.mtccs.getPartiesFull()[i]) {
                             apToSend = ap[i];
                             break;
                         }

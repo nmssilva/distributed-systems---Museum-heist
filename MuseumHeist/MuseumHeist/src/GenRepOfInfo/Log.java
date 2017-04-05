@@ -100,7 +100,6 @@ public class Log {
         //master thief
         pw.print(Log.mtccs.getMasterthief().getMasterState() + "  ");
 
-        //AP 0
         //thief 0
         pw.print(thieves[0].getThiefState() + " ");
         String situation;
@@ -132,8 +131,7 @@ public class Log {
         pw.print(situation + " ");
         pw.print(thieves[2].getMaxDisp() + "    ");
 
-        //AP 1
-        //thief 0
+        //thief 3
         pw.print(thieves[3].getThiefState() + " ");
         if (thieves[3].getAP() == null) {
             situation = "W";
@@ -143,7 +141,7 @@ public class Log {
         pw.print(situation + " ");
         pw.print(thieves[3].getMaxDisp() + "    ");
 
-        //thief 1
+        //thief 4
         pw.print(thieves[4].getThiefState() + " ");
         if (thieves[4].getAP() == null) {
             situation = "W";
@@ -153,7 +151,7 @@ public class Log {
         pw.print(situation + " ");
         pw.print(thieves[4].getMaxDisp() + "    ");
 
-        //thief 2
+        //thief 5
         pw.print(thieves[5].getThiefState() + " ");
         if (thieves[5].getAP() == null) {
             situation = "W";
