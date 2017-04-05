@@ -126,7 +126,6 @@ public class OrdThievesConcSite implements IOrdThievesConcSite {
     @Override
     public synchronized void amINeeded() {
         Thief thief = (Thief) Thread.currentThread();
-        System.out.println("Thief "+ thief.getThiefid() + " AM I NEEDED?");
 
         this.nAssaultThievesCs++;
         this.thievesInCs[thief.getThiefid()] = true;

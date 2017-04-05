@@ -30,9 +30,9 @@ public interface IMasterThiefCtrlCollSite {
 
     /**
      *
-     * @return true if all parties are full, false if otherwise.
+     * @return boolean array true if party has thieves, false if otherwise.
      */
-    public boolean getPartiesFull();
+    public boolean[] getPartiesFull();
 
     /**
      * transits Master Thief state to WAITING_FOR_ARRIVAL

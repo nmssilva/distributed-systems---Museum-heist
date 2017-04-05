@@ -6,7 +6,6 @@
 package entities;
 
 import static GenRepOfInfo.Heist.*;
-import java.util.Arrays;
 import java.util.Random;
 import monitors.IAssaultParty;
 import monitors.IMasterThiefCtrlCollSite;
@@ -240,6 +239,7 @@ public class Thief extends Thread {
                             roomsWithPaint[i] = 0;
                         }
                     }
+                    
                     if (getAP().getRoom().getId() > ROOMS_NUMBER - 1 - (THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES)) {
                         for (int i = ROOMS_NUMBER - 1 - (THIEVES_NUMBER / MAX_ASSAULT_PARTY_THIEVES); i < ROOMS_NUMBER; i++) {
                             if (i != getAP().getRoom().getId() ) {
@@ -247,7 +247,7 @@ public class Thief extends Thread {
                             }
                         }
                     }
-                    System.out.println("ROOMS WITH PAINT: " + Arrays.toString(roomsWithPaint));
+                    
                     if (countNotZero(roomsWithPaint) == 0) {
                         this.state = HEIST_END;
                     } else {

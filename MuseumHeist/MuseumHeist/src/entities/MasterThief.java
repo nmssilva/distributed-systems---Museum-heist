@@ -100,8 +100,6 @@ public class MasterThief extends Thread {
 
                 case DECIDING_WHAT_TO_DO:
                     System.out.println("Lady Master Thief is DECIDING_WHAT_TO_DO");
-
-                    System.out.println("N ASSAULT THIEVES CS: " + this.cs.getnAssaultThievesCs());
                     
                     // verificar se rooms estão vazios
                     if (this.cs.checkThievesEndHeist()) {
@@ -114,7 +112,7 @@ public class MasterThief extends Thread {
                     // se sim, forma uma party
                     
                     else if (this.cs.getnAssaultThievesCs() >= MAX_ASSAULT_PARTY_THIEVES 
-                            && !this.mtccs.getPartiesFull() 
+                            && !areAllTrue(this.mtccs.getPartiesFull()) 
                             && !areAllFalse(this.museum.getFreeRooms())
                             && countNotZero(this.museum.getNPaintingsRoom()) > 0) {
                         this.mtccs.prepareAssaultParty();
@@ -152,8 +150,6 @@ public class MasterThief extends Thread {
                             break;
                         }
                     }
-
-                    System.out.println("FREE ROOMS: " + Arrays.toString(this.museum.getFreeRooms()) + "\nNPAINTING: " + Arrays.toString(this.museum.getNPaintingsRoom()));
 
                     for (int i = 0; i < ROOMS_NUMBER; i++) {
                         if (this.museum.getFreeRooms()[i] == true) {

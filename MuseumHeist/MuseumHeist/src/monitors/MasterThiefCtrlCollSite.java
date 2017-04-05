@@ -96,7 +96,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
      * @return true if all parties are full, false if otherwise.
      */
     @Override
-    public boolean getPartiesFull() {
+    public boolean[] getPartiesFull() {
 
         MasterThief mt = (MasterThief) Thread.currentThread();
         boolean[] parties = new boolean[THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES];
@@ -112,7 +112,10 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
                 }
             }
         }
-        return areAllTrue(parties);
+        
+        System.out.println("GET PARTIES FULL: " + Arrays.toString(parties));
+        
+        return parties;
     }
 
     /**
@@ -189,9 +192,7 @@ public class MasterThiefCtrlCollSite implements IMasterThiefCtrlCollSite {
             this.totalPaintings++;
             System.out.println("TOTAL COLLECTED CANVAS: " + this.totalPaintings);
         }
-        System.out.println("THIEF " + thief.getThiefid() +
-                        " \nAP0: " + Arrays.toString(this.masterthief.getAp()[0].getThieves()) + 
-                        " \nAP1: " + Arrays.toString(this.masterthief.getAp()[1].getThieves()));
+        
         thief.getAP().getRoom().setFree(true);
         thief.getAP().setFree(true);
 
