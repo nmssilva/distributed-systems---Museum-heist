@@ -1,78 +1,76 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package monitors;
 
-import static GenRepOfInfo.Heist.*;
+import entities.AssaultThief;
+import interfaces.IMuseum;
+import interfaces.ILogger;
+import static auxiliary.Heist.*;
+import static auxiliary.States.*;
 
 /**
  *
- * @author Nuno Silva
+ * @author Nuno Silva 72708, Pedro Coelho 59517
  */
 public class Museum implements IMuseum {
 
-    private Room rooms[];
+    private Room[] rooms;                   // Array of rooms of the museum
+
+    // Logger
+    private ILogger log;
 
     /**
-     * Constructor
+     *
+     * @param log Logger
      */
-    public Museum() {
+    public Museum(ILogger log) {
+        rooms = new Room[ROOMS_NUMBER];
+
+        this.log = log;
+
+        log.setMuseum(rooms);
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            rooms[i] = new Room(i);
+        }
+    }
+
+    /**
+     *
+     * @param nRoom ID of the room where the thieves are going
+     * @return Returns 1 if thief was successful in retrieving a canvas, 0 if
+     * not
+     */
+    @Override
+    public synchronized int rollACanvas(int nRoom) {
+        AssaultThief thief = (AssaultThief) Thread.currentThread();
+
+        thief.setStatus(AT_A_ROOM);
+
+        int nPaintings = rooms[nRoom].getNPaintings();
         
-        this.rooms = new Room[ROOMS_NUMBER];
-        
-        for (int i = 0; i < ROOMS_NUMBER; i++) {
-            this.rooms[i] = new Room(i);
+        if (nPaintings > 0) {
+            rooms[nRoom].setnPaintings(nPaintings - 1);
+            
+            log.setMuseum(rooms);
+            log.setAssaultThief();
+            log.reportStatus();
+            
+            return 1;
+        } else {
+            log.setMuseum(rooms);
+            log.setAssaultThief();
+            log.reportStatus();
+            
+            return 0;
         }
     }
 
     /**
      *
-     * @return gets boolean array. true room is free, false if not free.
+     * @param roomID ID of a room
+     * @return Returns the room with the given ID
      */
     @Override
-    public boolean[] getFreeRooms() {
-        boolean[] free = new boolean[ROOMS_NUMBER];
-        for (int i = 0; i < ROOMS_NUMBER; i++) {
-            free[i] = this.rooms[i].isFree();
-        }
-        return free;
-    }
-    
-    /**
-     *
-     * @return gets int array with number of paintings of all rooms
-     */
-    @Override
-    public int[] getNPaintingsRoom(){
-        int[] a = new int[ROOMS_NUMBER];
-        for (int i = 0; i < ROOMS_NUMBER; i++) {
-            a[i] = this.rooms[i].getNPaintings();
-        }
-        return a;
-    }
-
-    /**
-     *
-     * @return Rooms
-     */
-    @Override
-    public Room[] getRooms() {
-        return rooms;
-    }
-    
-    /**
-     *
-     * @return Total number of paintings in museum
-     */
-    @Override
-    public int getTotalNPainting() {
-        int cnt = 0;
-        for ( int i = 0; i < ROOMS_NUMBER ; i++){
-            cnt += this.rooms[i].getNPaintings();
-        }
-        return cnt;
+    public Room getRoom(int roomID) {
+        return rooms[roomID];
     }
 
 }

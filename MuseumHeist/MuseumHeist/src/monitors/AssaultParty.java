@@ -1,145 +1,74 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package monitors;
 
-import entities.Thief;
-import static GenRepOfInfo.Heist.*;
+import interfaces.ILogger;
+import interfaces.IAssaultParty;
+import static auxiliary.Heist.*;
+import static auxiliary.States.*;
+import interfaces.*;
+import entities.AssaultThief;
 import java.util.Arrays;
 
 /**
  *
- * @author Nuno Silva
+ * @author Nuno Silva 72708, Pedro Coelho 59517
  */
 public class AssaultParty implements IAssaultParty {
 
-    private int id;
-    private Thief thieves[];
-    private int thievespos[];
-    private boolean free;
-    private boolean myTurn[];
-    private IRoom room;
+    private int id;                         // ID of the assault party
+    private int roomID;                     // ID of room assigned
+    private int[] partyThieves;             // Elements assigned
+    private int[] partyThievesPos;          // Position of the elements
+    private int[] partyThievesMaxDisp;      // Maximum displacement of the elements
+    private boolean[] myTurn;               // Turns of the elements
+    private boolean[] inRoom;               // Elements in room
+    private int nThievesRoom;               // Number of assault thieves in room
+    private int reverse;                    // Counter to inform all elements are Ready to crawlOut()
+
+    // Monitors
+    private final IMuseum museum;
+    private final ILogger log;
 
     /**
      *
-     * @param id Assault Party ID
+     * @param id
+     * @param museum
+     * @param log
      */
-    public AssaultParty(int id) {
+    public AssaultParty(int id, IMuseum museum, ILogger log) {
         this.id = id;
-        this.free = true;
-        
-        this.room = new Room(-1);
-        
-        this.thieves = new Thief[MAX_ASSAULT_PARTY_THIEVES];
-        this.thievespos = new int[MAX_ASSAULT_PARTY_THIEVES];
-        this.myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
+        roomID = -1;
+        partyThieves = new int[MAX_ASSAULT_PARTY_THIEVES];
+        partyThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES];
+        partyThievesMaxDisp = new int[MAX_ASSAULT_PARTY_THIEVES];
+        myTurn = new boolean[MAX_ASSAULT_PARTY_THIEVES];
+        inRoom = new boolean[MAX_ASSAULT_PARTY_THIEVES];
+        nThievesRoom = 0;
+        reverse = 0;
 
+        this.museum = museum;
+        this.log = log;
+
+        // Empty assault party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            thievespos[i] = 0;
-            this.myTurn[i] = (i == 0);
+            partyThieves[i] = -1;
+            partyThievesPos[i] = -1;
+            partyThievesMaxDisp[i] = -1;
+            myTurn[i] = false;
+            inRoom[i] = false;
         }
-
     }
 
     /**
      *
-     * @return Assault Party ID
-     */
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    /**
+     * Simulates the movement crawlIn of the Assault Thief current thread.
      *
-     * @param id ID to be set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
      *
-     * @return array of thieves in party
-     */
-    @Override
-    public Thief[] getThieves() {
-        return thieves;
-    }
-
-    /**
-     *
-     * @param thieves array of thieves to be set
-     */
-    @Override
-    public void setThieves(Thief[] thieves) {
-        this.thieves = thieves;
-    }
-
-    /**
-     *
-     * @return array of thieves positions
-     */
-    public int[] getThievespos() {
-        return thievespos;
-    }
-
-    /**
-     *
-     * @param thievespos sets thieves positions
-     */
-    public void setThievespos(int[] thievespos) {
-        this.thievespos = thievespos;
-    }
-
-    /**
-     *
-     * @return returns true is Assault PArty is free. false if otherwise;
-     */
-    @Override
-    public boolean isFree() {
-        return free;
-    }
-
-    /**
-     *
-     * @param free true to set Assault party free (not used) or false if not
-     * free (with thieves)
-     */
-    @Override
-    public void setFree(boolean free) {
-        this.free = free;
-    }
-
-    /**
-     *
-     * @return gets Room where Assault Party is going
-     */
-    @Override
-    public IRoom getRoom() {
-        return room;
-    }
-
-    /**
-     *
-     * @param room sets Room where Assault Party is going
-     */
-    @Override
-    public void setRoom(IRoom room) {
-        this.room = room;
-    }
-
-    /**
-     * Crawl in function
      */
     @Override
     public synchronized void crawlIn() {
+        AssaultThief thief = ((AssaultThief) Thread.currentThread());
 
-        Thief thief = ((Thief) Thread.currentThread());
-
-        while (!myTurn[thief.getPosInParty()]) {
+        while (!myTurn[getIndexParty()]) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -147,175 +76,415 @@ public class AssaultParty implements IAssaultParty {
             }
         }
 
-        boolean GoodToGo = true;
-        int i;
+        thief.setStatus(CRAWLING_INWARDS);
 
-        while (GoodToGo) {
+        int myIndex = getIndexParty();
+        int myPos = thief.getPosition();
+        int myAgility = thief.getMaxDisp();
+        int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            for (i = thief.getMaxDisp(); i > 0; i--) {
-                GoodToGo = true;
-                int[] posAfterMove = new int[MAX_ASSAULT_PARTY_THIEVES];
+        int count = 0;
+        int i = 0;
+        for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+            if (i != myIndex) {
+                assaultThievesPos[count] = partyThievesPos[i];
+                count++;
+            }
+        }
 
-                System.arraycopy(thievespos, 0, posAfterMove, 0, thievespos.length);
+        Arrays.sort(assaultThievesPos);
 
-                posAfterMove[thief.getPosInParty()] = thief.getPosition() + i;
+        // Predict maximum displacement
+        for (i = myAgility; i > 0; i--) {
+            boolean tooFarOrOcupada = false;
+            // Array que vai ter myPos no inicio e assaultThievesPos de seguida
+            int[] posAfterMove = new int[assaultThievesPos.length + 1];
+            posAfterMove[0] = myPos + i;
+            System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
+            Arrays.sort(posAfterMove);
+
+            for (int j = 0; j < posAfterMove.length - 1; j++) {
+                if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
+                    tooFarOrOcupada = true;
+                    break;
+                }
+            }
+
+            // Set new position
+            if ((!tooFarOrOcupada)) {
+                if (myPos + i >= getDistOutsideRoom()) {
+                    partyThievesPos[myIndex] = getDistOutsideRoom();
+                    thief.setPosition(getDistOutsideRoom());
+                    nThievesRoom++;
+                    inRoom[myIndex] = true;
+
+                    log.setAssaultThief();
+                    log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
+                    log.reportStatus();
+
+                } else {
+                    partyThievesPos[myIndex] = myPos + i;
+                    thief.setPosition(myPos + i);
+
+                    log.setAssaultThief();
+                    log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
+                    log.reportStatus();
+                }
+
+                break;
+            }
+        }
+
+        // Check if it is possible to move even further
+        boolean canMoveAgain = false;
+        if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
+            for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
+                boolean tooFarOrOcupada = false;
+                int[] posAfterMove = new int[assaultThievesPos.length + 1];
+                posAfterMove[0] = myPos + i;
+                System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
                 Arrays.sort(posAfterMove);
 
-                // verificar se um avanço i é ilegal
-                for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES - 1; j++) {
-                    //se posiçoes entre thieves for maior que 3, ou thieves lado a lado expecto na posiçao 0 e na sala
-                    if (posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) {
-                        GoodToGo = false;
+                for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
+                    if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
+                        tooFarOrOcupada = true;
+                        break;
                     }
+                }
 
-                    if (posAfterMove[j + 1] == posAfterMove[j]) {
-                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.room.getDistance())) {
-                            GoodToGo = false;
+                if ((!tooFarOrOcupada)) {
+                    canMoveAgain = true;
+                    break;
+                }
+            }
+            // Didn't get to room or can't walk further
+        } else if (!canMoveAgain) {
+            myTurn[myIndex] = false;
+
+            int min = ROOM_MAX_DISTANCE;
+            int minIndex = -1;
+
+            for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+                if (min >= partyThievesPos[x]) {
+                    min = partyThievesPos[x];
+                    minIndex = x;
+                }
+            }
+
+            if (minIndex == myIndex) {
+                boolean changed = true;
+                while (changed) {
+                    changed = false;
+                    for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+
+                        if (partyThievesPos[minIndex] + 1 == partyThievesPos[x] && partyThievesMaxDisp[minIndex] == 2) {
+                            if (partyThievesPos[minIndex] + 1 == getDistOutsideRoom()) {
+                                continue;
+                            }
+                            minIndex = x;
+                            changed = true;
                         }
                     }
                 }
 
-                // avançar
-                if (GoodToGo) {
-                    thievespos[thief.getPosInParty()] = thief.getPosition() + i;
-                    thief.setPosition(thief.getPosition() + i);
+            }
+            myTurn[minIndex] = true;
 
-                    if (thief.getPosition() > this.room.getDistance()) {
-                        thievespos[thief.getPosInParty()] = this.room.getDistance();
-                        thief.setPosition(this.room.getDistance());
-                        GoodToGo = false;
-                    }
+            notifyAll();
+        }
+    }
 
-                    break;
-                }
+    /**
+     *
+     * Simulates the operation reverseDirection of the Assault Party. The
+     * Assault Thief current thread blocks until the last element of the Assault
+     * Party executes this action.
+     *
+     */
+    @Override
+    public synchronized void reverseDirection() {
+        myTurn[getIndexParty()] = false;
+        inRoom[getIndexParty()] = false;
 
+        if (nThievesRoom == MAX_ASSAULT_PARTY_THIEVES) {
+            nThievesRoom = 0;
+        }
+
+        myTurn[0] = true;
+
+        reverse++;
+        while (reverse % MAX_ASSAULT_PARTY_THIEVES != 0 && reverse != 0) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                System.out.println(ex.getMessage());
             }
         }
 
-        myTurn[thief.getPosInParty()] = false;
-
-        int min = this.room.getDistance();
-        int minIndex = 0;
-
-        for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
-            if (min > this.thievespos[x]) {
-                min = this.thievespos[x]; //calculcar a posição do mais atrás
-                minIndex = x; //calcular o índice desse thief
-            }
-        }
-
-        myTurn[minIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + this.id + " positions " + Arrays.toString(thievespos));
         notifyAll();
     }
 
     /**
      *
-     * @return true if room has painting, false otherwise
-     * 
+     * Simulates the movement crawlOut of the Assault Thief current thread.
+     *
      */
     @Override
-    public boolean rollACanvas() {
-        
-        Thief thief = (Thief) Thread.currentThread();
-        
-        if (this.room.getNPaintings() > 0) {
-            this.room.setnPaintings(this.room.getNPaintings() - 1);
-            thief.setHasCanvas(true);
-            System.out.println("PAINTING LEFT ROOM " + this.room.getId() + ": " + this.room.getNPaintings());
-            return true;
+    public synchronized void crawlOut() {
+        AssaultThief thief = ((AssaultThief) Thread.currentThread());
+        while (!myTurn[getIndexParty()]) {
+            try {
+                if (nThievesRoom == MAX_ASSAULT_PARTY_THIEVES) {
+                    return;
+                }
+                wait();
+            } catch (InterruptedException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
-        
+
+        thief.setStatus(CRAWLING_OUTWARDS);
+
+        int myIndex = getIndexParty();
+        int myPos = thief.getPosition();
+        int myAgility = thief.getMaxDisp();
+        int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
+
+        int count = 0;
+        int i = 0;
+        for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+            if (i != myIndex) {
+                assaultThievesPos[count] = partyThievesPos[i];
+                count++;
+            }
+        }
+
+        Arrays.sort(assaultThievesPos);
+
+        /// Predict maximum displacement
+        for (i = myAgility; i > 0; i--) {
+            boolean tooFarOrOcupada = false;
+            // Array que vai ter myPos no inicio e assaultThievesPos de seguida
+            int[] posAfterMove = new int[assaultThievesPos.length + 1];
+            posAfterMove[0] = myPos - i;
+            System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
+            Arrays.sort(posAfterMove);
+
+            for (int j = 0; j < posAfterMove.length - 1; j++) {
+                if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                    tooFarOrOcupada = true;
+                    break;
+                }
+            }
+
+            // Set new position
+            if ((!tooFarOrOcupada)) {
+                if (myPos - i <= 0) {
+                    partyThievesPos[myIndex] = 0;
+                    thief.setPosition(0);
+                    nThievesRoom++;
+                    inRoom[myIndex] = true;
+
+                    log.setAssaultThief();
+                    log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
+                    log.reportStatus();
+                } else {
+                    partyThievesPos[myIndex] = myPos - i;
+                    thief.setPosition(myPos - i);
+
+                    log.setAssaultThief();
+                    log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
+                    log.reportStatus();
+
+                }
+
+                break;
+            }
+        }
+
+        // Check if it is possible to move even further
+        boolean canMoveAgain = false;
+        if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
+            for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
+                boolean tooFarOrOcupada = false;
+                int[] posAfterMove = new int[assaultThievesPos.length + 1];
+                posAfterMove[0] = myPos - i;
+                System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
+                Arrays.sort(posAfterMove);
+
+                for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
+                    if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                        tooFarOrOcupada = true;
+                        break;
+                    }
+                }
+
+                if ((!tooFarOrOcupada)) {
+                    canMoveAgain = true;
+                    break;
+                }
+            }
+            // Didn't get to room or can't walk further
+        } else if (!canMoveAgain) {
+            myTurn[myIndex] = false;
+
+            int max = 0;
+            int maxIndex = -1;
+
+            for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+                if (max <= partyThievesPos[x]) {
+                    max = partyThievesPos[x];
+                    maxIndex = x;
+                }
+            }
+
+            if (maxIndex == myIndex) {
+                boolean changed = true;
+                while (changed) {
+                    changed = false;
+                    for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+                        if (partyThievesPos[maxIndex] - 1 == partyThievesPos[x] && partyThievesMaxDisp[maxIndex] == 2) {
+                            if (partyThievesPos[maxIndex] - 1 == 0) {
+                                continue;
+                            }
+                            maxIndex = x;
+                            changed = true;
+                        }
+                    }
+                }
+            }
+
+            myTurn[maxIndex] = true;
+
+            notifyAll();
+        }
+
+        thief.setStatus(OUTSIDE);
+    }
+
+    /**
+     * Add an Assault Thief to the Assault Party.
+     *
+     * @param thief
+     * @return True, if the operation was successful or false if otherwise
+     */
+    @Override
+    public synchronized boolean addThief(AssaultThief thief) {
+        for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+            if (partyThieves[i] == -1) {
+                partyThieves[i] = thief.getThiefID();
+                partyThievesPos[i] = 0;
+                partyThievesMaxDisp[i] = thief.getMaxDisp();
+
+                log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
+                log.reportStatus();
+
+                return true;
+            }
+        }
+
         return false;
     }
 
     /**
-     *  function to transit state to crawling outwards
+     * Get index of current Assault Thief thread in the partyThieves array.
+     *
+     * @return Returns the index of the current Assault Thief thread in the
+     * partyThieves array
      */
     @Override
-    public synchronized void reverseDirection() {
-        
-        Thief thief = (Thief) Thread.currentThread();
-        thief.setState(CRAWLING_OUTWARDS);
-        
-        notifyAll();
+    public synchronized int getIndexParty() {
+        AssaultThief thief = (AssaultThief) Thread.currentThread();
+
+        for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+            if (partyThieves[i] == thief.getThiefID()) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     /**
-     * crawl out function
+     * Set the turn to crawl of the element of index 0 to true.
+     *
      */
     @Override
-    public synchronized void crawlOut() {
-        Thief thief = ((Thief) Thread.currentThread());
-
-        while (!myTurn[thief.getPosInParty()]) {
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-
-        boolean GoodToGo = true;
-        int i;
-
-        while (GoodToGo) {
-
-            for (i = thief.getMaxDisp(); i > 0; i--) {
-                GoodToGo = true;
-                int[] posAfterMove = new int[MAX_ASSAULT_PARTY_THIEVES];
-
-                System.arraycopy(thievespos, 0, posAfterMove, 0, thievespos.length);
-
-                posAfterMove[thief.getPosInParty()] = thief.getPosition() - i;
-                Arrays.sort(posAfterMove);
-
-                // verificar se um avanço i é ilegal
-                for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES - 1; j++) {
-                    //se posiçoes entre thieves for maior que 3, ou thieves lado a lado expecto na posiçao 0 e na sala
-                    if (posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) {
-                        GoodToGo = false;
-                    }
-
-                    if (posAfterMove[j + 1] == posAfterMove[j]) {
-                        if (!(posAfterMove[j] == 0 || posAfterMove[j] == this.room.getDistance())) {
-                            GoodToGo = false;
-                        }
-                    }
-                }
-
-                // avançar
-                if (GoodToGo) {
-                    thievespos[thief.getPosInParty()] = thief.getPosition() - i;
-                    thief.setPosition(thief.getPosition() - i);
-
-                    if (thief.getPosition() < 0 ) {
-                        thievespos[thief.getPosInParty()] = 0;
-                        thief.setPosition(0);
-                        GoodToGo = false;
-                    }
-
-                    break;
-                }
-
-            }
-        }
-
-        myTurn[thief.getPosInParty()] = false;
-
-        int max = 0;
-        int maxIndex = 0;
-
-        for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
-            if (max < this.thievespos[x]) {
-                max = this.thievespos[x]; //calculcar a posição do mais atrás
-                maxIndex = x; //calcular o índice desse thief
-            }
-        }
-
-        myTurn[maxIndex] = true; // acorda o mais atrás
-        System.out.println("Party " + this.id + " positions " + Arrays.toString(thievespos));
-        notifyAll();
+    public void setFirst() {
+        myTurn[0] = true;
     }
 
+    /**
+     * Set the ID of an Assault Thief in the current Assault Party.
+     *
+     * @param i
+     * @param value
+     */
+    @Override
+    public void setPartyThieves(int i, int value) {
+        partyThieves[i] = value;
+    }
+
+    /**
+     * Get Assault Thieves ID of the current Assault Party.
+     *
+     * @return Returns array partyThieves ID of the current Assault Party
+     */
+    @Override
+    public int[] getPartyThieves() {
+        return partyThieves;
+    }
+
+    /**
+     * Get Assault Thieves positions of the current Assault Party.
+     *
+     * @return Returns array partyThieves ID of the current Assault Party
+     */
+    @Override
+    public int[] getPartyThievesPos() {
+        return partyThievesPos;
+    }
+
+    /**
+     * Get Assault Thieves maximum displacement of the current Assault Party.
+     *
+     * @return Returns array partyThieves ID of the current Assault Party
+     */
+    @Override
+    public int[] getPartyThievesMaxDisp() {
+        return partyThievesMaxDisp;
+    }
+
+    /**
+     *
+     * Set a roomID to this Assault Party.
+     *
+     * @param roomID
+     */
+    @Override
+    public void setRoom(int roomID) {
+        this.roomID = roomID;
+    }
+
+    /**
+     * Get the roomID assigned to the current Assault Party.
+     *
+     * @return Returns roomIDy
+     */
+    @Override
+    public int getRoomID() {
+        return roomID;
+    }
+
+    /**
+     * +
+     * Get distance from the Outside to the Room assigned to this Assault Party
+     *
+     * @return Returns distance from the Outside to the Room assigned to this
+     * Assault Party
+     */
+    @Override
+    public int getDistOutsideRoom() {
+        return museum.getRoom(roomID).getDistOutside();
+    }
 }

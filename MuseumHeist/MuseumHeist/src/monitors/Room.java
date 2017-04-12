@@ -1,97 +1,60 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package monitors;
 
-import static GenRepOfInfo.Heist.MAX_DIST_OUTSIDE;
-import static GenRepOfInfo.Heist.MAX_PAINTINGS;
-import static GenRepOfInfo.Heist.MIN_DIST_OUTSIDE;
-import static GenRepOfInfo.Heist.MIN_PAINTINGS;
-import java.util.Random;
+import static auxiliary.Heist.*;
 
 /**
  *
- * @author Nuno Silva
+ * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class Room implements IRoom{
-    
-    private int id;         /* identificador do quarto */
-    private int distance;   /* distance from the gathering site */
-    private int nPaintings; /* number of paintings */    
-    private boolean free;   /* assault party in room */
-    
-    /**
-     * Constructor
-     * @param id Room ID
-     */
-    public Room(int id) {
-        this.distance =  new Random().nextInt((MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
-        this.nPaintings = new Random().nextInt((MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
-        this.id = id;
-        this.free = true;
-    }
-    
-    /**
-     *
-     * @return true if room is free, false if otherwise
-     */
-    public boolean isFree() {
-        return free;
-    }
-    
-    /**
-     *
-     * @param f value to set room free
-     */
-    @Override
-    public void setFree(boolean f) {
-        this.free = f;
-    }
+public class Room {
+
+    int id;                           // ID of the room
+    int nPaintings;                   // Number of paintings of the room
+    int distOutside;                  // Distance from the room to the outside
 
     /**
      *
-     * @return gets room ID
+     * @param id
      */
-    @Override
+    public Room(int id) {
+        this.id = id;
+        nPaintings = (int) (Math.random() * (MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
+        distOutside = (int) (Math.random() * (MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
+    }
+
+    /**
+     * Get ID of the Room.
+     *
+     * @return
+     */
     public int getId() {
         return id;
     }
 
     /**
-     *
-     * @return gets number of painting remaining in room
+     * Set the number of paintings of the Room.
+     * 
+     * @param nPaintings
      */
-    @Override
-    public int getNPaintings() {
-        return nPaintings;
-    }
-
-    /**
-     *
-     * @return gets distance to room
-     */
-    @Override
-    public int getDistance() {
-        return distance;
-    }
-
-    /**
-     *
-     * @param nPaintings sets number of paintings in room
-     */
-    @Override
     public void setnPaintings(int nPaintings) {
         this.nPaintings = nPaintings;
     }
 
     /**
+     * Get the number of paintings of the Room.
      *
-     * @param dist distance to be set to room
+     * @return nPaintings
      */
-    public void setDistance(int dist) {
-        this.distance = dist;
+    public int getNPaintings() {
+        return nPaintings;
     }
-    
+
+    /**
+     * Get the distance from the Room to the outside.
+     * 
+     * @return distOutside
+     */
+    public int getDistOutside() {
+        return distOutside;
+    }
 }
