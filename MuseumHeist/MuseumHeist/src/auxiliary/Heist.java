@@ -6,29 +6,24 @@ package auxiliary;
  */
 public class Heist {
 
-    
-    /**
-     * Total number of AssaultParties in the Heist.
-     */
-    public static final int MAX_ASSAULT_PARTIES = 2;
 
     /**
-     * Total number of AssaultThieves in the Heist.
+     * Total number of thieves in the Heist.
      */
     public static final int THIEVES_NUMBER = 6;
 
     /**
-     * AssaultThieves maximum displacement.
+     * Thieves maximum displacement.
      */
     public static final int THIEVES_MAX_DISPLACEMENT = 6;
 
     /**
-     * AssaultThieves minimum displacement.
+     * Thieves minimum displacement.
      */
     public static final int THIEVES_MIN_DISPLACEMENT = 2;
 
     /**
-     * AssaultThieves maximum distance between them while crawling in.
+     * Thieves maximum distance between them while crawling.
      */
     public static final int THIEVES_MAX_DISTANCE = 3;
 
@@ -38,9 +33,14 @@ public class Heist {
     public static final int ROOM_MAX_DISTANCE = 30;
 
     /**
-     * Maximum number of AssaultThieves in an AssaultParty.
+     * Maximum number of thieves in an AssaultParty.
      */
     public static final int MAX_ASSAULT_PARTY_THIEVES = 3;
+    
+    /**
+     * Total number of AssaultParties.
+     */
+    public static final int MAX_ASSAULT_PARTIES = THIEVES_NUMBER/MAX_ASSAULT_PARTY_THIEVES;
 
     /**
      * Total number of Rooms in the Museum.

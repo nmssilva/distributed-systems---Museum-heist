@@ -13,20 +13,20 @@ import genclass.*;
 public class HeistToTheMuseum {
 
     /**
-     * 
+     *
      * The main program
-     * 
+     *
      * @param args the command line arguments
      * @throws java.rmi.RemoteException
      */
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws RemoteException, InterruptedException {
         int runCount = 0;
-        int maxRun = 1;
-        
+        int maxRun = 5;
+
         while (runCount < maxRun) { //executar maxRun vezes
             runCount++;
             System.out.println("RUN #" + runCount);
-            
+
             // Inicialização
             Logger log = new Logger();
             Museum museum = new Museum(log);
@@ -47,7 +47,7 @@ public class HeistToTheMuseum {
             masterThief.start();
 
             for (int i = 0; i < 6; i++) {
-                thiefs[i] = new AssaultThief(i, 0, cs, ccs, assparties, museum);
+                thiefs[i] = new AssaultThief(i, cs, ccs, assparties, museum);
                 thiefs[i].start();
             }
 
@@ -55,8 +55,8 @@ public class HeistToTheMuseum {
             GenericIO.writelnString();
             try {
                 masterThief.join();
-            } catch (InterruptedException ex) {
-                System.out.println("MasterThief has finished!");
+                System.out.println("Master Thief has finished!");
+            } catch (InterruptedException e) {
             }
 
             GenericIO.writelnString();
@@ -67,7 +67,7 @@ public class HeistToTheMuseum {
                 }
                 GenericIO.writelnString("Thief " + i + " has finished.");
             }
-            
+
             log.reportFinalStatus();
 
             GenericIO.writelnString();

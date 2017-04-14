@@ -16,8 +16,8 @@ public class MasterThief extends Thread {
 
     /**
      *
-     * @param ccs
-     * @param cs
+     * @param ccs Control Collection Site
+     * @param cs Concentration Site
      */
     public MasterThief(IControlCollectionSite ccs, IConcentrationSite cs) {
         status = PLANNING_THE_HEIST;
@@ -49,8 +49,7 @@ public class MasterThief extends Thread {
                     break;
             }
         }
-
-        System.out.println("Master Thief has finished!");
+        
     }
 
     /**
@@ -64,7 +63,7 @@ public class MasterThief extends Thread {
 
     /**
      *
-     * @return Returns Current status of Master thief
+     * @return Returns status of MasterThief
      */
     public int getStatus() {
         return status;

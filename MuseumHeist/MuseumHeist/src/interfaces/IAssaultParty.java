@@ -9,10 +9,10 @@ import entities.AssaultThief;
 public interface IAssaultParty {
 
     /**
-     * Add an Assault Thief to the Assault Party
+     * Add a Thief to the Assault Party.
      *
-     * @param thief
-     * @return True, if the operation was sucessful or false if otherwise
+     * @param thief Thief to be added
+     * @return True if the operation was successful or false if otherwise
      */
     boolean addThief(AssaultThief thief);
 
@@ -41,7 +41,7 @@ public interface IAssaultParty {
     int getDistOutsideRoom();
 
     /**
-     * Get index of current Assault Thief thread in the partyThieves array
+     * Get index of current thief thread in the partyThieves array.
      *
      * @return Returns the index of the current Assault Thief thread in the
      * partyThieves array
@@ -89,7 +89,7 @@ public interface IAssaultParty {
      * Set the turn to crawl of the element of index 0 to true.
      *
      */
-    void setFirst();
+    void setFirstToCrawl();
 
     /**
      * Set the ID of an Assault Thief in the current Assault Party.

@@ -30,9 +30,9 @@ public class AssaultParty implements IAssaultParty {
 
     /**
      *
-     * @param id
-     * @param museum
-     * @param log
+     * @param id Assault Party ID
+     * @param museum Museum
+     * @param log Logger
      */
     public AssaultParty(int id, IMuseum museum, ILogger log) {
         this.id = id;
@@ -59,9 +59,7 @@ public class AssaultParty implements IAssaultParty {
     }
 
     /**
-     *
-     * Simulates the movement crawlIn of the Assault Thief current thread.
-     *
+     * The thief crawls inwards the museum room.
      *
      */
     @Override
@@ -96,7 +94,7 @@ public class AssaultParty implements IAssaultParty {
 
         // Predict maximum displacement
         for (i = myAgility; i > 0; i--) {
-            boolean tooFarOrOcupada = false;
+            boolean BadToGo = false;
             // Array que vai ter myPos no inicio e assaultThievesPos de seguida
             int[] posAfterMove = new int[assaultThievesPos.length + 1];
             posAfterMove[0] = myPos + i;
@@ -105,13 +103,13 @@ public class AssaultParty implements IAssaultParty {
 
             for (int j = 0; j < posAfterMove.length - 1; j++) {
                 if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
-                    tooFarOrOcupada = true;
+                    BadToGo = true;
                     break;
                 }
             }
 
             // Set new position
-            if ((!tooFarOrOcupada)) {
+            if ((!BadToGo)) {
                 if (myPos + i >= getDistOutsideRoom()) {
                     partyThievesPos[myIndex] = getDistOutsideRoom();
                     thief.setPosition(getDistOutsideRoom());
@@ -139,7 +137,7 @@ public class AssaultParty implements IAssaultParty {
         boolean canMoveAgain = false;
         if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
             for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
-                boolean tooFarOrOcupada = false;
+                boolean BadToGo = false;
                 int[] posAfterMove = new int[assaultThievesPos.length + 1];
                 posAfterMove[0] = myPos + i;
                 System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
@@ -147,18 +145,19 @@ public class AssaultParty implements IAssaultParty {
 
                 for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
                     if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
-                        tooFarOrOcupada = true;
+                        BadToGo = true;
                         break;
                     }
                 }
 
-                if ((!tooFarOrOcupada)) {
+                if ((!BadToGo)) {
                     canMoveAgain = true;
                     break;
                 }
             }
             // Didn't get to room or can't walk further
-        } else if (!canMoveAgain) {
+            // Discover next thief to crawl
+        } else {
             myTurn[myIndex] = false;
 
             int min = ROOM_MAX_DISTANCE;
@@ -226,7 +225,7 @@ public class AssaultParty implements IAssaultParty {
 
     /**
      *
-     * Simulates the movement crawlOut of the Assault Thief current thread.
+     * The thief crawls outwards the museum room.
      *
      */
     @Override
@@ -363,10 +362,10 @@ public class AssaultParty implements IAssaultParty {
     }
 
     /**
-     * Add an Assault Thief to the Assault Party.
+     * Add a Thief to the Assault Party.
      *
-     * @param thief
-     * @return True, if the operation was successful or false if otherwise
+     * @param thief Thief to be added
+     * @return True if the operation was successful or false if otherwise
      */
     @Override
     public synchronized boolean addThief(AssaultThief thief) {
@@ -387,7 +386,7 @@ public class AssaultParty implements IAssaultParty {
     }
 
     /**
-     * Get index of current Assault Thief thread in the partyThieves array.
+     * Get index of current thief thread in the partyThieves array.
      *
      * @return Returns the index of the current Assault Thief thread in the
      * partyThieves array
@@ -410,7 +409,7 @@ public class AssaultParty implements IAssaultParty {
      *
      */
     @Override
-    public void setFirst() {
+    public void setFirstToCrawl() {
         myTurn[0] = true;
     }
 

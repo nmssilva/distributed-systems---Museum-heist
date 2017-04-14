@@ -36,7 +36,7 @@ public class Museum implements IMuseum {
      *
      * @param nRoom ID of the room where the thieves are going
      * @return Returns 1 if thief was successful in retrieving a canvas, 0 if
-     * not
+     * otherwise
      */
     @Override
     public synchronized int rollACanvas(int nRoom) {
@@ -65,7 +65,7 @@ public class Museum implements IMuseum {
 
     /**
      *
-     * @param roomID ID of a room
+     * @param roomID ID of room
      * @return Returns the room with the given ID
      */
     @Override

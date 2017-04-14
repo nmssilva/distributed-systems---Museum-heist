@@ -14,31 +14,50 @@ public class States {
     // Status of AssaultThief
     public final static int 
             /**
-             * Status OUTSIDE.
+             *  blocking state
+             *  the ordinary thief is waken up by one of the following operations of the master thief:
+             *  prepareAssaultParty, during heist operations, or sumUpResults, at the end of the heist
              */
             OUTSIDE = 1000,
             /**
-             * Status WAITING_SEND_ASSAULT_PARTY.
+             * the thief is waiting to be sent to an assault party
              */
             WAITING_SEND_ASSAULT_PARTY = 1001,
             /**
-             * Status CRAWLING_INWARDS.
+             *  transitional state with eventual waiting
+             *  for the crawling in movement to start, the first party member is waken up by
+             *  the operation sendAssaultParty of master thief
+             *  the ordinary thief proceeds until the target room at the museum is reached and
+             *  blocks if he can not generate a new increment of position (before blocking, he
+             *  wakes up the fellow party member that is just behind him in the crawling queue,
+             *  or the first one still crawling, if he is the last)
+             *  when blocking occurs, the ordinary thief is waken up by the operation of
+             *  crawlIn of a fellow party member
              */
             CRAWLING_INWARDS = 2000,
             /**
-             * Status AT_A_ROOM.
+             * transitional state
              */
             AT_A_ROOM = 3000,
             /**
-             * Status CRAWLING_OUTWARDS.
+             * transitional state with eventual waiting
+             *  for the crawling out movement to start, the first party member is waken up by
+             *  the operation reverseDirection of the last party member to decide to leave the room
+             *  the ordinary thief proceeds until he reaches the outside gathering site and
+             *  blocks if he can not generate a new increment of position (before blocking, he
+             *  wakes up the fellow party member that is just behind him in the crawling
+             *  queue, or the first one still crawling, if he is the last)
+             *  when blocking occurs, the ordinary thief is waken up by the operation of
+             *  crawlOut of a fellow party member
              */
             CRAWLING_OUTWARDS = 4000,
             /**
-             * Status AT_COLLECTION_SITE.
+             * transitional state
+             * Thief returns from crawling out and is at collection site to hand canvas
              */
             AT_COLLECTION_SITE = 5000,
             /**
-             * Status HEIST_END.
+             * Thief ends heist
              */
             HEIST_END = 6000;
 

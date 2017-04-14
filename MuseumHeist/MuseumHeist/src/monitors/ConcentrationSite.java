@@ -122,14 +122,16 @@ public class ConcentrationSite implements IConcentrationSite {
 
         log.setMasterState();
         log.reportStatus();
-
+        
+        int partyID = ccs.getNextParty();
+        
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            parties[ccs.getNextParty()].addThief((AssaultThief) waitQueue.read());
+            parties[partyID].addThief((AssaultThief) waitQueue.read());
             nAssaultThievesCS--;
         }
 
-        parties[ccs.getNextParty()].setRoom(ccs.getNextRoom());
-        parties[ccs.getNextParty()].setFirst();
+        parties[partyID].setRoom(ccs.getNextRoom());
+        parties[partyID].setFirstToCrawl();
 
         notifyAll();
     }

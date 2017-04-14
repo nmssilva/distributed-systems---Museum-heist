@@ -25,18 +25,17 @@ public class AssaultThief extends Thread {
     /**
      *
      * @param thiefID
-     * @param position
      * @param cs
      * @param ccs
      * @param assparties
      * @param museum
      */
-    public AssaultThief(int thiefID, int position, IConcentrationSite cs, IControlCollectionSite ccs, IAssaultParty[] assparties, IMuseum museum) {
+    public AssaultThief(int thiefID, IConcentrationSite cs, IControlCollectionSite ccs, IAssaultParty[] assparties, IMuseum museum) {
         this.thiefID = thiefID;
         status = OUTSIDE;
         maxDisp = (int) (Math.random() * (THIEVES_MAX_DISPLACEMENT + 1 - THIEVES_MIN_DISPLACEMENT)) + THIEVES_MIN_DISPLACEMENT;
         partyID = -1;
-        this.position = position;
+        this.position = 0;
         hasCanvas = 0;
 
         this.cs = cs;
@@ -66,16 +65,16 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns ID of current Assault Thief thread
+     * @return Returns ID of Thief 
      */
     public int getThiefID() {
         return thiefID;
     }
 
     /**
-     * Sets status of this thief
+     * Sets status of thief
      *
-     * @param status new status of this thief
+     * @param status new status for thief
      */
     public void setStatus(int status) {
         this.status = status;
@@ -83,7 +82,7 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns status of this thief
+     * @return Returns status of thief
      */
     public int getStatus() {
         return status;
@@ -91,14 +90,14 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns maximum displacement of the current Assault Thief thread.
+     * @return Returns maximum displacement of thief.
      */
     public int getMaxDisp() {
         return maxDisp;
     }
 
     /**
-     * Assign to this thief an assault party
+     * Assign to thief an assault party
      *
      * @param partyID ID of assigned assault party
      */
@@ -108,16 +107,16 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns this thief's assault party
+     * @return Returns assault party ID of thief
      */
     public int getPartyID() {
         return partyID;
     }
 
     /**
-     * Sets new position of this thief
+     * Sets new position for thief
      *
-     * @param position New position of the current Assault Thief thread
+     * @param position New position of thief
      */
     public void setPosition(int position) {
         this.position = position;
@@ -125,15 +124,16 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns position of the current Assault Thief thread
+     * @return Returns position of thief
      */
     public int getPosition() {
         return position;
     }
 
     /**
-     *
-     * @param hasCanvas
+     * Sets thief with canvas (1) or without canvas (0)
+     * 
+     * @param hasCanvas 
      */
     public void setHasCanvas(int hasCanvas) {
         this.hasCanvas = hasCanvas;
@@ -141,7 +141,7 @@ public class AssaultThief extends Thread {
 
     /**
      *
-     * @return Returns Boolean value that asserts if thief has a canvas or not
+     * @return Returns 1 if thief has canvas, or 0 if otherwise
      */
     public int getHasCanvas() {
         return hasCanvas;

@@ -276,11 +276,8 @@ public class ControlCollectionSite implements IControlCollectionSite {
     }
 
     /**
-     * Assault thieves hands a canvas to the Master Thief or shows up empty
-     * handed.
+     * Thief hands a canvas if he has canvas.
      *
-     * @param roomID ID of the room from which the Assault Thief current thread
-     * has returned from.
      */
     @Override
     public synchronized void handCanvas() {
