@@ -1,0 +1,4 @@
+/**
+ * Interfaces package.
+ */
+package interfaces;

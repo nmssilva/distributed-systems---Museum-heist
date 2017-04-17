@@ -1,8 +1,12 @@
 package main;
 
-import entities.AssaultThief;
-import entities.MasterThief;
-import monitors.*;
+import serverSide.ConcentrationSite;
+import serverSide.AssaultParty;
+import serverSide.ControlCollectionSite;
+import serverSide.Logger;
+import serverSide.Museum;
+import clientSide.AssaultThief;
+import clientSide.MasterThief;
 import java.rmi.RemoteException;
 import genclass.*;
 
@@ -18,6 +22,7 @@ public class HeistToTheMuseum {
      *
      * @param args the command line arguments
      * @throws java.rmi.RemoteException
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws RemoteException, InterruptedException {
         int runCount = 0;

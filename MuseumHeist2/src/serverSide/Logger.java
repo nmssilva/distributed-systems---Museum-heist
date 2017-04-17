@@ -1,7 +1,7 @@
-package monitors;
+package serverSide;
 
-import entities.AssaultThief;
-import entities.MasterThief;
+import clientSide.AssaultThief;
+import clientSide.MasterThief;
 import interfaces.ILogger;
 import genclass.*;
 import static auxiliary.Heist.*;

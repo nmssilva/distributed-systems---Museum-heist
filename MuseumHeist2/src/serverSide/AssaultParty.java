@@ -1,11 +1,11 @@
-package monitors;
+package serverSide;
 
 import interfaces.ILogger;
 import interfaces.IAssaultParty;
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
 import interfaces.*;
-import entities.AssaultThief;
+import clientSide.AssaultThief;
 import java.util.Arrays;
 
 /**

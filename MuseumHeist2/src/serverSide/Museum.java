@@ -1,6 +1,6 @@
-package monitors;
+package serverSide;
 
-import entities.AssaultThief;
+import clientSide.AssaultThief;
 import interfaces.IMuseum;
 import interfaces.ILogger;
 import static auxiliary.Heist.*;

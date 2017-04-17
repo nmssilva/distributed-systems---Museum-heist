@@ -1,6 +1,6 @@
 package interfaces;
 
-import entities.AssaultThief;
+import clientSide.AssaultThief;
 
 /**
  *

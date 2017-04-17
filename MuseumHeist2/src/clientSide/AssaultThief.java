@@ -1,6 +1,5 @@
-package entities;
+package clientSide;
 
-import interfaces.*;
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
 
@@ -17,20 +16,32 @@ public class AssaultThief extends Thread {
     private int position;
     private int hasCanvas;
 
-    private final IConcentrationSite cs;
+    /*private final IConcentrationSite cs;
     private final IControlCollectionSite ccs;
     private final IAssaultParty[] assparties;
-    private final IMuseum museum;
+    private final IMuseum museum;*/
+    
+    /**
+     * Nome do sistema computacional onde está localizado o servidor
+     *
+     * @serialField serverHostName
+     */
+    private String serverHostName = null;
+
+    /**
+     * Número do port de escuta do servidor
+     *
+     * @serialField serverPortNumb
+     */
+    private int serverPortNumb;
 
     /**
      *
      * @param thiefID
-     * @param cs
-     * @param ccs
-     * @param assparties
-     * @param museum
+     * @param hostName
+     * @param port
      */
-    public AssaultThief(int thiefID, IConcentrationSite cs, IControlCollectionSite ccs, IAssaultParty[] assparties, IMuseum museum) {
+    public AssaultThief(int thiefID, String hostName, int port) {
         this.thiefID = thiefID;
         status = OUTSIDE;
         maxDisp = (int) (Math.random() * (THIEVES_MAX_DISPLACEMENT + 1 - THIEVES_MIN_DISPLACEMENT)) + THIEVES_MIN_DISPLACEMENT;
@@ -38,10 +49,13 @@ public class AssaultThief extends Thread {
         this.position = 0;
         hasCanvas = 0;
 
-        this.cs = cs;
+        /*this.cs = cs;
         this.ccs = ccs;
         this.assparties = assparties;
-        this.museum = museum;
+        this.museum = museum;*/
+        
+        serverHostName = hostName;
+        serverPortNumb = port;
     }
 
     /**
@@ -49,23 +63,24 @@ public class AssaultThief extends Thread {
      */
     @Override
     public void run() {
-        while (cs.amINeeded()) {
-            ccs.prepareExcursion();
-            while (position != assparties[partyID].getDistOutsideRoom()) {
-                assparties[partyID].crawlIn();
+        while (amINeeded()) {
+            prepareExcursion();
+            while (position != getDistOutsideRoom()) {
+                crawlIn();
             }
-            hasCanvas = museum.rollACanvas(assparties[getPartyID()].getRoomID());
-            assparties[getPartyID()].reverseDirection();
+            hasCanvas = rollACanvas();
+            reverseDirection();
             while (position != 0) {
-                assparties[getPartyID()].crawlOut();
+                crawlOut();
             }
-            ccs.handCanvas();
+                
+            handCanvas();
         }
     }
 
     /**
      *
-     * @return Returns ID of Thief 
+     * @return Returns ID of Thief
      */
     public int getThiefID() {
         return thiefID;
@@ -132,8 +147,8 @@ public class AssaultThief extends Thread {
 
     /**
      * Sets thief with canvas (1) or without canvas (0)
-     * 
-     * @param hasCanvas 
+     *
+     * @param hasCanvas
      */
     public void setHasCanvas(int hasCanvas) {
         this.hasCanvas = hasCanvas;
@@ -145,5 +160,37 @@ public class AssaultThief extends Thread {
      */
     public int getHasCanvas() {
         return hasCanvas;
+    }
+
+    private boolean amINeeded() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void prepareExcursion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void crawlIn() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private int getDistOutsideRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private int rollACanvas() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void reverseDirection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void handCanvas() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void crawlOut() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
