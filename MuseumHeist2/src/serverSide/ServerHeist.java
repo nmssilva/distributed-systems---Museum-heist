@@ -25,23 +25,24 @@ public class ServerHeist
 
    public static void main (String [] args)
    {
-      Museum museum;                                       // Museum
-      ConcentrationSite cs;                                // Concentration Site
-      ControlCollectionSite ccs;                           // Control Collection Site
-      Logger log;                                          // Logger
-      AssaultParty assaultparty[];                         // Assault Parties
+      Museum museum;                    // Museum
+      ConcentrationSite cs;             // Concentration Site
+      ControlCollectionSite ccs;        // Control Collection Site
+      Logger log;                       // Logger
+      AssaultParty assaultparty[];      // Assault Parties
               
-      BarberShopInterface bShopInter;                      // interface à barbearia
-      ServerCom scon, sconi;                               // canais de comunicação
-      ClientProxy cliProxy;                                // thread agente prestador do serviço
+      BarberShopInterface bShopInter;   // interface à barbearia
+      ServerCom scon, sconi;            // canais de comunicação
+      ClientProxy cliProxy;             // thread agente prestador do serviço
 
      /* estabelecimento do servico */
 
-      scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
-      scon.start ();                                       // com o endereço público
+      scon = new ServerCom (portNumb);  // criação do canal de escuta e sua associação
+      scon.start ();                    // com o endereço público
       
       log = new Logger();
       
+      // Serviços
       museum = new Museum(log);
       assaultparty = new AssaultParty[MAX_ASSAULT_PARTIES];
       for(int i = 0; i < MAX_ASSAULT_PARTIES; i++){

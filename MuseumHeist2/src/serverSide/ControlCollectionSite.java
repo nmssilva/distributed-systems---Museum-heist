@@ -39,8 +39,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
      *
      * @param parties
      * @param log
-     * @param parties
-     * @param log
      */
     public ControlCollectionSite(IAssaultParty[] parties, ILogger log) {
         roomOcupied = new boolean[ROOMS_NUMBER];

@@ -2,243 +2,343 @@ package auxiliary;
 
 import java.io.*;
 
-/**
- *   Este tipo de dados define as mensagens que são trocadas entre os clientes e o servidor numa solução do Problema
- *   dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento
- *   estático dos threads barbeiro.
- *   A comunicação propriamente dita baseia-se na troca de objectos de tipo Message num canal TCP.
- */
+public class Message implements Serializable {
 
-public class Message implements Serializable
-{
-  /**
-   *  Chave de serialização
-   *    @serialField serialVersionUID
-   */
+    /**
+     * Chave de serialização
+     *
+     * @serialField serialVersionUID
+     */
+    private static final long serialVersionUID = 1001L;
 
-   private static final long serialVersionUID = 1001L;
+    /* Tipos das mensagens */
+    /**
+     * Inicialização do ficheiro de logging (operação pedida pelo cliente)
+     *
+     * @serialField SETNFIC
+     */
+    public static final int SETNFIC = 1;
 
-  /* Tipos das mensagens */
+    /**
+     * Ficheiro de logging foi inicializado (resposta enviada pelo servidor)
+     *
+     * @serialField NFICDONE
+     */
+    public static final int NFICDONE = 2;
 
-  /**
-   *  Inicialização do ficheiro de logging (operação pedida pelo cliente)
-   *    @serialField SETNFIC
-   */
+    /**
+     * Inicio das operações (operação pedida pelo cliente)
+     *
+     * @serialField STARTOP
+     */
+    public static final int STARTOP = 3;
 
-   public static final int SETNFIC  =  1;
+    /**
+     * MastherThief pensa no que fazer (operação pedida pelo cliente)
+     *
+     * @serialField APPRAISE
+     */
+    public static final int APPRAISE = 4;
 
-  /**
-   *  Ficheiro de logging foi inicializado (resposta enviada pelo servidor)
-   *    @serialField NFICDONE
-   */
+    /**
+     * Buscar numero de thieves no concentration site (operação pedida pelo
+     * cliente)
+     *
+     * @serialField GETNTHICS
+     */
+    public static final int GETNTHICS = 5;
 
-   public static final int NFICDONE =  2;
+    /**
+     * Preparar assault party (operação pedida pelo cliente)
+     *
+     * @serialField PREPAREAP
+     */
+    public static final int PREPAREAP = 6;
 
-  /**
-   *  Corte de cabelo (operação pedida pelo cliente)
-   *    @serialField REQCUTH
-   */
+    /**
+     * Enviar assault party (operação pedida pelo cliente)
+     *
+     * @serialField SENDAP
+     */
+    public static final int SENDAP = 7;
 
-   public static final int REQCUTH  =  3;
+    /**
+     * MAsterThief espera pela chegada dos thiefs (operação pedida pelo cliente)
+     *
+     * @serialField TAKEREST
+     */
+    public static final int TAKEREST = 8;
 
-  /**
-   *  Cabelo cortado (resposta enviada pelo servidor)
-   *    @serialField CUTHDONE
-   */
+    /**
+     * MasterThief colecta os quadros (operação pedida pelo cliente)
+     *
+     * @serialField COLLCANV
+     */
+    public static final int COLLCANV = 9;
 
-   public static final int CUTHDONE =  4;
+    /**
+     * Somatório dos resultados (operação pedida pelo cliente)
+     *
+     * @serialField SUMUPRES
+     */
+    public static final int SUMUPRES = 10;
 
-  /**
-   *  Barbearia cheia (resposta enviada pelo servidor)
-   *    @serialField BSHOPF
-   */
+    /**
+     * Thief espera para ser necessitado (operação pedida pelo cliente)
+     *
+     * @serialField AMINEEDED
+     */
+    public static final int AMINEEDED = 11;
 
-   public static final int BSHOPF   =  5;
+    /**
+     * Preparação da excursão (operação pedida pelo cliente)
+     *
+     * @serialField PREPEXCU
+     */
+    public static final int PREPEXCU = 12;
 
-  /**
-   *  Alertar o thread barbeiro do fim de operações (operação pedida pelo cliente)
-   *    @serialField ENDOP
-   */
+    /**
+     * Buscar distancia até ao room (operação pedida pelo cliente)
+     *
+     * @serialField GETDIST
+     */
+    public static final int GETDIST = 13;
 
-   public static final int ENDOP    =  6;
+    /**
+     * Thief efetua movimento de crawlin (operação pedida pelo cliente)
+     *
+     * @serialField CRAWLIN
+     */
+    public static final int CRAWLIN = 14;
 
-  /**
-   *  Operação realizada com sucesso (resposta enviada pelo servidor)
-   *    @serialField ACK
-   */
+    /**
+     * Thief enrola uma pintura (operação pedida pelo cliente)
+     *
+     * @serialField ROLLCANVAS
+     */
+    public static final int ROLLCANVAS = 15;
 
-   public static final int ACK      =  7;
+    /**
+     * Thief prepara para voltar ao collection site (operação pedida pelo
+     * cliente)
+     *
+     * @serialField REVDIR
+     */
+    public static final int REVDIR = 16;
 
-  /**
-   *  Mandar o barbeiro dormir (operação pedida pelo cliente)
-   *    @serialField GOTOSLP
-   */
+    /**
+     * Thief efetua movimento crawl out (operação pedida pelo cliente)
+     *
+     * @serialField CRAWLOUT
+     */
+    public static final int CRAWLOUT = 17;
 
-   public static final int GOTOSLP  =  8;
+    /**
+     * Thief entrega um quadro (operação pedida pelo cliente)
+     *
+     * @serialField HANDCANVAS
+     */
+    public static final int HANDCANVAS = 18;
 
-  /**
-   *  Continuação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   *    @serialField CONT
-   */
+    /**
+     * Alertar o thread MasterThief do fim de operações (operação pedida pelo
+     * cliente)
+     *
+     * @serialField ENDOP
+     */
+    public static final int ENDOP = 19;
 
-   public static final int CONT     =  9;
+    /**
+     * Operação realizada com sucesso (resposta enviada pelo servidor)
+     *
+     * @serialField ACK
+     */
+    public static final int ACK = 20;
 
-  /**
-   *  Terminação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   *    @serialField END
-   */
+    /**
+     * Buscar numero de quadros
+     *
+     * @serialField GETPAINTN
+     */
+    public static final int GETPAINTN = 21;
 
-   public static final int END      = 10;
+    /**
+     * Resposta à distancia ao room
+     *
+     * @serialField DIST
+     */
+    public static final int DIST = 22;
 
-  /**
-   *  Chamar um cliente pelo barbeiro (operação pedida pelo cliente)
-   *    @serialField CALLCUST
-   */
+    /**
+     * Numero de pinturas
+     *
+     * @serialField PAINTNUMB
+     */
+    public static final int PAINTNUMB = 23;
 
-   public static final int CALLCUST = 11;
+    /**
+     * Pintura enrolada
+     *
+     * @serialField DIST
+     */
+    public static final int ROLLED = 24;
 
-  /**
-   *  Enviar a identificação do cliente (resposta enviada pelo servidor)
-   *    @serialField CUSTID
-   */
-
-   public static final int CUSTID   = 12;
-
-  /**
-   *  Receber pagamento pelo barbeiro (operação pedida pelo cliente)
-   *    @serialField GETPAY
-   */
-
-   public static final int GETPAY   = 13;
+    /**
+     * Pintura nao enrolada
+     *
+     * @serialField DIST
+     */
+    public static final int NOT_ROLLED = 25;
 
 
-  /* Campos das mensagens */
+    /* Campos das mensagens */
+    /**
+     * Tipo da mensagem
+     *
+     * @serialField msgType
+     */
+    private int msgType = -1;
 
-  /**
-   *  Tipo da mensagem
-   *    @serialField msgType
-   */
+    /**
+     * Identificação do thief
+     *
+     * @serialField thiefId
+     */
+    private int thiefId = -1;
 
-   private int msgType = -1;
+    /**
+     * Identificação da assault party
+     *
+     * @serialField apId
+     */
+    private int apId = -1;
 
-  /**
-   *  Identificação do cliente
-   *    @serialField custId
-   */
+    /**
+     * Identificação do room
+     *
+     * @serialField roomId
+     */
+    private int roomId = -1;
 
-   private int thiefId = -1;
+    /**
+     * Nome do ficheiro de logging
+     *
+     * @serialField fName
+     */
+    private String fName = null;
 
-  /**
-   *  Nome do ficheiro de logging
-   *    @serialField fName
-   */
+    /**
+     * Número de iterações do ciclo de vida dos clientes
+     *
+     * @serialField nIter
+     */
+    private int nIter = -1;
 
-   private String fName = null;
+    /**
+     * Instanciação de uma mensagem (forma 1).
+     *
+     * @param type tipo da mensagem
+     */
+    public Message(int type) {
+        msgType = type;
+    }
 
-  /**
-   *  Número de iterações do ciclo de vida dos clientes
-   *    @serialField nIter
-   */
+    /**
+     * Instanciação de uma mensagem (forma 2).
+     *
+     * @param type tipo da mensagem
+     * @param id identificação do cliente/barbeiro
+     */
+    public Message(int type, int id) {
+        msgType = type;
+        if ((msgType == AMINEEDED) || (msgType == PREPEXCU) || (msgType == CRAWLIN)
+                || (msgType == ROLLCANVAS) || (msgType == REVDIR)
+                || (msgType == CRAWLOUT) || (msgType == HANDCANVAS)) {
+            thiefId = id;
+        }
+    }
 
-   private int nIter = -1;
+    /**
+     * Instanciação de uma mensagem (forma 4).
+     *
+     * @param type tipo da mensagem
+     * @param name nome do ficheiro de logging
+     * @param nIter número de iterações do ciclo de vida dos clientes
+     */
+    public Message(int type, String name, int nIter) {
+        msgType = type;
+        fName = name;
+        this.nIter = nIter;
+    }
 
-  /**
-   *  Instanciação de uma mensagem (forma 1).
-   *
-   *    @param type tipo da mensagem
-   */
+    /**
+     * Obtenção do valor do campo tipo da mensagem.
+     *
+     * @return tipo da mensagem
+     */
+    public int getType() {
+        return (msgType);
+    }
 
-   public Message (int type)
-   {
-      msgType = type;
-   }
+    /**
+     * Obtenção do valor do campo identificador da assault party.
+     *
+     * @return identificação da assault party
+     */
+    public int getApId() {
+        return (apId);
+    }
 
-  /**
-   *  Instanciação de uma mensagem (forma 2).
-   *
-   *    @param type tipo da mensagem
-   *    @param id identificação do cliente/barbeiro
-   */
+    /**
+     * Obtenção do valor do campo identificador do room.
+     *
+     * @return identificação do room
+     */
+    public int getRoomId() {
+        return (roomId);
+    }
 
-   public Message (int type, int id)
-   {
-      msgType = type;
-      if ((msgType == REQCUTH) || (msgType == CUSTID))
-         thiefId= id;
-   }
+    /**
+     * Obtenção do valor do campo identificador do thief.
+     *
+     * @return identificação do thief
+     */
+    public int getThiefId() {
+        return (thiefId);
+    }
 
-  /**
-   *  Instanciação de uma mensagem (forma 4).
-   *
-   *    @param type tipo da mensagem
-   *    @param name nome do ficheiro de logging
-   *    @param nIter número de iterações do ciclo de vida dos clientes
-   */
+    /**
+     * Obtenção do valor do campo nome do ficheiro de logging.
+     *
+     * @return nome do ficheiro
+     */
+    public String getFName() {
+        return (fName);
+    }
 
-   public Message (int type, String name, int nIter)
-   {
-      msgType = type;
-      fName= name;
-      this.nIter = nIter;
-   }
+    /**
+     * Obtenção do valor do campo número de iterações do ciclo de vida dos
+     * clientes.
+     *
+     * @return número de iterações do ciclo de vida dos clientes
+     */
+    public int getNIter() {
+        return (nIter);
+    }
 
-  /**
-   *  Obtenção do valor do campo tipo da mensagem.
-   *
-   *    @return tipo da mensagem
-   */
-
-   public int getType ()
-   {
-      return (msgType);
-   }
-
-  /**
-   *  Obtenção do valor do campo identificador do thief.
-   *
-   *    @return identificação do thief
-   */
-
-   public int getThiefId ()
-   {
-      return (thiefId);
-   }
-
-  /**
-   *  Obtenção do valor do campo nome do ficheiro de logging.
-   *
-   *    @return nome do ficheiro
-   */
-
-   public String getFName ()
-   {
-      return (fName);
-   }
-
-  /**
-   *  Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
-   *
-   *    @return número de iterações do ciclo de vida dos clientes
-   */
-
-   public int getNIter ()
-   {
-      return (nIter);
-   }
-
-  /**
-   *  Impressão dos campos internos.
-   *  Usada para fins de debugging.
-   *
-   *    @return string contendo, em linhas separadas, a concatenação da identificação de cada campo e valor respectivo
-   */
-
-   @Override
-   public String toString ()
-   {
-      return ("Tipo = " + msgType +
-              "\nId Thief = " + thiefId +
-              "\nNome Fic. Logging = " + fName +
-              "\nN. de Iteracoes = " + nIter);
-   }
+    /**
+     * Impressão dos campos internos. Usada para fins de debugging.
+     *
+     * @return string contendo, em linhas separadas, a concatenação da
+     * identificação de cada campo e valor respectivo
+     */
+    @Override
+    public String toString() {
+        return ("Tipo = " + msgType
+                + "\nId Thief = " + thiefId
+                + "\nId AP = " + apId
+                + "\nId Room = " + roomId
+                + "\nNome Fic. Logging = " + fName
+                + "\nN. de Iteracoes = " + nIter);
+    }
 }
