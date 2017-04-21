@@ -22,5 +22,9 @@ public interface IMuseum {
      * otherwise
      */
     int rollACanvas(int nRoom);
+    
+    int getRoomDistance(int roomId);
+    
+    int getPaintingsNumber(int roomId);
 
 }

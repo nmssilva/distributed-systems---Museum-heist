@@ -1,6 +1,7 @@
 package auxiliary;
 
 import java.io.*;
+import serverSide.Room;
 
 public class Message implements Serializable {
 
@@ -46,42 +47,42 @@ public class Message implements Serializable {
      *
      * @serialField GETNTHICS
      */
-    public static final int GETNTHICS = 5;
+    public static final int GET_N_THIEVES_IN_CS = 5;
 
     /**
      * Preparar assault party (operação pedida pelo cliente)
      *
      * @serialField PREPAREAP
      */
-    public static final int PREPAREAP = 6;
+    public static final int PREPARE_AP = 6;
 
     /**
      * Enviar assault party (operação pedida pelo cliente)
      *
      * @serialField SENDAP
      */
-    public static final int SENDAP = 7;
+    public static final int SEND_AP = 7;
 
     /**
-     * MAsterThief espera pela chegada dos thiefs (operação pedida pelo cliente)
+     * MasterThief espera pela chegada dos thiefs (operação pedida pelo cliente)
      *
      * @serialField TAKEREST
      */
-    public static final int TAKEREST = 8;
+    public static final int TAKE_REST = 8;
 
     /**
      * MasterThief colecta os quadros (operação pedida pelo cliente)
      *
      * @serialField COLLCANV
      */
-    public static final int COLLCANV = 9;
+    public static final int COLLECT_CANVAS = 9;
 
     /**
      * Somatório dos resultados (operação pedida pelo cliente)
      *
      * @serialField SUMUPRES
      */
-    public static final int SUMUPRES = 10;
+    public static final int SUM_UP_RESULTS = 10;
 
     /**
      * Thief espera para ser necessitado (operação pedida pelo cliente)
@@ -95,7 +96,7 @@ public class Message implements Serializable {
      *
      * @serialField PREPEXCU
      */
-    public static final int PREPEXCU = 12;
+    public static final int PREPARE_EXCURSION = 12;
 
     /**
      * Buscar distancia até ao room (operação pedida pelo cliente)
@@ -156,39 +157,210 @@ public class Message implements Serializable {
     public static final int ACK = 20;
 
     /**
+     * Operação realizada com sucesso com envio de um valor inteiro (resposta
+     * enviada pelo servidor)
+     *
+     * @serialField ACK_INT
+     */
+    public static final int ACK_INT = 21;
+    
+    /**
+     * Operação realizada com sucesso com envio de um array de valores inteiros (resposta
+     * enviada pelo servidor)
+     *
+     * @serialField ACK_INT
+     */
+    public static final int ACK_INT_ARRAY = 22;
+
+    /**
+     * Operação realizada com sucesso com envio de um valor booleano (resposta
+     * enviada pelo servidor)
+     *
+     * @serialField ACK
+     */
+    public static final int ACK_BOOL = 23;
+
+    /**
      * Buscar numero de quadros
      *
      * @serialField GETPAINTN
      */
-    public static final int GETPAINTN = 21;
+    public static final int GET_N_PAINTING = 25;
 
     /**
-     * Resposta à distancia ao room
+     * Adicionar thief ao assault party
      *
-     * @serialField DIST
+     * @serialField ADD_THIEF
      */
-    public static final int DIST = 22;
+    public static final int ADD_THIEF = 26;
 
     /**
-     * Numero de pinturas
+     * Obter o index do thief na assault party
      *
-     * @serialField PAINTNUMB
+     * @serialField GET_INDEX_AP
      */
-    public static final int PAINTNUMB = 23;
+    public static final int GET_INDEX_AP = 27;
 
     /**
-     * Pintura enrolada
+     * Fazer set ao room da assault party
      *
-     * @serialField DIST
+     * @serialField SET_ROOM
      */
-    public static final int ROLLED = 24;
+    public static final int SET_ROOM = 28;
 
     /**
-     * Pintura nao enrolada
+     * Obter array de thieves na assault party
      *
-     * @serialField DIST
+     * @serialField GET_PARTY_THIEVES
      */
-    public static final int NOT_ROLLED = 25;
+    public static final int GET_PARTY_THIEVES = 29;
+
+    /**
+     * Obter array do maximum displacement dos thiefs na asasault party
+     *
+     * @serialField GET_PARTY_THIEVES_MAX_DISP
+     */
+    public static final int GET_PARTY_THIEVES_MAX_DISP = 30;
+
+    /**
+     * Obter array das posiçoes dos thieves da assault party
+     *
+     * @serialField GET_PARTY_THIEVES_POS
+     */
+    public static final int GET_PARTY_THIEVES_POS = 31;
+
+    /**
+     * Obter room ID para onde a assault party foi
+     *
+     * @serialField GET_ROOM_ID
+     */
+    public static final int GET_ROOM_ID = 32;
+
+    /**
+     * Definir o primeiro thief a fazer crawl
+     *
+     * @serialField SET_FIRST_TO_CRAWL
+     */
+    public static final int SET_FIRST_TO_CRAWL = 33;
+
+    /**
+     * Definir thief na assault party
+     *
+     * @serialField SET_PARTY_THIEVES
+     */
+    public static final int SET_PARTY_THIEVES = 34;
+    
+    /**
+     * Definir próxima assault party a ser enviada
+     *
+     * @serialField SET_NEXT_PARTY
+     */
+    public static final int SET_NEXT_PARTY = 35;
+    
+    /**
+     * Definir proxima room para a assault party
+     *
+     * @serialField SET_NEXT_ROOM
+     */
+    public static final int SET_NEXT_ROOM = 36;
+    
+    /**
+     * Obter próxima assault party a ser enviada
+     *
+     * @serialField GET_NEXT_PARTY
+     */
+    public static final int GET_NEXT_PARTY = 37;
+    
+    /**
+     * Obter proxima room para a assault party
+     *
+     * @serialField GET_NEXT_ROOM
+     */
+    public static final int GET_NEXT_ROOM = 38;
+    
+    /**
+     * Obter se o thief está na party
+     *
+     * @serialField IN_PARTY
+     */
+    public static final int IN_PARTY = 39;
+    
+    /**
+     * Definir valor da variável ready para true
+     *
+     * @serialField IS_READY
+     */
+    public static final int SET_READY = 40;
+    
+    /**
+     * Obter proxima assault party vazia
+     *
+     * @serialField NEXT_EMPTY_PARTY
+     */
+    public static final int NEXT_EMPTY_PARTY = 41;
+    
+    /**
+     * Obter proxima room vazia
+     *
+     * @serialField NEXT_EMPTY_ROOM
+     */
+    public static final int NEXT_EMPTY_ROOM = 42;
+    
+    /**
+     * Report do estado final
+     *
+     * @serialField REPORT_FINAL_STATUS
+     */
+    public static final int REPORT_FINAL_STATUS = 43;
+    
+    /**
+     * Report do estado inicial
+     *
+     * @serialField REPORT_INITIAL_STATUS
+     */
+    public static final int REPORT_INITIAL_STATUS = 44;
+    
+    /**
+     * Report do estado atual
+     *
+     * @serialField REPORT_STATUS
+     */
+    public static final int REPORT_STATUS = 45;
+    
+    /**
+     * Definir assault party
+     *
+     * @serialField SET_ASSAULT_PARTY
+     */
+    public static final int SET_ASSAULT_PARTY = 46;
+    
+    /**
+     * Definir Assault thief
+     *
+     * @serialField SET_ASSAULT_THIEF
+     */
+    public static final int SET_ASSAULT_THIEF = 47;
+    
+    /**
+     * Definir estado da master thief
+     *
+     * @serialField SET_MASTER_STATE
+     */
+    public static final int SET_MASTER_STATE = 48;
+    
+    /**
+     * Definir o museum
+     *
+     * @serialField SET_MUSEUM
+     */
+    public static final int SET_MUSEUM = 49;
+    
+    /**
+     * Definir numero de pinturas
+     *
+     * @serialField SET_N_PAINTINGS
+     */
+    public static final int SET_N_PAINTINGS = 50;
 
 
     /* Campos das mensagens */
@@ -219,7 +391,58 @@ public class Message implements Serializable {
      * @serialField roomId
      */
     private int roomId = -1;
+    
+    /**
+     *  Valor tipo int na resposta do servidor
+     * 
+     * @serialField ackint
+     */
+    private int ackint;
+    
+    /**
+     *  Valor tipo int[] na resposta do servidor
+     * 
+     * @serialField ackintarray
+     */
+    private int[] ackintarray;
+    
+    /**
+     * Valor tipo boolean na resposta do servidor
+     * 
+     * @serialField ackbool
+     */
+    private boolean ackbool;
+    
+    /**
+     * Valor tipo int para ser transportado na mensagem
+     * 
+     * @serialField value
+     */
+    private int value;
+    
+    /**
+     * Array de elementos de uma assault party
+     * 
+     * @serialField elements
+     */
+    private int[] elements;
+    
+    /**
+     * Array da posição dos elementos de uma assault party
+     * 
+     * @serialField positions
+     */
+    private int[] positions;
+    
+    /**
+     * Array de roomsy
+     * 
+     * @serialField rooms
+     */
+    private Room[] rooms;
 
+    
+    
     /**
      * Nome do ficheiro de logging
      *
@@ -235,7 +458,7 @@ public class Message implements Serializable {
     private int nIter = -1;
 
     /**
-     * Instanciação de uma mensagem (forma 1).
+     * Instanciação de uma mensagem
      *
      * @param type tipo da mensagem
      */
@@ -244,22 +467,70 @@ public class Message implements Serializable {
     }
 
     /**
-     * Instanciação de uma mensagem (forma 2).
+     * Instanciação de uma mensagem
      *
      * @param type tipo da mensagem
-     * @param id identificação do cliente/barbeiro
+     * @param value valor inteiro
      */
-    public Message(int type, int id) {
+    public Message(int type, int value) {
         msgType = type;
-        if ((msgType == AMINEEDED) || (msgType == PREPEXCU) || (msgType == CRAWLIN)
+        if ((msgType == AMINEEDED) || (msgType == PREPARE_EXCURSION) || (msgType == CRAWLIN)
                 || (msgType == ROLLCANVAS) || (msgType == REVDIR)
                 || (msgType == CRAWLOUT) || (msgType == HANDCANVAS)) {
-            thiefId = id;
+            thiefId = value;
+        }
+        if(msgType == ACK_INT){
+            ackint = value;
+        }
+    }
+    
+    /**
+     * Instanciação de uma mensagem
+     *
+     * @param type tipo da mensagem
+     * @param array array de valores inteiros
+     */
+    public Message(int type, int[] array) {
+        msgType = type;
+        if(msgType == ACK_INT_ARRAY){
+            ackintarray = array;
+        }
+    }
+    
+    /**
+     * Instanciação de uma mensagem
+     *
+     * @param type tipo da mensagem
+     * @param apId
+     * @param elements
+     * @param positions
+     * @param roomId
+     */
+    public Message(int type, int apId, int[] elements, int[] positions, int roomId) {
+        msgType = type;
+        this.apId = apId;
+        this.roomId = roomId;
+        this.elements = new int[elements.length];
+        System.arraycopy(elements, 0, this.elements, 0, elements.length);
+        this.positions = new int[positions.length];
+        System.arraycopy(positions, 0, this.positions, 0, positions.length);
+    }
+
+    /**
+     * Instanciação de uma mensagem
+     *
+     * @param type tipo da mensagem
+     * @param value valor booleano
+     */
+    public Message(int type, boolean value) {
+        msgType = type;
+        if(msgType == ACK_BOOL){
+            ackbool = value;
         }
     }
 
     /**
-     * Instanciação de uma mensagem (forma 4).
+     * Instanciação de uma mensagem
      *
      * @param type tipo da mensagem
      * @param name nome do ficheiro de logging
@@ -325,7 +596,45 @@ public class Message implements Serializable {
     public int getNIter() {
         return (nIter);
     }
+    
+    /**
+     * Obtenção do valor do campo value
+     *
+     * @return value
+     */
+    public int getValue() {
+        return value;
+    }
 
+    /**
+     * Obtenção do valor do campo elements
+     *
+     * @return elements
+     */
+    public int[] getElements() {
+        return elements;
+    }
+
+    /**
+     * Obtenção do valor do campo positions
+     *
+     * @return positions
+     */
+    public int[] getPositions() {
+        return positions;
+    }
+
+    /**
+     * Obtenção do valor do campo rooms
+     *
+     * @return rooms
+     */
+    public Room[] getRooms() {
+        return rooms;
+    }
+
+    
+    
     /**
      * Impressão dos campos internos. Usada para fins de debugging.
      *

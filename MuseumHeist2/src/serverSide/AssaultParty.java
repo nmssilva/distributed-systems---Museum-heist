@@ -417,11 +417,11 @@ public class AssaultParty implements IAssaultParty {
      * Set the ID of an Assault Thief in the current Assault Party.
      *
      * @param i
-     * @param value
+     * @param thiefid
      */
     @Override
-    public void setPartyThieves(int i, int value) {
-        partyThieves[i] = value;
+    public void setPartyThieves(int i, int thiefid) {
+        partyThieves[i] = thiefid;
     }
 
     /**

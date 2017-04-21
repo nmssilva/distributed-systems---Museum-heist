@@ -31,6 +31,8 @@ public class MasterThief extends Thread {
 
     /**
      *
+     * @param hostName
+     * @param port
      */
     public MasterThief(String hostName, int port) {
         status = PLANNING_THE_HEIST;

@@ -267,7 +267,7 @@ public class ControlCollectionSite implements IControlCollectionSite {
      *
      */
     @Override
-    public synchronized void isReady() {
+    public synchronized void setReady() {
         ready = true;
 
         notifyAll();

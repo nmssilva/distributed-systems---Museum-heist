@@ -4,13 +4,6 @@ import genclass.GenericIO;
 import auxiliary.Message;
 import auxiliary.MessageException;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
-
 public class ClientProxy extends Thread
 {
   /**

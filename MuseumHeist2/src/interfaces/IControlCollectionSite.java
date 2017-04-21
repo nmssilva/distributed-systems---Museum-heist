@@ -67,7 +67,7 @@ public interface IControlCollectionSite {
      * ready.
      *
      */
-    void isReady();
+    void setReady();
 
     /**
      * Discover next empty Assault Party.

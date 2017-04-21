@@ -86,7 +86,7 @@ public class ConcentrationSite implements IConcentrationSite {
 
         nAssaultThievesCS++;
         waitQueue.write(thief);
-        ccs.isReady();
+        ccs.setReady();
 
         log.setAssaultThief();
         log.reportStatus();

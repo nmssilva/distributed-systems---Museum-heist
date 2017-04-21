@@ -73,4 +73,14 @@ public class Museum implements IMuseum {
         return rooms[roomID];
     }
 
+    @Override
+    public int getRoomDistance(int roomId) {
+        return rooms[roomId].getDistOutside();
+    }
+
+    @Override
+    public int getPaintingsNumber(int roomId) {
+        return rooms[roomId].getNPaintings();
+    }
+
 }
