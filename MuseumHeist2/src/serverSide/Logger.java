@@ -28,11 +28,13 @@ public class Logger implements ILogger {
     private int[][] assparties;
     private int[] asspartiesRoomID;
     private String lastLine, lastLine2;
+    private int nIter;
 
     /**
      *
      */
     public Logger() {
+        log = new TextFile();
         assaultThiefStatus = new String[THIEVES_NUMBER];
         assaultThiefMaxDisp = new int[THIEVES_NUMBER];
         assaultThiefSituation = new String[THIEVES_NUMBER];
@@ -59,8 +61,6 @@ public class Logger implements ILogger {
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
         fileName = "Heistothemuseum_" + date.format(today) + ".log";
-
-        this.log = new TextFile();
     }
 
     /**
@@ -119,10 +119,10 @@ public class Logger implements ILogger {
     /**
      * Set an Assault Thief State in the Logger
      *
+     * @param thief
      */
     @Override
-    public void setAssaultThief() {
-        AssaultThief thief = (AssaultThief) Thread.currentThread();
+    public void setAssaultThief(AssaultThief thief) {
         int status = thief.getStatus();
         switch (status) {
             case 1000:
@@ -236,14 +236,14 @@ public class Logger implements ILogger {
             }
             line2 += "";
         }
-
+        /*
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             if (rooms[i].getNPaintings() < 10) {
                 line2 += " " + rooms[i].getNPaintings() + " " + rooms[i].getDistOutside() + "   ";
             } else {
                 line2 += rooms[i].getNPaintings() + " " + rooms[i].getDistOutside() + "   ";
             }
-        }
+        }*/
         if (!dontPrint) {
             if (!(lastLine.equals(line) && lastLine2.equals(line2))) {
                 log.writelnString(line);
@@ -287,5 +287,23 @@ public class Logger implements ILogger {
             GenericIO.writelnString("A operação de fecho do ficheiro " + fileName + " falhou!");
             System.exit(1);
         }
+    }
+
+    /**
+     * Start a file where all the operations will be written along with the
+     * changes to the main attributes of the Heist.
+     *
+     * @param fileName
+     * @param nIter
+     */
+    public synchronized void setFileName(String fileName, int nIter) {
+        if ((fileName != null) && !("".equals(fileName))) {
+            this.fileName = fileName;
+        }
+        if (nIter > 0) {
+            this.nIter = nIter;
+        }
+        reportInitialStatus();
+        reportStatus();
     }
 }

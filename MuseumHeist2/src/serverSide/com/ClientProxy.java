@@ -1,8 +1,9 @@
-package serverSide;
+package serverSide.com;
 
 import genclass.GenericIO;
 import auxiliary.Message;
 import auxiliary.MessageException;
+import serverSide.Interfaces.*;
 
 public class ClientProxy extends Thread
 {
@@ -23,26 +24,26 @@ public class ClientProxy extends Thread
    private ServerCom sconi;
 
   /**
-   *  Interface à barbearia
+   *  Interface genérica
    *
-   *    @serialField bShopInter
+   *    @serialField inter
    */
 
-   private BarberShopInterface bShopInter;
+   private Interface inter;
 
   /**
    *  Instanciação do interface à barbearia.
    *
    *    @param sconi canal de comunicação
-   *    @param bShopInter interface à barbearia
+   *    @param inter interface
    */
 
-   public ClientProxy (ServerCom sconi, BarberShopInterface bShopInter)
+   public ClientProxy (ServerCom sconi, Interface inter)
    {
       super ("Proxy_" + getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.inter = inter;
    }
 
   /**
@@ -56,8 +57,9 @@ public class ClientProxy extends Thread
               outMessage = null;                      // mensagem de saída
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
+      
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = inter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { GenericIO.writelnString ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -76,12 +78,12 @@ public class ClientProxy extends Thread
 
    private static int getProxyId ()
    {
-      Class<serverSide.ClientProxy> cl = null;             // representação do tipo de dados ClientProxy na máquina
+      Class<serverSide.com.ClientProxy> cl = null;             // representação do tipo de dados ClientProxy na máquina
                                                            //   virtual de Java
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = (Class<serverSide.ClientProxy>) Class.forName ("serverSide.ClientProxy");
+      { cl = (Class<serverSide.com.ClientProxy>) Class.forName ("serverSide.ClientProxy");
       }
       catch (ClassNotFoundException e)
       { GenericIO.writelnString ("O tipo de dados ClientProxy não foi encontrado!");

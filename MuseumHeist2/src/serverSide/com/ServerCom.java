@@ -1,4 +1,4 @@
-package serverSide;
+package serverSide.com;
 
 import genclass.GenericIO;
 import java.io.*;

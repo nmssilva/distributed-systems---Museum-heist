@@ -2,10 +2,7 @@ package serverSide;
 
 import clientSide.AssaultThief;
 import clientSide.MasterThief;
-import interfaces.ILogger;
-import interfaces.IControlCollectionSite;
 import interfaces.IConcentrationSite;
-import interfaces.IAssaultParty;
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
 import auxiliary.MemFIFO;
@@ -18,25 +15,21 @@ public class ConcentrationSite implements IConcentrationSite {
 
     private MemFIFO waitQueue;                     // Wainting queue for ready assault thieves               
     private int nAssaultThievesCS;                 // Number of assault thieves in the concentration site
-
-    // Monitors
-    private IAssaultParty[] parties;
-    private IControlCollectionSite ccs;
-    private ILogger log;
+    private int[][] parties;
 
     /**
      *
-     * @param ccs Control Collection Site
-     * @param parties Assault Parties
-     * @param log Logger
      */
-    public ConcentrationSite(IControlCollectionSite ccs, IAssaultParty[] parties, ILogger log) {
+    public ConcentrationSite() {
         waitQueue = new MemFIFO(THIEVES_NUMBER);
         nAssaultThievesCS = 0;
-
-        this.parties = parties;
-        this.ccs = ccs;
-        this.log = log;
+        parties = new int[MAX_ASSAULT_PARTIES][MAX_ASSAULT_PARTY_THIEVES];
+        
+        for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
+            for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
+                parties[i][j] = -1;
+            }
+        }
     }
 
     /**
@@ -48,11 +41,8 @@ public class ConcentrationSite implements IConcentrationSite {
      *
      */
     @Override
-    public synchronized void startOfOperations() {
-        MasterThief mthief = (MasterThief) Thread.currentThread();
+    public synchronized void startOfOperations(MasterThief mthief) {
 
-        log.setMasterState();
-        log.reportStatus();
 
         while (nAssaultThievesCS != THIEVES_NUMBER) {
             try {
@@ -64,8 +54,6 @@ public class ConcentrationSite implements IConcentrationSite {
 
         mthief.setStatus(DECIDING_WHAT_TO_DO);
 
-        log.setMasterState();
-        log.reportStatus();
     }
 
     /**
@@ -73,11 +61,11 @@ public class ConcentrationSite implements IConcentrationSite {
      * waiting queue and blocks it until the Master Thief executes
      * prepareAssaultParty or the heist ends. The status of the Assault Thief
      * current thread is changed to OUTSIDE in the end of the operation.
+     * @param thief
      * @return 
      */
     @Override
-    public synchronized boolean amINeeded() {
-        AssaultThief thief = ((AssaultThief) Thread.currentThread());
+    public synchronized boolean amINeeded(AssaultThief thief) {
 
         // Reset thief
         thief.setPartyID(-1);
@@ -86,10 +74,9 @@ public class ConcentrationSite implements IConcentrationSite {
 
         nAssaultThievesCS++;
         waitQueue.write(thief);
+        /*
         ccs.setReady();
 
-        log.setAssaultThief();
-        log.reportStatus();
 
         notifyAll();
 
@@ -104,7 +91,7 @@ public class ConcentrationSite implements IConcentrationSite {
 
             }
         }
-
+        */
         return true;
     }
 
@@ -119,10 +106,7 @@ public class ConcentrationSite implements IConcentrationSite {
         MasterThief mthief = (MasterThief) Thread.currentThread();
 
         mthief.setStatus(ASSEMBLING_A_GROUP);
-
-        log.setMasterState();
-        log.reportStatus();
-        
+        /*
         int partyID = ccs.getNextParty();
         
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -132,7 +116,7 @@ public class ConcentrationSite implements IConcentrationSite {
 
         parties[partyID].setRoom(ccs.getNextRoom());
         parties[partyID].setFirstToCrawl();
-
+        */
         notifyAll();
     }
 

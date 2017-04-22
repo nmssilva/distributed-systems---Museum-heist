@@ -1,14 +1,15 @@
-package serverSide;
+package serverSide.Interfaces;
 
 import static auxiliary.Heist.*;
 import auxiliary.Message;
 import auxiliary.MessageException;
+import serverSide.ControlCollectionSite;
 
 /**
  *
  * @author Nuno Silva
  */
-public class ControlCollectionSiteInterface {
+public class ControlCollectionSiteInterface extends Interface {
 
     private ControlCollectionSite ccs;
 

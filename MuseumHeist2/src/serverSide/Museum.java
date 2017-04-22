@@ -14,19 +14,13 @@ public class Museum implements IMuseum {
 
     private Room[] rooms;                   // Array of rooms of the museum
 
-    // Logger
-    private ILogger log;
-
     /**
      *
-     * @param log Logger
      */
-    public Museum(ILogger log) {
+    public Museum() {
         rooms = new Room[ROOMS_NUMBER];
 
-        this.log = log;
-
-        log.setMuseum(rooms);
+        //log.setMuseum(rooms);
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             rooms[i] = new Room(i);
         }
@@ -48,17 +42,9 @@ public class Museum implements IMuseum {
         
         if (nPaintings > 0) {
             rooms[nRoom].setnPaintings(nPaintings - 1);
-            
-            log.setMuseum(rooms);
-            log.setAssaultThief();
-            log.reportStatus();
-            
+
             return 1;
         } else {
-            log.setMuseum(rooms);
-            log.setAssaultThief();
-            log.reportStatus();
-            
             return 0;
         }
     }

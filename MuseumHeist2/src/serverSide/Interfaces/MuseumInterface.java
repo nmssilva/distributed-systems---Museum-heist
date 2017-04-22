@@ -1,14 +1,15 @@
-package serverSide;
+package serverSide.Interfaces;
 
 import static auxiliary.Heist.*;
 import auxiliary.Message;
 import auxiliary.MessageException;
+import serverSide.Museum;
 
 /**
  *
  * @author Nuno Silva
  */
-public class MuseumInterface {
+public class MuseumInterface extends Interface {
 
     private Museum museum;
 

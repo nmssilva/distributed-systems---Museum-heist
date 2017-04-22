@@ -3,26 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package serverSide;
+package serverSide.Interfaces;
 
 import static auxiliary.Heist.*;
 import auxiliary.Message;
 import auxiliary.MessageException;
+import serverSide.AssaultParty;
 
 /**
  *
  * @author Nuno Silva
  */
-public class AssaultPartyInterface {
+public class AssaultPartyInterface extends Interface {
     
     private AssaultParty ap;
 
     public AssaultPartyInterface(AssaultParty ap) {
-
         this.ap = ap;
-
     }
     
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
 
         Message outMessage = null;

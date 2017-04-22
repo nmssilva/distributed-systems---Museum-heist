@@ -1,10 +1,8 @@
 package serverSide;
 
-import interfaces.ILogger;
 import interfaces.IAssaultParty;
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
-import interfaces.*;
 import clientSide.AssaultThief;
 import java.util.Arrays;
 
@@ -24,17 +22,11 @@ public class AssaultParty implements IAssaultParty {
     private int nThievesRoom;               // Number of assault thieves in room
     private int reverse;                    // Counter to inform all elements are Ready to crawlOut()
 
-    // Monitors
-    private final IMuseum museum;
-    private final ILogger log;
 
     /**
      *
-     * @param id Assault Party ID
-     * @param museum Museum
-     * @param log Logger
      */
-    public AssaultParty(int id, IMuseum museum, ILogger log) {
+    public AssaultParty(int id) {
         this.id = id;
         roomID = -1;
         partyThieves = new int[MAX_ASSAULT_PARTY_THIEVES];
@@ -45,8 +37,6 @@ public class AssaultParty implements IAssaultParty {
         nThievesRoom = 0;
         reverse = 0;
 
-        this.museum = museum;
-        this.log = log;
 
         // Empty assault party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -115,18 +105,18 @@ public class AssaultParty implements IAssaultParty {
                     thief.setPosition(getDistOutsideRoom());
                     nThievesRoom++;
                     inRoom[myIndex] = true;
-
+/*
                     log.setAssaultThief();
                     log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
-                    log.reportStatus();
+                    log.reportStatus();*/
 
                 } else {
                     partyThievesPos[myIndex] = myPos + i;
                     thief.setPosition(myPos + i);
-
+/*
                     log.setAssaultThief();
                     log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
-                    log.reportStatus();
+                    log.reportStatus();*/
                 }
 
                 break;
@@ -283,17 +273,17 @@ public class AssaultParty implements IAssaultParty {
                     thief.setPosition(0);
                     nThievesRoom++;
                     inRoom[myIndex] = true;
-
+/*
                     log.setAssaultThief();
                     log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
-                    log.reportStatus();
+                    log.reportStatus();*/
                 } else {
                     partyThievesPos[myIndex] = myPos - i;
                     thief.setPosition(myPos - i);
-
+/*
                     log.setAssaultThief();
                     log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
-                    log.reportStatus();
+                    log.reportStatus();*/
 
                 }
 
@@ -374,9 +364,9 @@ public class AssaultParty implements IAssaultParty {
                 partyThieves[i] = thief.getThiefID();
                 partyThievesPos[i] = 0;
                 partyThievesMaxDisp[i] = thief.getMaxDisp();
-
+/*
                 log.setAssaultParty(id, partyThieves, partyThievesPos, roomID);
-                log.reportStatus();
+                log.reportStatus();*/
 
                 return true;
             }
@@ -484,6 +474,7 @@ public class AssaultParty implements IAssaultParty {
      */
     @Override
     public int getDistOutsideRoom() {
-        return museum.getRoom(roomID).getDistOutside();
+        //return museum.getRoom(roomID).getDistOutside();
+        return -1;
     }
 }

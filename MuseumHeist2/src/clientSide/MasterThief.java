@@ -1,19 +1,26 @@
 package clientSide;
 
+import clientSide.com.ClientCom;
 import auxiliary.Message;
+import static auxiliary.Message.*;
 import static auxiliary.States.*;
 import genclass.GenericIO;
+import java.io.Serializable;
 
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class MasterThief extends Thread {
+public class MasterThief extends Thread implements Serializable{
 
     private int status;
 
-    /*private final IControlCollectionSite ccs;
-    private final IConcentrationSite cs;*/
+    /**
+     * Chave de serialização
+     *
+     * @serialField serialVersionUID
+     */
+    private static final long serialVersionUID = 1003L;
     
     /**
      * Nome do sistema computacional onde está localizado o servidor
@@ -111,8 +118,23 @@ public class MasterThief extends Thread {
         con.close();
     }
 
-    private void startOfOperations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean startOfOperations() {
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, 4001);
+        if (!con.open()) {
+            return false;
+        }
+         outMessage = new Message(STARTOP);
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+        
+        return false;
     }
 
     private int appraiseSit(int nThieves) {
@@ -123,8 +145,25 @@ public class MasterThief extends Thread {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void prepareAssaultParty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean prepareAssaultParty() {
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, 4001);
+
+        if (!con.open()) {
+            return false;
+        }
+        outMessage = new Message(PREPARE_AP);
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+
+        return false;
     }
 
     private void sendAssaultParty() {

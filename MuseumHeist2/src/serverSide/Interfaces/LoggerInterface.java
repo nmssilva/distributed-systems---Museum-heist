@@ -1,14 +1,15 @@
-package serverSide;
+package serverSide.Interfaces;
 
 import static auxiliary.Heist.*;
 import auxiliary.Message;
 import auxiliary.MessageException;
+import serverSide.Logger;
 
 /**
  *
  * @author Nuno Silva
  */
-public class LoggerInterface {
+public class LoggerInterface extends Interface {
 
     private Logger log;
 
@@ -16,6 +17,7 @@ public class LoggerInterface {
         this.log = log;
     }
 
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
 
         Message outMessage = null;
@@ -49,8 +51,12 @@ public class LoggerInterface {
                     throw new MessageException("Valor inválido!!", inMessage);
                 }
                 break;
+            case Message.SET_ASSAULT_THIEF:
+                if ((inMessage.getThief().getThiefID() >= THIEVES_NUMBER) || (inMessage.getThief().getThiefID() < 0)) {
+                    throw new MessageException("Valor inválido!!", inMessage);
+                }
+                break;
         }
-
         /* processamento */
         switch (inMessage.getType()) {
 
@@ -71,7 +77,7 @@ public class LoggerInterface {
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_ASSAULT_THIEF:
-                log.setAssaultThief();
+                log.setAssaultThief(inMessage.getThief());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_MASTER_STATE:
@@ -85,6 +91,11 @@ public class LoggerInterface {
             case Message.SET_N_PAINTINGS:
                 log.setnPaintings(inMessage.getValue());
                 outMessage = new Message(Message.ACK);
+                break;
+            case Message.SETNFIC:            
+                System.out.println("LOGGER - SETNFIC");
+                log.setFileName(inMessage.getFName(), inMessage.getNIter());
+                outMessage = new Message(Message.NFICDONE);
                 break;
             
 

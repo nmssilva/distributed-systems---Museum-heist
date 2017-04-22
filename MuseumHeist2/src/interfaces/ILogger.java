@@ -1,5 +1,6 @@
 package interfaces;
 
+import clientSide.AssaultThief;
 import serverSide.Room;
 
 /**
@@ -40,7 +41,7 @@ public interface ILogger {
      * Set an Assault Thief in the General Repository of Information.
      *
      */
-    void setAssaultThief();
+    void setAssaultThief(AssaultThief thief);
 
     /**
      * Set the Master Thief in the General Repository of Information.

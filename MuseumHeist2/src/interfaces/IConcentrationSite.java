@@ -1,5 +1,8 @@
 package interfaces;
 
+import clientSide.AssaultThief;
+import clientSide.MasterThief;
+
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
@@ -13,7 +16,7 @@ public interface IConcentrationSite {
      * current thread is changed to OUTSIDE in the end of the operation.
      * @return
      */
-    boolean amINeeded();
+    boolean amINeeded(AssaultThief thief);
 
     /**
      * Get the number of Assault Thieves in Concentration Site.
@@ -38,6 +41,6 @@ public interface IConcentrationSite {
      * in the end of the operation.
      *
      */
-    void startOfOperations();
+    void startOfOperations(MasterThief mthief);
     
 }

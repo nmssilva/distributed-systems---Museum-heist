@@ -1,14 +1,26 @@
 package clientSide;
 
+import clientSide.com.ClientCom;
 import static auxiliary.Heist.*;
+import auxiliary.Message;
+import static auxiliary.Message.*;
 import static auxiliary.States.*;
+import genclass.GenericIO;
+import java.io.Serializable;
 
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class AssaultThief extends Thread {
+public class AssaultThief extends Thread implements Serializable {
 
+    /**
+     * Chave de serialização
+     *
+     * @serialField serialVersionUID
+     */
+    private static final long serialVersionUID = 1002L;
+    
     private final int thiefID;
     private int status;
     private final int maxDisp;
@@ -163,7 +175,32 @@ public class AssaultThief extends Thread {
     }
 
     private boolean amINeeded() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, 4001);
+        if (!con.open()) {
+            return false;
+        }
+        //        outMessage = new Message(AMINEEDED, thiefID, status, maxDisp, partyID, hasCanvas);        
+        outMessage = new Message(AMINEEDED,this);      
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK_BOOL) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+        if (inMessage.getType() == ACK_BOOL) {
+            System.out.println("NEEDED");
+            this.partyID = -1;
+            this.hasCanvas = 0;
+            this.status = OUTSIDE;
+            reportStatus();
+            return true;                                                // operação bem sucedida - corte efectuado
+        }
+        System.out.println("FALSE");
+
+        return false;
     }
 
     private void prepareExcursion() {
@@ -192,5 +229,30 @@ public class AssaultThief extends Thread {
 
     private void crawlOut() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private boolean reportStatus() {
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, 4000);
+
+        if (!con.open()) {
+            return false;
+        }
+        outMessage = new Message(REPORT_STATUS, this);        // pede a realização do serviço
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+
+        if (inMessage.getType() == ACK) {
+            return true;                                                // operação bem sucedida - corte efectuado
+        }
+
+        return false;
     }
 }

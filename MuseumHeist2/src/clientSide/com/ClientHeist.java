@@ -1,8 +1,10 @@
-package clientSide;
+package clientSide.com;
 
 import static auxiliary.Heist.*;
 import genclass.GenericIO;
 import auxiliary.Message;
+import clientSide.AssaultThief;
+import clientSide.MasterThief;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +27,7 @@ public class ClientHeist {
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Museum Heist\n");
         GenericIO.writeString("Number of Interations? ");
-        nIter = GenericIO.readlnInt();
+        nIter = 1;//GenericIO.readlnInt();
 
         // log file name
         Date today = Calendar.getInstance().getTime();
@@ -33,9 +35,9 @@ public class ClientHeist {
         fName = "Heistothemuseum_" + date.format(today) + ".log";
 
         GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
-        serverHostName = GenericIO.readlnString();
+        serverHostName = "ROG";//GenericIO.readlnString();
         GenericIO.writeString("Número do port de escuta do servidor? ");
-        serverPortNumb = GenericIO.readlnInt();
+        serverPortNumb = 4000;//GenericIO.readlnInt();
 
         /* Criação dos threads thiefs e masterthief */
         masterThief = new MasterThief(serverHostName, serverPortNumb);

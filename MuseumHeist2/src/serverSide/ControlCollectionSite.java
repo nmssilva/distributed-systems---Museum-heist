@@ -2,9 +2,7 @@ package serverSide;
 
 import clientSide.AssaultThief;
 import clientSide.MasterThief;
-import interfaces.ILogger;
 import interfaces.IControlCollectionSite;
-import interfaces.IAssaultParty;
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
 
@@ -31,16 +29,10 @@ public class ControlCollectionSite implements IControlCollectionSite {
     private boolean ready;
     private boolean collectCanvas;
 
-    // Monitors
-    private IAssaultParty[] parties;
-    private ILogger log;
-
     /**
      *
-     * @param parties
-     * @param log
      */
-    public ControlCollectionSite(IAssaultParty[] parties, ILogger log) {
+    public ControlCollectionSite() {
         roomOcupied = new boolean[ROOMS_NUMBER];
         emptyRooms = new boolean[ROOMS_NUMBER];
         nPaintings = 0;
@@ -52,9 +44,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
         nextRoom = -1;
         nextParty = -1;
         partyReady = 0;
-
-        this.parties = parties;
-        this.log = log;
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             partiesArrived[i] = 0;
@@ -86,9 +75,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         mt.setStatus(DECIDING_WHAT_TO_DO);
 
-        log.setMasterState();
-        log.reportStatus();
-
         if (nAssaultThievesCS >= MAX_ASSAULT_PARTY_THIEVES) {
             if (nextRoom != -1) {
                 return 1;                                            // prepareAssaultParty()
@@ -116,9 +102,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         thief.setPartyID(nextParty);
         thief.setStatus(WAITING_SEND_ASSAULT_PARTY);
-
-        log.setAssaultThief();
-        log.reportStatus();
 
         partyReady++;
 
@@ -153,8 +136,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         mthief.setStatus(DECIDING_WHAT_TO_DO);
 
-        log.setMasterState();
-        log.reportStatus();
 
         while (partyReady != MAX_ASSAULT_PARTY_THIEVES) {
             try {
@@ -183,8 +164,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         mthief.setStatus(WAITING_FOR_GROUP_ARRIVAL);
 
-        log.setMasterState();
-        log.reportStatus();
 
         rest = true;
 
@@ -233,9 +212,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             int count = 0;
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                if (parties[i].getPartyThieves()[j] == -1) {
+                /*if (parties[i].getPartyThieves()[j] == -1) {
                     count++;
-                }
+                }*/
                 if (count == MAX_ASSAULT_PARTY_THIEVES) {
                     return i;
                 }
@@ -292,29 +271,28 @@ public class ControlCollectionSite implements IControlCollectionSite {
         }
 
         rest = false;
-        int roomID = parties[thief.getPartyID()].getRoomID();
+        //int roomID = parties[thief.getPartyID()].getRoomID();
 
         if (thief.getHasCanvas() == 0) {
-            emptyRooms[roomID] = true;
+            //emptyRooms[roomID] = true;
         }
         if (thief.getHasCanvas() == 1) {
             nPaintings++;
-            log.setnPaintings(nPaintings);
         }
 
         partiesArrived[thief.getPartyID()]++;
         if (partiesArrived[thief.getPartyID()] == MAX_ASSAULT_PARTY_THIEVES) {
             partiesArrived[thief.getPartyID()] = 0;
-            roomOcupied[roomID] = false;
+            //roomOcupied[roomID] = false;
         }
 
         collectCanvas = true;
 
         // Reset Party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            if (parties[thief.getPartyID()].getPartyThieves()[i] == thief.getThiefID()) {
+            /*if (parties[thief.getPartyID()].getPartyThieves()[i] == thief.getThiefID()) {
                 parties[thief.getPartyID()].setPartyThieves(i, -1);
-            }
+            }*/
         }
 
         notifyAll();
@@ -332,9 +310,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                if (parties[i].getPartyThieves()[j] == thief.getThiefID()) {
+                /*if (parties[i].getPartyThieves()[j] == thief.getThiefID()) {
                     return true;
-                }
+                }*/
             }
         }
 
@@ -352,9 +330,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         mthief.setStatus(DECIDING_WHAT_TO_DO);
 
-        log.setMasterState();
-        log.reportStatus();
-
         collectCanvas = false;
 
         notifyAll();
@@ -370,10 +345,6 @@ public class ControlCollectionSite implements IControlCollectionSite {
         MasterThief mthief = (MasterThief) Thread.currentThread();
 
         mthief.setStatus(PRESENTING_THE_REPORT);
-
-        log.setMasterState();
-        log.reportStatus();
-
     }
 
     /**
