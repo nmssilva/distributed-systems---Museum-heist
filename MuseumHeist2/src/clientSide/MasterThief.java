@@ -222,8 +222,7 @@ public class MasterThief extends Thread implements Serializable {
         inMessage = (Message) con.readObject();
         if (inMessage.getType() != ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
-            GenericIO.writelnString(inMessage.toString());
-            
+            GenericIO.writelnString(inMessage.toString());            
             GenericIO.writelnString("Class: " + this.getClass().getName());
             GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);

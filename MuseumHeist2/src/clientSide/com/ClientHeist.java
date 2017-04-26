@@ -5,6 +5,8 @@ import genclass.GenericIO;
 import auxiliary.Message;
 import clientSide.AssaultThief;
 import clientSide.MasterThief;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class ClientHeist {
 
@@ -12,8 +14,9 @@ public class ClientHeist {
      * Programa principal.
      *
      * @param args parameter arguments
+     * @throws java.net.UnknownHostException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
         AssaultThief[] assaultThief = new AssaultThief[THIEVES_NUMBER]; // array of threads thief
         MasterThief masterThief;        // Master Thief
         int nIter;                      // number of iterations of lifecycle of thieves
@@ -33,7 +36,9 @@ public class ClientHeist {
         fName = "logger.log";
 
         GenericIO.writelnString("Nome do sistema computacional onde está o servidor? ");
-        serverHostName = "ROG";//GenericIO.readlnString();
+        InetAddress addr;
+        addr = InetAddress.getLocalHost();
+        serverHostName = addr.getHostName();//GenericIO.readlnString();
         GenericIO.writelnString("Número do port de escuta do servidor? ");
         serverPortNumb = 4000;//GenericIO.readlnInt();
 
@@ -61,7 +66,7 @@ public class ClientHeist {
         if (inMessage.getType() != Message.NFICDONE) {
             GenericIO.writelnString("Arranque da simulação: Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
-            
+
             System.exit(1);
         }
         //con.close();
@@ -75,7 +80,7 @@ public class ClientHeist {
 
         /* Aguardar o fim da simulação */
         GenericIO.writelnString();
-        for (int i = 0; i < THIEVES_NUMBER ;i++) {
+        for (int i = 0; i < THIEVES_NUMBER; i++) {
             try {
                 assaultThief[i].join();
             } catch (InterruptedException e) {
