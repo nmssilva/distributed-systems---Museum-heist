@@ -20,7 +20,7 @@ public class AssaultThief extends Thread implements Serializable {
      * @serialField serialVersionUID
      */
     private static final long serialVersionUID = 1002L;
-    
+
     private final int thiefID;
     private int status;
     private final int maxDisp;
@@ -32,7 +32,6 @@ public class AssaultThief extends Thread implements Serializable {
     private final IControlCollectionSite ccs;
     private final IAssaultParty[] assparties;
     private final IMuseum museum;*/
-    
     /**
      * Nome do sistema computacional onde está localizado o servidor
      *
@@ -65,7 +64,6 @@ public class AssaultThief extends Thread implements Serializable {
         this.ccs = ccs;
         this.assparties = assparties;
         this.museum = museum;*/
-        
         serverHostName = hostName;
         serverPortNumb = port;
     }
@@ -85,7 +83,7 @@ public class AssaultThief extends Thread implements Serializable {
             while (position != 0) {
                 crawlOut();
             }
-                
+
             handCanvas();
         }
     }
@@ -176,35 +174,59 @@ public class AssaultThief extends Thread implements Serializable {
 
     private boolean amINeeded() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, 4001);
+        ClientCom con = new ClientCom(serverHostName, PORT_CS);
         if (!con.open()) {
             return false;
         }
-        //        outMessage = new Message(AMINEEDED, thiefID, status, maxDisp, partyID, hasCanvas);        
-        outMessage = new Message(AMINEEDED,this);      
+        outMessage = new Message(AMINEEDED, this);
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
+        
         if (inMessage.getType() != ACK_BOOL) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-        con.close();
         if (inMessage.getType() == ACK_BOOL) {
-            System.out.println("NEEDED");
             this.partyID = -1;
             this.hasCanvas = 0;
             this.status = OUTSIDE;
+            System.out.println("STATUS: " + this.status);
             reportStatus();
-            return true;                                                // operação bem sucedida - corte efectuado
+            return true;     
         }
-        System.out.println("FALSE");
+        //con.close();
 
         return false;
     }
 
     private void prepareExcursion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("#" + thiefID + " prepareExcursion");
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        if (!con.open()) {
+            System.out.println("Client Con Not Open");
+            System.exit(1);
+        }
+        outMessage = new Message(PREPARE_EXCURSION, this);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
+            System.exit(1);
+        }
+        //con.close();
+        if (inMessage.getType() == ACK) {
+            System.out.println("Thief: " + thiefID
+                    + "\nParty: " + partyID);
+            reportStatus();
+        }
     }
 
     private void crawlIn() {
@@ -233,7 +255,7 @@ public class AssaultThief extends Thread implements Serializable {
 
     private boolean reportStatus() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, 4000);
+        ClientCom con = new ClientCom(serverHostName, PORT_LOG);
 
         if (!con.open()) {
             return false;
@@ -245,14 +267,18 @@ public class AssaultThief extends Thread implements Serializable {
         if (inMessage.getType() != ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-        con.close();
+        //con.close();
 
-        if (inMessage.getType() == ACK) {
-            return true;                                                // operação bem sucedida - corte efectuado
-        }
+        return inMessage.getType() == ACK;
+    }
 
-        return false;
+    @Override
+    public String toString() {
+        return "to string Thief #" + this.thiefID;
     }
 }

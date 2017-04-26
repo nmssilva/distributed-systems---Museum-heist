@@ -1,5 +1,6 @@
 package clientSide;
 
+import static auxiliary.Heist.*;
 import clientSide.com.ClientCom;
 import auxiliary.Message;
 import static auxiliary.Message.*;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class MasterThief extends Thread implements Serializable{
+public class MasterThief extends Thread implements Serializable {
 
     private int status;
 
@@ -21,7 +22,7 @@ public class MasterThief extends Thread implements Serializable{
      * @serialField serialVersionUID
      */
     private static final long serialVersionUID = 1003L;
-    
+
     /**
      * Nome do sistema computacional onde está localizado o servidor
      *
@@ -113,36 +114,99 @@ public class MasterThief extends Thread implements Serializable{
         if (inMessage.getType() != Message.ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-        con.close();
+        //con.close();
     }
 
     private boolean startOfOperations() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, 4001);
+        ClientCom con = new ClientCom(serverHostName, PORT_CS);
         if (!con.open()) {
             return false;
         }
-         outMessage = new Message(STARTOP);
+        outMessage = new Message(STARTOP, this);
         con.writeObject(outMessage);
 
         inMessage = (Message) con.readObject();
         if (inMessage.getType() != ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-        
+
         return false;
     }
 
     private int appraiseSit(int nThieves) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        if (!con.open()) {
+            return -1;
+        }
+        outMessage = new Message(APPRAISE, this, nThieves);
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK_INT) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
+            System.exit(1);
+        }
+
+        return inMessage.getValue();
+        
+        /*Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        
+        if (!con.open()) {
+            return -1;
+        }
+        
+        outMessage = new Message(Message.APPRAISE, this, nThieves);
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK_INT) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+
+        return inMessage.getValue();*/
     }
 
     private int getnAssaultThievesCS() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, PORT_CS);
+        if (!con.open()) {
+            return -1;
+        }
+        outMessage = new Message(GET_N_THIEVES_IN_CS);
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != ACK_INT) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
+            System.exit(1);
+        }
+
+        return inMessage.getValue();
     }
 
     private boolean prepareAssaultParty() {
@@ -159,9 +223,12 @@ public class MasterThief extends Thread implements Serializable{
         if (inMessage.getType() != ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            
+            GenericIO.writelnString("Class: " + this.getClass().getName());
+            GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-        con.close();
+        //con.close();
 
         return false;
     }

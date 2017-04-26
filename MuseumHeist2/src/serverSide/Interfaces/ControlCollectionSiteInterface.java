@@ -17,6 +17,7 @@ public class ControlCollectionSiteInterface extends Interface {
         this.ccs = ccs;
     }
 
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
 
         Message outMessage = null;
@@ -25,7 +26,7 @@ public class ControlCollectionSiteInterface extends Interface {
         switch (inMessage.getType()) {
 
             case Message.APPRAISE:
-                if ((inMessage.getValue() >= THIEVES_NUMBER) || (inMessage.getValue() < 0)) {
+                if ((inMessage.getValue() > THIEVES_NUMBER) || (inMessage.getValue() < 0)) {
                     throw new MessageException("Valor inválido!!", inMessage);
                 }
                 break;
@@ -45,61 +46,76 @@ public class ControlCollectionSiteInterface extends Interface {
 
         /* processamento */
         switch (inMessage.getType()) {
-
             case Message.APPRAISE:
-                outMessage = new Message(Message.ACK_INT, ccs.appraiseSit(inMessage.getValue()));
+                System.out.println("CCS - APPRAISE");
+                outMessage = new Message(Message.ACK_INT, ccs.appraiseSit(inMessage.getValue(), inMessage.getMThief()));
                 break;
             case Message.COLLECT_CANVAS:
+                System.out.println("CCS - COLLECT_CANVAS");
                 ccs.collectCanvas();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.GET_NEXT_PARTY:
+                System.out.println("CCS - GET_NEXT_PARTY");
                 outMessage = new Message(Message.ACK_INT, ccs.getNextParty());
                 break;
             case Message.GET_NEXT_ROOM:
+                System.out.println("CCS - GET_NEXT_ROOM");
                 outMessage = new Message(Message.ACK_INT, ccs.getNextRoom());
                 break;
             case Message.GET_N_PAINTING:
+                System.out.println("CCS - GET_N_PAINTING");
                 outMessage = new Message(Message.ACK_INT, ccs.getnPaintings());
                 break;
             case Message.HANDCANVAS:
+                System.out.println("CCS - HANDCANVAS");
                 ccs.handCanvas();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.IN_PARTY:
-                outMessage = new Message(Message.ACK_BOOL, ccs.inParty());
+                System.out.println("CCS - IN_PARTY");
+                outMessage = new Message(Message.ACK_BOOL, ccs.inParty(inMessage.getThief()));
                 break;
             case Message.SET_READY:
+                System.out.println("CCS - SET_READY");
                 ccs.setReady();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.NEXT_EMPTY_PARTY:
+                System.out.println("CCS - NEXT_EMPTY_PARTY");
                 outMessage = new Message(Message.ACK_INT, ccs.nextEmptyParty());
                 break;
             case Message.NEXT_EMPTY_ROOM:
+                System.out.println("CCS - NEXT_EMPTY_ROOM");
                 outMessage = new Message(Message.ACK_INT, ccs.nextEmptyRoom());
                 break;
             case Message.PREPARE_EXCURSION:
-                ccs.prepareExcursion();
+                System.out.println("CCS - PREPARE_EXCURSION");
+                ccs.prepareExcursion(inMessage.getThief());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SEND_AP:
+                System.out.println("CCS - SEND_AP");
                 ccs.sendAssaultParty();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_NEXT_PARTY:
+                System.out.println("CCS - SET_NEXT_PARTY");
                 ccs.setNextParty(inMessage.getApId());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_NEXT_ROOM:
+                System.out.println("CCS - SET_NEXT_ROOM");
                 ccs.setNextRoom(inMessage.getRoomId());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SUM_UP_RESULTS:
+                System.out.println("CCS - SUM_UP_RESULTS");
                 ccs.sumUpResults();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.TAKE_REST:
+                System.out.println("CCS - TAKE_REST");
                 ccs.takeARest();
                 outMessage = new Message(Message.ACK);
                 break;

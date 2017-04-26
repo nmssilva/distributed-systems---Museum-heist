@@ -25,6 +25,7 @@ public class AssaultParty implements IAssaultParty {
 
     /**
      *
+     * @param id
      */
     public AssaultParty(int id) {
         this.id = id;
@@ -393,6 +394,19 @@ public class AssaultParty implements IAssaultParty {
 
         return -1;
     }
+
+    
+    /**
+     * 
+     * Get Assault Party id
+     * 
+     * @return id Assault Party id
+     */
+    public int getId() {
+        return id;
+    }
+    
+    
 
     /**
      * Set the turn to crawl of the element of index 0 to true.

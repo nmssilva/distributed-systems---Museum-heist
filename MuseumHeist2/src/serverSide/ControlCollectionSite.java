@@ -59,12 +59,12 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * execute. The Master Thief sets its status to DECIDING_WHAT_TO_DO before
      * returning the operation.
      *
-     * @param nAssaultThievesCS
+     * @param nAssaultThievesCS numero de thieves na concentration site
+     * @param mt MasterThief
      * @return ID of the operation to execute.
      */
     @Override
-    public synchronized int appraiseSit(int nAssaultThievesCS) {
-        MasterThief mt = (MasterThief) Thread.currentThread();
+    public synchronized int appraiseSit(int nAssaultThievesCS, MasterThief mt) {
 
         nextParty = nextEmptyParty();
         nextRoom = nextEmptyRoom();
@@ -97,8 +97,7 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * to WAITING_FOR_SENT_ASSAULT_PARTY.
      */
     @Override
-    public synchronized void prepareExcursion() {
-        AssaultThief thief = (AssaultThief) Thread.currentThread();
+    public synchronized void prepareExcursion(AssaultThief thief) {
 
         thief.setPartyID(nextParty);
         thief.setStatus(WAITING_SEND_ASSAULT_PARTY);
@@ -305,18 +304,17 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * or false if otherwise.
      */
     @Override
-    public synchronized boolean inParty() {
-        AssaultThief thief = ((AssaultThief) Thread.currentThread());
+    public synchronized boolean inParty(AssaultThief thief) {
 
-        for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
+        /*for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                /*if (parties[i].getPartyThieves()[j] == thief.getThiefID()) {
+                if (parties[i].getPartyThieves()[j] == thief.getThiefID()) {
                     return true;
-                }*/
+                }
             }
-        }
-
-        return false;
+        }*/
+        
+        return thief.getPartyID() != -1;
     }
 
     /**
@@ -378,9 +376,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
     }
 
     /**
-     * Get the number of paitings collected to the moment.
+     * Get the number of paintings collected to the moment.
      *
-     * @return Returns the number of paitings collected to the moment.
+     * @return Returns the number of paintings collected to the moment.
      */
     @Override
     public int getnPaintings() {

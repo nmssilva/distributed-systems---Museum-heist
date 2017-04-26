@@ -5,9 +5,6 @@ import genclass.GenericIO;
 import auxiliary.Message;
 import clientSide.AssaultThief;
 import clientSide.MasterThief;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class ClientHeist {
 
@@ -26,17 +23,18 @@ public class ClientHeist {
 
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Museum Heist\n");
-        GenericIO.writeString("Number of Interations? ");
+        GenericIO.writelnString("Number of Interations? ");
         nIter = 1;//GenericIO.readlnInt();
 
         // log file name
-        Date today = Calendar.getInstance().getTime();
+        /*Date today = Calendar.getInstance().getTime();
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-        fName = "Heistothemuseum_" + date.format(today) + ".log";
+        fName = "Heistothemuseum_" + date.format(today) + ".log";*/
+        fName = "logger.log";
 
-        GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
+        GenericIO.writelnString("Nome do sistema computacional onde está o servidor? ");
         serverHostName = "ROG";//GenericIO.readlnString();
-        GenericIO.writeString("Número do port de escuta do servidor? ");
+        GenericIO.writelnString("Número do port de escuta do servidor? ");
         serverPortNumb = 4000;//GenericIO.readlnInt();
 
         /* Criação dos threads thiefs e masterthief */
@@ -63,9 +61,10 @@ public class ClientHeist {
         if (inMessage.getType() != Message.NFICDONE) {
             GenericIO.writelnString("Arranque da simulação: Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
+            
             System.exit(1);
         }
-        con.close();
+        //con.close();
 
         /* Arranque da simulação */
         masterThief.start();

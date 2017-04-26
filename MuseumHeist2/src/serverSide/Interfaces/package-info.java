@@ -1,4 +1,4 @@
 /**
- * Entities package.
+ * Interfaces package of serverSide
  */
-package clientSide;
+package serverSide.Interfaces;

@@ -56,39 +56,55 @@ public class LoggerInterface extends Interface {
                     throw new MessageException("Valor inválido!!", inMessage);
                 }
                 break;
+            case Message.SETNFIC:
+                if ((inMessage.getNIter() < 1 )) {
+                    throw new MessageException("NIter inválido!!", inMessage);
+                }
+                if ((inMessage.getFName().length() == 0 )) {
+                    throw new MessageException("Nome do ficherio de log inválido!!", inMessage);
+                }
+                break;
         }
         /* processamento */
         switch (inMessage.getType()) {
 
             case Message.REPORT_FINAL_STATUS:
+                System.out.println("LOGGER - REPORT_FINAL_STATUS");
                 log.reportFinalStatus();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.REPORT_INITIAL_STATUS:
+                System.out.println("LOGGER - REPORT_INITIAL_STATUS");
                 log.reportInitialStatus();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.REPORT_STATUS:
+                System.out.println("LOGGER - REPORT_STATUS");
                 log.reportStatus();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_ASSAULT_PARTY:
+                System.out.println("LOGGER - SET_ASSAULT_PARTY");
                 log.setAssaultParty(inMessage.getApId(), inMessage.getElements(), inMessage.getPositions(), inMessage.getRoomId());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_ASSAULT_THIEF:
+                System.out.println("LOGGER - SET_ASSAULT_THIEF");
                 log.setAssaultThief(inMessage.getThief());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_MASTER_STATE:
+                System.out.println("LOGGER - SET_MASTER_STATE");
                 log.setMasterState();
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_MUSEUM:
+                System.out.println("LOGGER - SET_MUSEUM");
                 log.setMuseum(inMessage.getRooms());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_N_PAINTINGS:
+                System.out.println("LOGGER - SET_N_PAINTINGS");
                 log.setnPaintings(inMessage.getValue());
                 outMessage = new Message(Message.ACK);
                 break;

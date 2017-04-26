@@ -1,5 +1,8 @@
 package interfaces;
 
+import clientSide.AssaultThief;
+import clientSide.MasterThief;
+
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
@@ -15,7 +18,7 @@ public interface IControlCollectionSite {
      * @param nAssaultThievesCS
      * @return ID of the operation to execute.
      */
-    int appraiseSit(int nAssaultThievesCS);
+    int appraiseSit(int nAssaultThievesCS, MasterThief mt);
 
     /**
      * Master Thief collects a canvas. The Master Thief sets its status to
@@ -57,10 +60,11 @@ public interface IControlCollectionSite {
     /**
      * Checks if the Assault Thief current thread is in the Assault Party.
      *
+     * @param thief Assault Thief
      * @return True, if the Assault Thief current thread is in the Assault Party
      * or false if otherwise.
      */
-    boolean inParty();
+    boolean inParty(AssaultThief thief);
 
     /**
      * Operation to wake Master Thief that the Assault Thief current Thread is
@@ -91,8 +95,9 @@ public interface IControlCollectionSite {
      * Assault Party to execute this operation and blocks until the Master Thief
      * finalizes executing sendAssaultParty. The Assault Thief sets its status
      * to WAITING_FOR_SENT_ASSAULT_PARTY.
+     * @param thief Thief
      */
-    void prepareExcursion();
+    void prepareExcursion(AssaultThief thief);
 
     /**
      * Master Thief sends a ready Assault Party. The Master Thief sets it's

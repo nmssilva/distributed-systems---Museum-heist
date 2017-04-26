@@ -1,4 +1,4 @@
 /**
- * Entities package.
+ * Com package of serverSide
  */
-package clientSide;
+package serverSide.servers;

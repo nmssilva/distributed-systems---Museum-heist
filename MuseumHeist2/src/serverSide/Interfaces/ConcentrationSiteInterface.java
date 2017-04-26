@@ -36,16 +36,20 @@ public class ConcentrationSiteInterface extends Interface {
         switch (inMessage.getType()) {
 
             case Message.AMINEEDED:
+                System.out.println("CS - AMINEEDED ");
                 outMessage = new Message(Message.ACK_BOOL, cs.amINeeded(inMessage.getThief()));
                 break;
             case Message.GET_N_THIEVES_IN_CS:
+                System.out.println("CS - GET_N_THIEVES_IN_CS");
                 outMessage = new Message(Message.ACK_INT, cs.getnAssaultThievesCS());
                 break;
             case Message.PREPARE_AP:
+                System.out.println("CS - PREPARE_AP");
                 cs.prepareAssaultParty(); 
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.STARTOP:
+                System.out.println("CS - STARTOP");
                 cs.startOfOperations(inMessage.getMThief());
                 outMessage = new Message(Message.ACK);
                 break;

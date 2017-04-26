@@ -19,6 +19,7 @@ public class MuseumInterface extends Interface {
 
     }
 
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
 
         Message outMessage = null;
@@ -47,12 +48,15 @@ public class MuseumInterface extends Interface {
         switch (inMessage.getType()) {
 
             case Message.GETDIST:
+                System.out.println("MUSEUM - GETDIST");
                 outMessage = new Message(Message.ACK_INT, museum.getRoomDistance(inMessage.getRoomId()));        
                 break;
             case Message.GET_N_PAINTING:
+                System.out.println("MUSEUM - GET_N_PAINTING");
                 outMessage = new Message(Message.ACK_INT, museum.getPaintingsNumber(inMessage.getRoomId())); 
                 break;
             case Message.ROLLCANVAS:
+                System.out.println("MUSEUM - ROLLCANVAS");
                 outMessage = new Message(Message.ACK_INT, museum.rollACanvas(inMessage.getRoomId()));      
                 break;
         }

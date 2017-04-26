@@ -66,4 +66,29 @@ public class Heist {
      * Minimum distance from the Room in the Museum to the Outside.
      */
     public static final int MIN_DIST_OUTSIDE = 15;
+    
+    /**
+     * Port numbers for log interface
+     */
+    public static final int PORT_LOG = 4000;
+    
+    /**
+     * Port numbers for concentration site interface
+     */
+    public static final int PORT_CS = 4001;
+    
+    /**
+     * Port numbers for control and collection site interface
+     */
+    public static final int PORT_CCS = 4002;
+    
+    /**
+     * Port numbers for assault party interface
+     */
+    public static final int PORT_AP = 4003;
+    
+    /**
+     * Port numbers for museum interface
+     */
+    public static final int PORT_MUSEUM = 4005;
 }

@@ -1,4 +1,4 @@
 /**
- * Entities package.
+ * Com package of clientSide
  */
-package clientSide;
+package clientSide.com;

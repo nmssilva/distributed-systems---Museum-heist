@@ -394,13 +394,6 @@ public class Message implements Serializable {
     private int roomId = -1;
 
     /**
-     * Valor tipo int na resposta do servidor
-     *
-     * @serialField ackint
-     */
-    private int ackint;
-
-    /**
      * Valor tipo int[] na resposta do servidor
      *
      * @serialField ackintarray
@@ -493,7 +486,7 @@ public class Message implements Serializable {
             thiefId = value;
         }
         if (msgType == ACK_INT) {
-            ackint = value;
+            this.value = value;
         }
     }
 
@@ -540,6 +533,7 @@ public class Message implements Serializable {
         if (msgType == ACK_BOOL) {
             ackbool = value;
         }
+        
     }
 
     /**
@@ -564,6 +558,12 @@ public class Message implements Serializable {
         this.msgType = msgType;
         this.mthief = mthief;
     }
+    public Message(int msgType, MasterThief mthief, int value) {
+        this.msgType = msgType;
+        this.mthief = mthief;
+        this.value = value;
+    }
+    
 
     /**
      * Obtenção do valor do campo tipo da mensagem.
@@ -656,6 +656,26 @@ public class Message implements Serializable {
         return rooms;
     }
 
+    /**
+     * Obtenção do valor do campo ackintarray
+     *
+     * @return ackintarray
+     */
+    public int[] getAckintarray() {
+        return ackintarray;
+    }
+
+    /**
+     * Obtenção do valor do campo ackbool
+     *
+     * @return ackbool
+     */
+    public boolean getAckbool() {
+        return ackbool;
+    }
+
+    
+    
     /**
      * Obtenção do valor do campo thief
      *

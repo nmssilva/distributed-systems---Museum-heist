@@ -1,5 +1,6 @@
 package serverSide.servers;
 
+import auxiliary.Heist;
 import genclass.GenericIO;
 import serverSide.com.ClientProxy;
 import serverSide.ControlCollectionSite;
@@ -13,7 +14,7 @@ public class ControlCollectionSiteServer {
      *
      * @serialField portNumb
      */
-    private static final int portNumb = 4002;
+    private static final int portNumb = Heist.PORT_CCS;
 
     /**
      * Programa principal.
