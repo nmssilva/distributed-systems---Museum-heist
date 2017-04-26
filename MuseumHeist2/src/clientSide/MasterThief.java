@@ -140,13 +140,12 @@ public class MasterThief extends Thread implements Serializable {
             GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
         }
-
+        setStatus(DECIDING_WHAT_TO_DO);
         return false;
     }
 
     private int appraiseSit(int nThieves) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+        
         Message inMessage, outMessage;
         ClientCom con = new ClientCom(serverHostName, PORT_CCS);
         if (!con.open()) {
@@ -167,24 +166,6 @@ public class MasterThief extends Thread implements Serializable {
 
         return inMessage.getValue();
         
-        /*Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
-        
-        if (!con.open()) {
-            return -1;
-        }
-        
-        outMessage = new Message(Message.APPRAISE, this, nThieves);
-        con.writeObject(outMessage);
-
-        inMessage = (Message) con.readObject();
-        if (inMessage.getType() != ACK_INT) {
-            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
-            GenericIO.writelnString(inMessage.toString());
-            System.exit(1);
-        }
-
-        return inMessage.getValue();*/
     }
 
     private int getnAssaultThievesCS() {

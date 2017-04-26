@@ -50,7 +50,7 @@ public class ConcentrationSiteInterface extends Interface {
                 break;
             case Message.STARTOP:
                 System.out.println("CS - STARTOP");
-                cs.startOfOperations(inMessage.getMThief());
+                cs.startOfOperations();
                 outMessage = new Message(Message.ACK);
                 break;
         }

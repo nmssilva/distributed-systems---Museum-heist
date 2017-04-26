@@ -47,10 +47,9 @@ public class ConcentrationSite implements IConcentrationSite {
      * heist. The status of the Master Thief is changed to DECIDING_WHAT_TO_DO
      * in the end of the operation.
      *
-     * @param mthief
      */
     @Override
-    public synchronized void startOfOperations(MasterThief mthief) {
+    public synchronized void startOfOperations() {
 
         while (nAssaultThievesCS != THIEVES_NUMBER) {
             try {
@@ -59,8 +58,6 @@ public class ConcentrationSite implements IConcentrationSite {
 
             }
         }
-
-        mthief.setStatus(DECIDING_WHAT_TO_DO);
 
     }
 

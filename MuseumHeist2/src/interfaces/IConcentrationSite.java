@@ -14,6 +14,7 @@ public interface IConcentrationSite {
      * waiting queue and blocks it until the Master Thief executes
      * prepareAssaultParty or the heist ends. The status of the Assault Thief
      * current thread is changed to OUTSIDE in the end of the operation.
+     * @param thief
      * @return
      */
     boolean amINeeded(AssaultThief thief);
@@ -41,6 +42,6 @@ public interface IConcentrationSite {
      * in the end of the operation.
      *
      */
-    void startOfOperations(MasterThief mthief);
+    void startOfOperations();
     
 }
