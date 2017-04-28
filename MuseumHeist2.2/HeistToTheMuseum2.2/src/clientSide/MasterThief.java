@@ -89,9 +89,13 @@ public class MasterThief extends Thread {
         Message inMessage, outMessage;
         ClientCom con = new ClientCom(serverHostName, PORT_CCS);
 
-        if (!con.open()) {
-            return -1;
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
         }
+        
         outMessage = new Message(APPRAISE_SIT, nAssaultThievesCS);
         con.writeObject(outMessage);
 
@@ -183,7 +187,7 @@ public class MasterThief extends Thread {
 
         return true;
     }
-    
+
     private boolean sumUpResults() {
         Message inMessage, outMessage;
         ClientCom con = new ClientCom(serverHostName, PORT_CCS);

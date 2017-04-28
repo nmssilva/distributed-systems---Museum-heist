@@ -45,7 +45,7 @@ public class Museum_Interface extends Interface {
         /* seu processamento */
         
         if (inMessage.getType() == GET_DIST_OUTSIDE) {
-            System.out.println("MUSEUM - GET DIST OUTSIDE" + inMessage.getInteger());
+            System.out.println("MUSEUM - GET DIST OUTSIDE Room:" + inMessage.getInteger());
             int distOutside = museum.getRoom(inMessage.getInteger()).getDistOutside();
             
             outMessage = new Message(Message.ACK, distOutside);

@@ -57,9 +57,11 @@ public class ControlCollectionSite_Interface extends Interface {
         }
         if (inMessage.getType() == APPRAISE_SIT) {
             System.out.println("CCS - APPRAISE SIT");
-            int situation = ccs.appraiseSit(inMessage.getInteger());
-
-            outMessage = new Message(Message.ACK, situation);
+            try {
+                Thread.sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+            outMessage = new Message(Message.ACK, ccs.appraiseSit(inMessage.getInteger()));
         }
         if (inMessage.getType() == GET_NEXT_AP) {
             System.out.println("CCS - GET_NEXT_AP");
