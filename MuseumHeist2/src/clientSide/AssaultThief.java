@@ -85,6 +85,7 @@ public class AssaultThief extends Thread implements Serializable {
             }
 
             handCanvas();
+            resetThief();
         }
     }
 
@@ -267,7 +268,6 @@ public class AssaultThief extends Thread implements Serializable {
         if (inMessage.getType() != ACK) {
             GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
             GenericIO.writelnString(inMessage.toString());
-            
             GenericIO.writelnString("Class: " + this.getClass().getName());
             GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
             System.exit(1);
@@ -280,5 +280,12 @@ public class AssaultThief extends Thread implements Serializable {
     @Override
     public String toString() {
         return "to string Thief #" + this.thiefID;
+    }
+
+    private void resetThief() {
+        // Reset thief
+        setPartyID(-1);
+        setHasCanvas(0);
+        setStatus(OUTSIDE);
     }
 }

@@ -1,0 +1,4 @@
+/**
+ * Auxiliary package.
+ */
+package auxiliary;

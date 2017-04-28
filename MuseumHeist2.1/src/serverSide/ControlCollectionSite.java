@@ -2,26 +2,21 @@ package serverSide;
 
 import clientSide.AssaultThief;
 import clientSide.MasterThief;
+import interfaces.ILogger;
 import interfaces.IControlCollectionSite;
-import static auxiliary.Heist.*;
-import auxiliary.Message;
-import static auxiliary.Message.ACK;
-import static auxiliary.Message.STARTOP;
-import static auxiliary.States.*;
-import clientSide.com.ClientCom;
-import genclass.GenericIO;
 import interfaces.IAssaultParty;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static auxiliary.Heist.*;
+import static auxiliary.States.*;
+import java.io.Serializable;
 
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class ControlCollectionSite implements IControlCollectionSite {
+public class ControlCollectionSite implements IControlCollectionSite, Serializable {
 
+    private static final long serialVersionUID = 1006L;
+    
     private int[] partiesArrived;           // Needed to know which parties have arrived
     private boolean[] roomOcupied;          // Represents the status of each room (occupied or clear)
     private boolean[] emptyRooms;           // Represents the emptyness of each room (empty or still with paintings)
@@ -39,10 +34,18 @@ public class ControlCollectionSite implements IControlCollectionSite {
     private boolean ready;
     private boolean collectCanvas;
 
+    // Monitors
+    private IAssaultParty[] parties;
+    private ILogger log;
+
     /**
      *
+     * @param parties
+     * @param log
+     * @param parties
+     * @param log
      */
-    public ControlCollectionSite() {
+    public ControlCollectionSite(IAssaultParty[] parties, ILogger log) {
         roomOcupied = new boolean[ROOMS_NUMBER];
         emptyRooms = new boolean[ROOMS_NUMBER];
         nPaintings = 0;
@@ -54,6 +57,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
         nextRoom = -1;
         nextParty = -1;
         partyReady = 0;
+
+        this.parties = parties;
+        this.log = log;
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             partiesArrived[i] = 0;
@@ -69,32 +75,35 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * execute. The Master Thief sets its status to DECIDING_WHAT_TO_DO before
      * returning the operation.
      *
-     * @param nAssaultThievesCS numero de thieves na concentration site
-     * @param mt MasterThief
+     * @param nAssaultThievesCS
      * @return ID of the operation to execute.
      */
     @Override
-    public synchronized int appraiseSit(int nAssaultThievesCS, MasterThief mt) {
+    public synchronized int appraiseSit(int nAssaultThievesCS) {
+        MasterThief mt = (MasterThief) Thread.currentThread();
 
         nextParty = nextEmptyParty();
         nextRoom = nextEmptyRoom();
 
         if (nextParty == -1) {
-            return 0; // takeARest()
+            return 0;                                                // takeARest()
         }
 
         mt.setStatus(DECIDING_WHAT_TO_DO);
 
+        log.setMasterState();
+        log.reportStatus();
+
         if (nAssaultThievesCS >= MAX_ASSAULT_PARTY_THIEVES) {
             if (nextRoom != -1) {
-                return 1;   // prepareAssaultParty()
+                return 1;                                            // prepareAssaultParty()
             } else if (nAssaultThievesCS != THIEVES_NUMBER) {
-                return 0;   // takeARest()
+                return 0;                                            // takeARest()
             } else {
-                return 2;   // sumUpResults()
+                return 2;                                            // sumUpResults()
             }
         } else {
-            return 0;       // takeARest()        
+            return 0;                                                // takeARest()        
         }
     }
 
@@ -107,10 +116,14 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * to WAITING_FOR_SENT_ASSAULT_PARTY.
      */
     @Override
-    public synchronized void prepareExcursion(AssaultThief thief) {
+    public synchronized void prepareExcursion() {
+        AssaultThief thief = (AssaultThief) Thread.currentThread();
 
         thief.setPartyID(nextParty);
         thief.setStatus(WAITING_SEND_ASSAULT_PARTY);
+
+        log.setAssaultThief();
+        log.reportStatus();
 
         partyReady++;
 
@@ -145,6 +158,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
 
         mthief.setStatus(DECIDING_WHAT_TO_DO);
 
+        log.setMasterState();
+        log.reportStatus();
+
         while (partyReady != MAX_ASSAULT_PARTY_THIEVES) {
             try {
                 wait();
@@ -171,6 +187,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
         MasterThief mthief = (MasterThief) Thread.currentThread();
 
         mthief.setStatus(WAITING_FOR_GROUP_ARRIVAL);
+
+        log.setMasterState();
+        log.reportStatus();
 
         rest = true;
 
@@ -216,43 +235,12 @@ public class ControlCollectionSite implements IControlCollectionSite {
      */
     @Override
     public synchronized int nextEmptyParty() {
-        
-        int[] getpartythieves;
-        
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             int count = 0;
-            
-            Message inMessage, outMessage;
-            ClientCom con = null;
-            try {
-                con = new ClientCom(InetAddress.getLocalHost().getHostName(), PORT_AP + i);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (!con.open()) {
-                return -1;
-            }
-            outMessage = new Message(Message.GET_PARTY_THIEVES);
-            con.writeObject(outMessage);
-
-            inMessage = (Message) con.readObject();
-            if (inMessage.getType() != Message.ACK_INT_ARRAY) {
-                GenericIO.writelnString(inMessage.toString());
-                GenericIO.writelnString("Class: " + this.getClass().getName());
-                GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
-                System.exit(1);
-            }
-            getpartythieves = inMessage.getAckintarray();
-            
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-                
-                if(getpartythieves[j] == -1){
+                if (parties[i].getPartyThieves()[j] == -1) {
                     count++;
                 }
-                
-                /*if (parties[i].getPartyThieves()[j] == -1) {
-                    count++;
-                }*/
                 if (count == MAX_ASSAULT_PARTY_THIEVES) {
                     return i;
                 }
@@ -309,50 +297,29 @@ public class ControlCollectionSite implements IControlCollectionSite {
         }
 
         rest = false;
-        //int roomID = parties[thief.getPartyID()].getRoomID();
+        int roomID = parties[thief.getPartyID()].getRoomID();
 
         if (thief.getHasCanvas() == 0) {
-            //emptyRooms[roomID] = true;
+            emptyRooms[roomID] = true;
         }
         if (thief.getHasCanvas() == 1) {
             nPaintings++;
+            log.setnPaintings(nPaintings);
         }
 
         partiesArrived[thief.getPartyID()]++;
         if (partiesArrived[thief.getPartyID()] == MAX_ASSAULT_PARTY_THIEVES) {
             partiesArrived[thief.getPartyID()] = 0;
-            //roomOcupied[roomID] = false;
+            roomOcupied[roomID] = false;
         }
 
         collectCanvas = true;
 
         // Reset Party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-
-            /*Message inMessage, outMessage;
-            ClientCom con = null;
-            try {
-                con = new ClientCom(InetAddress.getLocalHost().getHostAddress(), PORT_CS);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (!con.open()) {
-                return;
-            }
-            outMessage = new Message(STARTOP);
-            con.writeObject(outMessage);
-
-            inMessage = (Message) con.readObject();
-            if (inMessage.getType() != ACK) {
-                GenericIO.writelnString(inMessage.toString());
-                GenericIO.writelnString("Class: " + this.getClass().getName());
-                GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
-                System.exit(1);
-            }*/
-
- /*if (parties[thief.getPartyID()].getPartyThieves()[i] == thief.getThiefID()) {
+            if (parties[thief.getPartyID()].getPartyThieves()[i] == thief.getThiefID()) {
                 parties[thief.getPartyID()].setPartyThieves(i, -1);
-            }*/
+            }
         }
 
         notifyAll();
@@ -365,42 +332,18 @@ public class ControlCollectionSite implements IControlCollectionSite {
      * or false if otherwise.
      */
     @Override
-    public synchronized boolean inParty(AssaultThief thief) {
+    public synchronized boolean inParty() {
+        AssaultThief thief = ((AssaultThief) Thread.currentThread());
 
-        int[] getpartythieves;
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
-
-            Message inMessage, outMessage;
-            ClientCom con = null;
-            try {
-                con = new ClientCom(InetAddress.getLocalHost().getHostName(), PORT_AP + i);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (!con.open()) {
-                return false;
-            }
-            outMessage = new Message(Message.GET_PARTY_THIEVES);
-            con.writeObject(outMessage);
-
-            inMessage = (Message) con.readObject();
-            if (inMessage.getType() != Message.ACK_INT_ARRAY) {
-                GenericIO.writelnString(inMessage.toString());
-                GenericIO.writelnString("Class: " + this.getClass().getName());
-                GenericIO.writelnString("Linha: " + new Exception().getStackTrace()[0].getLineNumber());
-                System.exit(1);
-            }
-            getpartythieves = inMessage.getAckintarray();
-
             for (int j = 0; j < MAX_ASSAULT_PARTY_THIEVES; j++) {
-
-                if (getpartythieves[j] == thief.getThiefID()) {
+                if (parties[i].getPartyThieves()[j] == thief.getThiefID()) {
                     return true;
                 }
             }
         }
 
-        return thief.getPartyID() != -1;
+        return false;
     }
 
     /**
@@ -413,6 +356,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
         MasterThief mthief = (MasterThief) Thread.currentThread();
 
         mthief.setStatus(DECIDING_WHAT_TO_DO);
+
+        log.setMasterState();
+        log.reportStatus();
 
         collectCanvas = false;
 
@@ -429,6 +375,10 @@ public class ControlCollectionSite implements IControlCollectionSite {
         MasterThief mthief = (MasterThief) Thread.currentThread();
 
         mthief.setStatus(PRESENTING_THE_REPORT);
+
+        log.setMasterState();
+        log.reportStatus();
+
     }
 
     /**
@@ -454,7 +404,7 @@ public class ControlCollectionSite implements IControlCollectionSite {
     /**
      * Get the ID of the next Room to be assigned.
      *
-     * @return
+     * @return 
      */
     @Override
     public int getNextRoom() {
@@ -462,9 +412,9 @@ public class ControlCollectionSite implements IControlCollectionSite {
     }
 
     /**
-     * Get the number of paintings collected to the moment.
+     * Get the number of paitings collected to the moment.
      *
-     * @return Returns the number of paintings collected to the moment.
+     * @return Returns the number of paitings collected to the moment.
      */
     @Override
     public int getnPaintings() {

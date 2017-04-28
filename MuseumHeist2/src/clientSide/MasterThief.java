@@ -190,12 +190,14 @@ public class MasterThief extends Thread implements Serializable {
         return inMessage.getValue();
     }
 
-    private boolean prepareAssaultParty() {
+    private void prepareAssaultParty() {        
+        setStatus(ASSEMBLING_A_GROUP);
+        
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, 4001);
+        ClientCom con = new ClientCom(serverHostName, PORT_CS);
 
         if (!con.open()) {
-            return false;
+            return;
         }
         outMessage = new Message(PREPARE_AP);
         con.writeObject(outMessage);
@@ -209,8 +211,6 @@ public class MasterThief extends Thread implements Serializable {
             System.exit(1);
         }
         //con.close();
-
-        return false;
     }
 
     private void sendAssaultParty() {

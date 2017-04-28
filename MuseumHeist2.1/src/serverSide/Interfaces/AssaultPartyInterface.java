@@ -50,6 +50,10 @@ public class AssaultPartyInterface extends Interface {
         /* processamento */
         switch (inMessage.getType()) {
             
+            case Message.GETAP:
+                System.out.println("AP#" + ap.getId() + " - GETAP ");
+                outMessage = new Message(Message.ACK, ap);
+                break;
             case Message.ADD_THIEF:
                 System.out.println("AP#" + ap.getId() + " - AMINEEDED");
                 outMessage = new Message(Message.ACK_INT, ap.addThief(inMessage.getThief()));
