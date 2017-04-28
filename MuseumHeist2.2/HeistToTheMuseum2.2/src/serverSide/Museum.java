@@ -43,7 +43,7 @@ public class Museum {
         int nPaintings = rooms[nRoom].getNPaintings();
         if (nPaintings > 0) {
             rooms[nRoom].setnPaintings(nPaintings - 1);
-            System.out.print("REMAINING CANVAS: " + getTotalPaintings());
+            System.out.println("REMAINING CANVAS: " + getTotalPaintings());
             return 1;
         } else {
             return 0;
