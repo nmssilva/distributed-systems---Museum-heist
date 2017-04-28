@@ -3,7 +3,7 @@ package serverSide.servers;
 import genclass.*;
 import serverSide.AssaultParty;
 import serverSide.com.ClientProxy;
-import serverSide.interfaces.IAssaultParty;
+import serverSide.interfaces.AssaultParty_Interface;
 import serverSide.com.ServerCom;
 import static auxiliary.constants.Heist.PORT_AP;
 
@@ -11,7 +11,7 @@ public class AssaultParty1Server {
 
     public static void main(String[] args) {
         AssaultParty assaultParty1;
-        IAssaultParty iAssaultParty1;
+        AssaultParty_Interface iAssaultParty1;
         ServerCom scon1, sconi1;
         ClientProxy assaultPartyProxy1;
 
@@ -21,7 +21,7 @@ public class AssaultParty1Server {
 
         assaultParty1 = new AssaultParty(1);
 
-        iAssaultParty1 = new IAssaultParty(assaultParty1);
+        iAssaultParty1 = new AssaultParty_Interface(assaultParty1);
 
         GenericIO.writelnString("AP#1 - PORT " + (PORT_AP+1));
         GenericIO.writelnString("O serviço foi estabelecido!");

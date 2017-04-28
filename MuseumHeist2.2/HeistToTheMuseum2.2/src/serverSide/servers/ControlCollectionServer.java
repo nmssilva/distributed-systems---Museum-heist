@@ -4,7 +4,7 @@ import static auxiliary.constants.Heist.PORT_CCS;
 import genclass.*;
 import serverSide.com.ClientProxy;
 import serverSide.ControlCollectionSite;
-import serverSide.interfaces.IControlCollectionSite;
+import serverSide.interfaces.ControlCollectionSite_Interface;
 import serverSide.com.ServerCom;
 
 /**
@@ -30,7 +30,7 @@ public class ControlCollectionServer
    public static void main (String [] args)
    {
       ControlCollectionSite CCS;                                    // barbearia (representa o serviço a ser prestado)
-      IControlCollectionSite iCCS;                      // interface à barbearia
+      ControlCollectionSite_Interface iCCS;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
       ClientProxy cliProxy;                                // thread agente prestador do serviço
 
@@ -39,7 +39,7 @@ public class ControlCollectionServer
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
       CCS = new ControlCollectionSite();                           // activação do serviço
-      iCCS = new IControlCollectionSite(CCS);        // activação do interface com o serviço
+      iCCS = new ControlCollectionSite_Interface(CCS);        // activação do interface com o serviço
       
       GenericIO.writelnString("CCS - PORT " + PORT_CCS);
       GenericIO.writelnString ("O serviço foi estabelecido!");

@@ -9,7 +9,7 @@ import static auxiliary.messages.Message.*;
  * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
  * (replicação do servidor) com lançamento estático dos threads barbeiro.
  */
-public class IControlCollectionSite extends Interface {
+public class ControlCollectionSite_Interface extends Interface {
 
     /**
      * Concentration site (represents the provided service)
@@ -23,7 +23,7 @@ public class IControlCollectionSite extends Interface {
      *
      * @param ccs concentration site
      */
-    public IControlCollectionSite(ControlCollectionSite ccs) {
+    public ControlCollectionSite_Interface(ControlCollectionSite ccs) {
         this.ccs = ccs;
     }
 
@@ -38,6 +38,7 @@ public class IControlCollectionSite extends Interface {
      * @throws MessageException se a mensagem com o pedido for considerada
      * inválida
      */
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
         Message outMessage = null;                           // mensagem de resposta
 
@@ -77,12 +78,6 @@ public class IControlCollectionSite extends Interface {
             ccs.prepareExcursion();
 
             outMessage = new Message(Message.ACK);
-        }
-        if (inMessage.getType() == GET_NEXT_ROOM) {
-            System.out.println("CCS - GET_NEXT_ROOM");
-            int nextRoom = ccs.getNextRoom();
-
-            outMessage = new Message(Message.ACK, nextRoom);
         }
         if (inMessage.getType() == HAND_CANVAS) {
             System.out.println("CCS - HAND_CANVAS");

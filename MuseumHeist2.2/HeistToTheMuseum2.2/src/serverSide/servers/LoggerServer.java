@@ -3,7 +3,7 @@ package serverSide.servers;
 import static auxiliary.constants.Heist.PORT_LOG;
 import genclass.*;
 import serverSide.com.ClientProxy;
-import serverSide.interfaces.ILogger;
+import serverSide.interfaces.Logger_Interface;
 import serverSide.Logger;
 import serverSide.com.ServerCom;
 
@@ -30,7 +30,7 @@ public class LoggerServer
    public static void main (String [] args)
    {
       Logger logger;                                    // barbearia (representa o serviço a ser prestado)
-      ILogger iLogger;                      // interface à barbearia
+      Logger_Interface iLogger;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
       ClientProxy cliProxy;                                // thread agente prestador do serviço
 
@@ -39,7 +39,7 @@ public class LoggerServer
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
       logger = new Logger ();                           // activação do serviço
-      iLogger = new ILogger(logger);        // activação do interface com o serviço
+      iLogger = new Logger_Interface(logger);        // activação do interface com o serviço
       
       GenericIO.writelnString("LOG - PORT " + PORT_LOG);
       GenericIO.writelnString ("O serviço foi estabelecido!");

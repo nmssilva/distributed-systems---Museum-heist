@@ -4,11 +4,11 @@ import auxiliary.messages.*;
 import serverSide.AssaultParty;
 import static auxiliary.messages.Message.*;
 
-public class IAssaultParty extends Interface {
+public class AssaultParty_Interface extends Interface {
 
     private AssaultParty assparty;
 
-    public IAssaultParty(AssaultParty assparty) {
+    public AssaultParty_Interface(AssaultParty assparty) {
         this.assparty = assparty;
     }
 

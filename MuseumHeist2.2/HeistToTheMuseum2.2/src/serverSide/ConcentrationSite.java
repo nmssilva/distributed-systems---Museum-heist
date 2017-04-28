@@ -56,6 +56,8 @@ public class ConcentrationSite {
      * prepareAssaultParty or the heist ends. The status of the Assault Thief
      * current thread is changed to OUTSIDE in the end of the operation.
      *
+     * @param thiefID
+     * @param maxDisp
      * @return
      */
     public synchronized int amINeeded(int thiefID, int maxDisp) {
@@ -148,6 +150,7 @@ public class ConcentrationSite {
         con.close();
 
         partyID = inMessage.getInteger();
+        System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             con = new ClientCom(hostname, PORT_AP + partyID);
             if (!con.open()) {

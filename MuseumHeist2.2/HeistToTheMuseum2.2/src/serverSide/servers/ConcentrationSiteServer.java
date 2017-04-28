@@ -4,7 +4,7 @@ import static auxiliary.constants.Heist.PORT_CS;
 import genclass.*;
 import serverSide.com.ClientProxy;
 import serverSide.ConcentrationSite;
-import serverSide.interfaces.IConcentrationSite;
+import serverSide.interfaces.ConcentrationSite_Interface;
 import serverSide.com.ServerCom;
 
 /**
@@ -29,7 +29,7 @@ public class ConcentrationSiteServer {
      */
     public static void main(String[] args) {
         ConcentrationSite CCS;                                    // barbearia (representa o serviço a ser prestado)
-        IConcentrationSite iCCS;                      // interface à barbearia
+        ConcentrationSite_Interface iCCS;                      // interface à barbearia
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 
@@ -37,7 +37,7 @@ public class ConcentrationSiteServer {
         scon = new ServerCom(portNumb);                     // criação do canal de escuta e sua associação
         scon.start();                                       // com o endereço público
         CCS = new ConcentrationSite();                           // activação do serviço
-        iCCS = new IConcentrationSite(CCS);        // activação do interface com o serviço
+        iCCS = new ConcentrationSite_Interface(CCS);        // activação do interface com o serviço
         
         GenericIO.writelnString("CS - PORT " + PORT_CS);
         GenericIO.writelnString("O serviço foi estabelecido!");

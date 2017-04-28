@@ -3,7 +3,7 @@ package serverSide.servers;
 import auxiliary.constants.Heist;
 import genclass.*;
 import serverSide.com.ClientProxy;
-import serverSide.interfaces.IMuseum;
+import serverSide.interfaces.Museum_Interface;
 import serverSide.Museum;
 import serverSide.com.ServerCom;
 
@@ -29,7 +29,7 @@ public class MuseumServer {
      */
     public static void main(String[] args) {
         Museum museum;                                    // barbearia (representa o serviço a ser prestado)
-        IMuseum iMuseum;                      // interface à barbearia
+        Museum_Interface iMuseum;                      // interface à barbearia
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 
@@ -37,7 +37,7 @@ public class MuseumServer {
         scon = new ServerCom(portNumb);                     // criação do canal de escuta e sua associação
         scon.start();                                       // com o endereço público
         museum = new Museum();                           // activação do serviço
-        iMuseum = new IMuseum(museum);        // activação do interface com o serviço
+        iMuseum = new Museum_Interface(museum);        // activação do interface com o serviço
         
         GenericIO.writelnString("MUSEUM - PORT " + Heist.PORT_MUSEUM);
         GenericIO.writelnString("O serviço foi estabelecido!");

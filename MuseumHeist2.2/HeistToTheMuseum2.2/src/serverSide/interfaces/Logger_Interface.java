@@ -10,7 +10,7 @@ import serverSide.Logger;
  * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
  * (replicação do servidor) com lançamento estático dos threads barbeiro.
  */
-public class ILogger extends Interface {
+public class Logger_Interface extends Interface {
 
     /**
      * Logger (represents the provided service)
@@ -24,7 +24,7 @@ public class ILogger extends Interface {
      *
      * @param log
      */
-    public ILogger(Logger log) {
+    public Logger_Interface(Logger log) {
         this.log = log;
     }
 

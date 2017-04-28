@@ -9,7 +9,7 @@ import static auxiliary.messages.Message.*;
  * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
  * (replicação do servidor) com lançamento estático dos threads barbeiro.
  */
-public class IMuseum extends Interface {
+public class Museum_Interface extends Interface {
 
     /**
      * Concentration site (represents the provided service)
@@ -23,7 +23,7 @@ public class IMuseum extends Interface {
      *
      * @param museum
      */
-    public IMuseum(Museum museum) {
+    public Museum_Interface(Museum museum) {
         this.museum = museum;
     }
 

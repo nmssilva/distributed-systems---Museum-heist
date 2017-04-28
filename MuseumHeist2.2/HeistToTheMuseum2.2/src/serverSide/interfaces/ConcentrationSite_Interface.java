@@ -9,7 +9,7 @@ import static auxiliary.messages.Message.*;
  * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
  * (replicação do servidor) com lançamento estático dos threads barbeiro.
  */
-public class IConcentrationSite extends Interface {
+public class ConcentrationSite_Interface extends Interface {
 
     /**
      * Concentration site (represents the provided service)
@@ -23,7 +23,7 @@ public class IConcentrationSite extends Interface {
      *
      * @param cs concentration site
      */
-    public IConcentrationSite(ConcentrationSite cs) {
+    public ConcentrationSite_Interface(ConcentrationSite cs) {
         this.cs = cs;
     }
 
@@ -38,6 +38,7 @@ public class IConcentrationSite extends Interface {
      * @throws MessageException se a mensagem com o pedido for considerada
      * inválida
      */
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
         Message outMessage = null;                           // mensagem de resposta
 
@@ -63,8 +64,6 @@ public class IConcentrationSite extends Interface {
             int thievesCS = cs.getnAssaultThievesCS();
             outMessage = new Message(Message.ACK, thievesCS);
         }
-        
-
         return outMessage;
     }
 }
