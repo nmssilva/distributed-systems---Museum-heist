@@ -30,7 +30,7 @@ public class ClientHeistToTheMuseum {
         GenericIO.writeString("Numero de iterações? ");
         nIter = 1;
         GenericIO.writeString("Nome do ficheiro de logging? ");
-        fName = "teste";
+        fName = "logger.log";
         GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
         serverHostName = InetAddress.getLocalHost().getHostName();
 
@@ -72,7 +72,7 @@ public class ClientHeistToTheMuseum {
                 thiefs[i].join();
             } catch (InterruptedException e) {
             }
-            GenericIO.writelnString("O cliente " + i + " terminou.");
+            GenericIO.writelnString("O thief " + i + " terminou.");
         }
         GenericIO.writelnString();
         while (mthief.isAlive()) {
@@ -83,6 +83,8 @@ public class ClientHeistToTheMuseum {
             mthief.join();
         } catch (InterruptedException e) {
         }
+        GenericIO.writelnString("O masterthief terminou.");
+        
 
         GenericIO.writelnString();
     }

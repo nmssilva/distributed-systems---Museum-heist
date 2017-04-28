@@ -186,7 +186,7 @@ public class ConcentrationSite {
         if (!con.open()) {
             return false;
         }
-        outMessage = new Message(Message.SET_AP_ROOM);
+        outMessage = new Message(Message.SET_AP_ROOM, roomID);
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         con.close();

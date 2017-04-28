@@ -21,7 +21,7 @@ public class IMuseum extends Interface {
     /**
      * Concentration site interface instantiation
      *
-     * @param cs concentration site
+     * @param museum
      */
     public IMuseum(Museum museum) {
         this.museum = museum;
@@ -38,6 +38,7 @@ public class IMuseum extends Interface {
      * @throws MessageException se a mensagem com o pedido for considerada
      * inválida
      */
+    @Override
     public Message processAndReply(Message inMessage) throws MessageException {
         Message outMessage = null;                           // mensagem de resposta
 

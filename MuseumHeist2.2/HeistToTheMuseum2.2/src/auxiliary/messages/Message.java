@@ -55,73 +55,28 @@ public class Message implements Serializable {
     public static final int SUM_UP_RESULTS = 39;
     public static final int NEXT_EMPTY_ROOM = 40;
 
-    /* Message fields */
-    /**
-     * Message type
-     *
-     * @serialField msgType
-     */
     private int msgType = -1;
 
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
     private int thiefID;
 
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
     private int status;
 
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
     private int maxDisp;
 
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
-    private int integer2;
-
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
     private int hasCanvas;
 
     private boolean b;
 
-    /**
-     * Thief identification
-     *
-     * @serialField thiefId
-     */
     private int partyThieves[];
 
-    /**
-     * Logging file name
-     *
-     * @serialField fName
-     */
     private String fName = null;
 
-    /**
-     * Thieves lifecyle iterations number
-     *
-     * @serialField nIter
-     */
     private int nIter = -1;
+    
     private int integer;
+    private int integer2;
     private int integer3;
+    
     private int partyID;
 
     public Message(int type) {
