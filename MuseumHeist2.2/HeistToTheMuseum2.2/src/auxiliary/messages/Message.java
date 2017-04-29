@@ -55,11 +55,9 @@ public class Message implements Serializable {
     public static final int SUM_UP_RESULTS = 39;
     public static final int NEXT_EMPTY_ROOM = 40;
     public static final int SETMUSEUM = 41;
-    /*public static final int NEXT_EMPTY_ROOM = 40;
-    public static final int NEXT_EMPTY_ROOM = 40;
-    public static final int NEXT_EMPTY_ROOM = 40;
-    public static final int NEXT_EMPTY_ROOM = 40;
-    public static final int NEXT_EMPTY_ROOM = 40;*/
+    public static final int SETAP = 42;
+    public static final int SETMTSTATUS = 43;
+    public static final int SET_ASSAULT_THIEF = 44;
 
     private int msgType = -1;
 
@@ -131,6 +129,14 @@ public class Message implements Serializable {
         this.msgType = type;
         this.intarray = intarray;
         this.intarray2 = intarray2;
+    }
+
+    public Message(int SETAP, int id, int[] partyThieves, int[] partyThievesPos, int roomID) {
+        this.msgType = SETAP;
+        this.partyID = id;
+        this.partyThieves = partyThieves;
+        this.intarray = partyThievesPos;
+        this.integer = roomID;
     }
     
     

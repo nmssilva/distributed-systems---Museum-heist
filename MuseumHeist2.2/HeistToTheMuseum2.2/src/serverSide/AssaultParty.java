@@ -52,6 +52,9 @@ public class AssaultParty {
             myTurn[i] = false;
             inRoom[i] = false;
         }
+
+        logSetAp();
+
     }
 
     /**
@@ -471,7 +474,22 @@ public class AssaultParty {
         return inMessage.getInteger();
     }
 
-    public void setFileName(String fName, int nIter) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void logSetAp() {
+        /* Comunicação ao servidor dos parâmetros do problema */
+        ClientCom con;                                       // canal de comunicação
+        Message inMessage, outMessage;                       // mensagens trocadas
+
+        con = new ClientCom(HOST_LOG, PORT_LOG);
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
+        }
+
+        outMessage = new Message(Message.SETAP, this.id, this.partyThieves, this.partyThievesPos, this.roomID);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        con.close();
     }
 }

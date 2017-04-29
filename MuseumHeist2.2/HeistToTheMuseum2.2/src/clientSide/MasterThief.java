@@ -61,6 +61,9 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
 
+        this.status = DECIDING_WHAT_TO_DO;
+        logSetMasterState();
+        
         return false;
     }
 
@@ -106,6 +109,9 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
         //con.close();
+        
+        this.status = DECIDING_WHAT_TO_DO;
+        logSetMasterState();
 
         return inMessage.getInteger();
     }
@@ -127,6 +133,9 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
         con.close();
+        
+        this.status = ASSEMBLING_A_GROUP;
+        logSetMasterState();
 
         return false;
     }
@@ -147,6 +156,9 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
 
+        this.status = DECIDING_WHAT_TO_DO;
+        logSetMasterState();
+        
         return true;
     }
 
@@ -165,6 +177,9 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        this.status = WAITING_FOR_ARRIVAL;
+        logSetMasterState();
 
         return true;
     }
@@ -184,6 +199,9 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        this.status = DECIDING_WHAT_TO_DO;
+        logSetMasterState();
 
         return true;
     }
@@ -203,7 +221,29 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        this.status = PRESENTING_REPORT;
+        logSetMasterState();
 
         return true;
+    }
+
+    private void logSetMasterState() {
+        /* Comunicação ao servidor dos parâmetros do problema */
+        ClientCom con;                                       // canal de comunicação
+        Message inMessage, outMessage;                       // mensagens trocadas
+
+        con = new ClientCom(HOST_LOG, PORT_LOG);
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
+        }
+
+        outMessage = new Message(Message.SETMTSTATUS, this.status);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        con.close();
     }
 }

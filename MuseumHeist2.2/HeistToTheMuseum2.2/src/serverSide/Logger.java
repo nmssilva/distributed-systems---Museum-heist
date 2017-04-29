@@ -84,7 +84,6 @@ public class Logger {
      *
      */
     public void setMasterThief(int status) {
-        MasterThief mthief = (MasterThief) Thread.currentThread();
         switch (status) {
             case 1000:
                 masterThiefStatus = "PLAN";

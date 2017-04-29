@@ -57,25 +57,40 @@ public class Logger_Interface extends Interface {
 
         /* Message processing */
         switch (inMessage.getType()) {
-            case Message.SETNFIC:                               // Initialize logging file
+            case Message.SETNFIC:                           // Initialize logging file
                 System.out.println("LOGGER - SETNFIC");
                 log.setFileName(inMessage.getFName(), inMessage.getNIter());
                 outMessage = new Message(Message.NFICDONE);
                 break;
-            case Message.SETREP:                                // Update GRI and report in logging file
+            case Message.SETREP:                            // Update GRI and report in logging file
                 System.out.println("LOGGER - SETREP");
                 log.setAssaultThief(inMessage.getThiefID(), inMessage.getStatus(), inMessage.getMaxDisp(), inMessage.getPartyID(), inMessage.getHasCanvas());
                 log.reportStatus();
                 outMessage = new Message(Message.REPDONE);
                 break;
-            case Message.ENDOP:                                 // End of operations of the logger and report final status in the logging file
+            case Message.ENDOP:                             // End of operations of the logger and report final status in the logging file
                 System.out.println("LOGGER - ENDOP");
                 log.reportFinalStatus();
                 outMessage = new Message(Message.ACK);
                 break;
-            case Message.SETMUSEUM:                             // End of operations of the logger and report final status in the logging file                
+            case Message.SETMUSEUM:                         // End of operations of the logger and report final status in the logging file                
                 System.out.println("LOGGER - SETMUSEUM");
                 log.setMuseum(inMessage.getIntarray(), inMessage.getIntarray2());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.SETAP:                             // End of operations of the logger and report final status in the logging file                
+                System.out.println("LOGGER - SETAP");
+                log.setAssaultParty(inMessage.getPartyID(), inMessage.getPartyThieves(), inMessage.getIntarray(), inMessage.getInteger());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.SETMTSTATUS:                       // End of operations of the logger and report final status in the logging file                
+                System.out.println("LOGGER - SETMTSTATUS");
+                log.setMasterThief(inMessage.getInteger());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.SET_ASSAULT_THIEF:                 // End of operations of the logger and report final status in the logging file                
+                System.out.println("LOGGER - SET_ASSAULT_THIEF");
+                log.setAssaultThief(inMessage.getThiefID(),inMessage.getStatus(), inMessage.getMaxDisp(), inMessage.getPartyID(), inMessage.getHasCanvas());
                 outMessage = new Message(Message.ACK);
                 break;
 

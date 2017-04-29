@@ -55,12 +55,12 @@ public class States {
              */
             ASSEMBLING_A_GROUP = 3000,
             /**
-             * Status WAITING_FOR_GROUP_ARRIVAL.
+             * Status WAITING_FOR_ARRIVAL.
              */
-            WAITING_FOR_GROUP_ARRIVAL = 4000,
+            WAITING_FOR_ARRIVAL = 4000,
             /**
-             * Status PRESENTING_THE_REPORT.
+             * Status PRESENTING_REPORT.
              */
-            PRESENTING_THE_REPORT = 5000;
+            PRESENTING_REPORT = 5000;
 
 }

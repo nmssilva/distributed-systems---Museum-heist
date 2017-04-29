@@ -93,8 +93,8 @@ public class ClientHeistToTheMuseum {
     }
 
     private static void reportFinalStatus() {
-        ClientCom con;                                       // canal de comunicação
-        Message inMessage, outMessage;                       // mensagens trocadas
+        ClientCom con;                  // canal de comunicação
+        Message inMessage, outMessage;  // mensagens trocadas
 
         con = new ClientCom(HOST_LOG, PORT_LOG);
         while (!con.open()) {

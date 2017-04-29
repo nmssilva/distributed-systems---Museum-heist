@@ -34,6 +34,10 @@ public class AssaultThief extends Thread {
         this.nIter = nIter;
         serverHostName = hostName;
         this.serverPort = serverPort;
+        
+        logSetThief();
+        
+        System.out.println("THIEF #" + thiefID + " created");
     }
 
     /**
@@ -75,11 +79,13 @@ public class AssaultThief extends Thread {
         con.close();
 
         if (inMessage.getInteger() != -1) {
-            //System.out.println("THIEF #" + thiefID + "NEEDED");
+            System.out.println("THIEF #" + thiefID + "NEEDED");
             this.partyID = inMessage.getInteger();
             this.hasCanvas = 0;
             reportStatus();
         }
+        
+        logSetThief();
 
         return inMessage.getInteger();
     }
@@ -99,6 +105,9 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        status = CRAWLING_INWARDS;
+        logSetThief();
 
         return false;
     }
@@ -137,6 +146,9 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        status = CRAWLING_INWARDS;
+        logSetThief();
 
         return false;
     }
@@ -177,6 +189,9 @@ public class AssaultThief extends Thread {
         }
 
         hasCanvas = inMessage.getInteger();
+        
+        status = AT_A_ROOM;
+        logSetThief();
 
         return true;
     }
@@ -197,6 +212,9 @@ public class AssaultThief extends Thread {
             System.exit(1);
         }
 
+        status = CRAWLING_OUTWARDS;
+        logSetThief();
+        
         return true;
     }
 
@@ -215,6 +233,10 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        status = CRAWLING_OUTWARDS;
+        logSetThief();
+        
         return false;
     }
 
@@ -233,6 +255,9 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
+        
+        status = AT_COLLECTION_SITE;
+        logSetThief();
 
         return true;
     }
@@ -260,5 +285,24 @@ public class AssaultThief extends Thread {
         }
 
         return false;
+    }
+
+    private void logSetThief() {
+        /* Comunicação ao servidor dos parâmetros do problema */
+        ClientCom con;                                       // canal de comunicação
+        Message inMessage, outMessage;                       // mensagens trocadas
+
+        con = new ClientCom(HOST_LOG, PORT_LOG);
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
+        }
+
+        outMessage = new Message(Message.SET_ASSAULT_THIEF, this.thiefID, this.status, this.maxDisp, this.partyID, this.hasCanvas);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        con.close();
     }
 }
