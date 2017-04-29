@@ -45,14 +45,14 @@ public class Museum_Interface extends Interface {
         /* seu processamento */
         switch (inMessage.getType()) {
             case GET_DIST_OUTSIDE:
-                System.out.println("MUSEUM - GET DIST OUTSIDE Room:" + inMessage.getInteger());
-                int distOutside = museum.getRoom(inMessage.getInteger()).getDistOutside();
+                System.out.println("MUSEUM - GET DIST OUTSIDE Room:" + inMessage.getValue());
+                int distOutside = museum.getRoom(inMessage.getValue()).getDistOutside();
 
                 outMessage = new Message(Message.ACK, distOutside);
                 break;
             case ROLL_A_CANVAS:
                 System.out.println("MUSEUM - ROLL_A_CANVAS");
-                int hasCanvas = museum.rollACanvas(inMessage.getInteger());
+                int hasCanvas = museum.rollACanvas(inMessage.getValue());
 
                 outMessage = new Message(Message.ACK, hasCanvas);
                 break;

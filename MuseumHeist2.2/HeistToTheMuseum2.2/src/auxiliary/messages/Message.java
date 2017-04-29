@@ -6,10 +6,11 @@ import java.io.*;
  *
  * This data type defines the exchanged messages between server and clients in a
  * solution of the Heist to the Museum that implements a type 2 client-server
- * model (with server replication) with static "lancamento" of thieves threads
+ * model (with server replication) with static initialization of thieves threads
  * The communication is based on the exchange of type Message objectes in a TCP
  * channel.
  */
+
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 1001L;
@@ -70,9 +71,9 @@ public class Message implements Serializable {
 
     private int nIter = -1;
 
-    private int integer;
-    private int integer2;
-    private int integer3;
+    private int value;
+    private int value2;
+    private int value3;
 
     private int[] intarray;
     private int[] intarray2;
@@ -85,20 +86,20 @@ public class Message implements Serializable {
 
     public Message(int type, int integer) {
         msgType = type;
-        this.integer = integer;
+        this.value = integer;
     }
 
     public Message(int type, int integer, int integer2) {
         msgType = type;
-        this.integer = integer;
-        this.integer2 = integer2;
+        this.value = integer;
+        this.value2 = integer2;
     }
 
     public Message(int type, int integer, int integer2, int integer3) {
         msgType = type;
-        this.integer = integer;
-        this.integer2 = integer2;
-        this.integer3 = integer3;
+        this.value = integer;
+        this.value2 = integer2;
+        this.value3 = integer3;
     }
 
     public Message(int type, int[] partyThieves) {
@@ -128,19 +129,29 @@ public class Message implements Serializable {
         this.partyID = id;
         this.partyThieves = partyThieves;
         this.intarray = partyThievesPos;
-        this.integer = roomID;
+        this.value = roomID;
     }
 
-    public int getInteger() {
-        return integer;
+    public Message(int type, int thiefID, int status, int maxDisp, int partyID, int hasCanvas) {
+        msgType = type;
+        this.thiefID = thiefID;
+        this.status = status;
+        this.maxDisp = maxDisp;
+        this.partyID = partyID;
+        this.hasCanvas = hasCanvas;
+        //this.thief = (AssaultThief) Thread.currentThread();
     }
 
-    public int getInteger2() {
-        return integer2;
+    public int getValue() {
+        return value;
     }
 
-    public int getInteger3() {
-        return integer3;
+    public int getValue2() {
+        return value2;
+    }
+
+    public int getValue3() {
+        return value3;
     }
 
     public int[] getPartyThieves() {
@@ -157,16 +168,6 @@ public class Message implements Serializable {
 
     public int getHasCanvas() {
         return hasCanvas;
-    }
-
-    public Message(int type, int thiefID, int status, int maxDisp, int partyID, int hasCanvas) {
-        msgType = type;
-        this.thiefID = thiefID;
-        this.status = status;
-        this.maxDisp = maxDisp;
-        this.partyID = partyID;
-        this.hasCanvas = hasCanvas;
-        //this.thief = (AssaultThief) Thread.currentThread();
     }
 
     public int getPartyID() {
@@ -204,6 +205,18 @@ public class Message implements Serializable {
         return (fName);
     }
 
+    public boolean isB() {
+        return b;
+    }
+
+    public int[] getIntarray() {
+        return intarray;
+    }
+
+    public int[] getIntarray2() {
+        return intarray2;
+    }
+
     /**
      * Get value of thieves lifecycle iterations number field
      *
@@ -223,18 +236,6 @@ public class Message implements Serializable {
     public String toString() {
         return ("Type = " + msgType
                 + "\nThief Id = " + thiefID);
-    }
-
-    public boolean isB() {
-        return b;
-    }
-
-    public int[] getIntarray() {
-        return intarray;
-    }
-
-    public int[] getIntarray2() {
-        return intarray2;
     }
 
 }

@@ -63,7 +63,7 @@ public class ControlCollectionSite_Interface extends Interface {
                 } catch (InterruptedException e) {
                 }
 
-                outMessage = new Message(Message.ACK, ccs.appraiseSit(inMessage.getInteger()));
+                outMessage = new Message(Message.ACK, ccs.appraiseSit(inMessage.getValue()));
 
                 break;
             case GET_NEXT_AP:
@@ -86,7 +86,7 @@ public class ControlCollectionSite_Interface extends Interface {
                 break;
             case HAND_CANVAS:
                 System.out.println("CCS - HAND_CANVAS");
-                ccs.handCanvas(inMessage.getInteger(), inMessage.getInteger2(), inMessage.getInteger3());
+                ccs.handCanvas(inMessage.getValue(), inMessage.getValue2(), inMessage.getValue3());
 
                 outMessage = new Message(Message.ACK);
                 break;

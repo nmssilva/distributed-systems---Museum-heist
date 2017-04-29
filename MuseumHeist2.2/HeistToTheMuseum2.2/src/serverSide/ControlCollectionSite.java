@@ -277,7 +277,7 @@ public class ControlCollectionSite {
         inMessage = (Message) con.readObject();
         con.close();
 
-        int roomID = inMessage.getInteger();
+        int roomID = inMessage.getValue();
 
         if (hasCanvas == 0) {
             emptyRooms[roomID] = true;

@@ -80,7 +80,7 @@ public class MasterThief extends Thread {
         }
         //con.close();
 
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private int appraiseSit(int nAssaultThievesCS) {
@@ -108,7 +108,7 @@ public class MasterThief extends Thread {
         this.status = DECIDING_WHAT_TO_DO;
         logSetMasterState();
 
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private boolean prepareAssaultParty() {

@@ -91,7 +91,7 @@ public class ConcentrationSite {
                 inMessage = (Message) con.readObject();
                 con.close();
 
-                if (inMessage.getInteger() == -1 && nAssaultThievesCS == THIEVES_NUMBER) {
+                if (inMessage.getValue() == -1 && nAssaultThievesCS == THIEVES_NUMBER) {
                     return -1;
                 }
 
@@ -150,7 +150,7 @@ public class ConcentrationSite {
         inMessage = (Message) con.readObject();
         con.close();
 
-        partyID = inMessage.getInteger();
+        partyID = inMessage.getValue();
         //System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             con = new ClientCom(hostname, PORT_AP + partyID);
@@ -184,7 +184,7 @@ public class ConcentrationSite {
         inMessage = (Message) con.readObject();
         con.close();
 
-        int roomID = inMessage.getInteger();
+        int roomID = inMessage.getValue();
 
         con = new ClientCom(hostname, PORT_AP + partyID);
         if (!con.open()) {

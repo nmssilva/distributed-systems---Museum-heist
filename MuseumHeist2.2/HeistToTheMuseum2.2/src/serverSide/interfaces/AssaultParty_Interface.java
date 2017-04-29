@@ -27,7 +27,7 @@ public class AssaultParty_Interface extends Interface {
 
             case ADDTHIEF:
                 System.out.println("AP: ADDTHIEF");
-                assparty.addThief(inMessage.getInteger(), inMessage.getInteger2());
+                assparty.addThief(inMessage.getValue(), inMessage.getValue2());
 
                 outMessage = new Message(Message.ACK);
                 break;
@@ -45,15 +45,15 @@ public class AssaultParty_Interface extends Interface {
                 outMessage = new Message(Message.ACK, distOutside);
                 break;
             case SET_AP_ROOM:
-                System.out.println("AP: SET_AP_ROOM: " + inMessage.getInteger());
+                System.out.println("AP: SET_AP_ROOM: " + inMessage.getValue());
 
-                assparty.setRoom(inMessage.getInteger());
+                assparty.setRoom(inMessage.getValue());
 
                 outMessage = new Message(Message.ACK);
                 break;
             case CRAWL_IN:
                 System.out.println("AP: CRAWL_IN");
-                assparty.crawlIn(inMessage.getInteger());
+                assparty.crawlIn(inMessage.getValue());
 
                 outMessage = new Message(Message.ACK);
                 break;
@@ -71,19 +71,19 @@ public class AssaultParty_Interface extends Interface {
                 break;
             case REVERSE_DIRECTION:
                 System.out.println("AP: REVERSE_DIRECTION");
-                assparty.reverseDirection(inMessage.getInteger());
+                assparty.reverseDirection(inMessage.getValue());
 
                 outMessage = new Message(Message.ACK);
                 break;
             case CRAWL_OUT:
                 System.out.println("AP: CRAWL_OUT");
-                assparty.crawlOut(inMessage.getInteger());
+                assparty.crawlOut(inMessage.getValue());
 
                 outMessage = new Message(Message.ACK);
                 break;
             case SET_PTHIEVES:
                 System.out.println("AP: SET_PTHIEVES");
-                assparty.setPartyThieves(inMessage.getInteger(), inMessage.getInteger2());
+                assparty.setPartyThieves(inMessage.getValue(), inMessage.getValue2());
 
                 outMessage = new Message(Message.ACK);
                 break;

@@ -46,7 +46,7 @@ public class ConcentrationSite_Interface extends Interface {
         switch (inMessage.getType()) {
             case AMINEEDED:
                 System.out.println("CS - AMINEEDED");
-                int partyID = cs.amINeeded(inMessage.getInteger(), inMessage.getInteger2());
+                int partyID = cs.amINeeded(inMessage.getValue(), inMessage.getValue2());
 
                 outMessage = new Message(Message.ACK, partyID);
                 break;

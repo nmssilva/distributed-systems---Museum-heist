@@ -475,7 +475,7 @@ public class AssaultParty {
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         con.close();
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private void logSetAp() {

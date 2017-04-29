@@ -74,9 +74,9 @@ public class AssaultThief extends Thread {
         }
         con.close();
 
-        if (inMessage.getInteger() != -1) {
+        if (inMessage.getValue() != -1) {
             //System.out.println("THIEF #" + thiefID + "NEEDED");
-            this.partyID = inMessage.getInteger();
+            this.partyID = inMessage.getValue();
             this.hasCanvas = 0;
             reportStatus();
         }
@@ -84,7 +84,7 @@ public class AssaultThief extends Thread {
         logSetThief();
         reportStatus();
 
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private boolean prepareExcursion() {
@@ -126,7 +126,7 @@ public class AssaultThief extends Thread {
             System.exit(1);
         }
 
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private boolean crawlIn() {
@@ -168,7 +168,7 @@ public class AssaultThief extends Thread {
             System.exit(1);
         }
 
-        return inMessage.getInteger();
+        return inMessage.getValue();
     }
 
     private boolean rollACanvas(int roomID) {
@@ -187,7 +187,7 @@ public class AssaultThief extends Thread {
             System.exit(1);
         }
 
-        hasCanvas = inMessage.getInteger();
+        hasCanvas = inMessage.getValue();
 
         status = AT_A_ROOM;
         logSetThief();

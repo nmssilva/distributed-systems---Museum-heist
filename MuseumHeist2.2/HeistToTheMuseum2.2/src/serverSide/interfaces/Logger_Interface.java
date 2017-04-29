@@ -99,7 +99,7 @@ public class Logger_Interface extends Interface {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
                 }
-                log.setAssaultParty(inMessage.getPartyID(), inMessage.getPartyThieves(), inMessage.getIntarray(), inMessage.getInteger());
+                log.setAssaultParty(inMessage.getPartyID(), inMessage.getPartyThieves(), inMessage.getIntarray(), inMessage.getValue());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SETMTSTATUS:                       // End of operations of the logger and report final status in the logging file                
@@ -108,7 +108,7 @@ public class Logger_Interface extends Interface {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
                 }
-                log.setMasterThief(inMessage.getInteger());
+                log.setMasterThief(inMessage.getValue());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_ASSAULT_THIEF:                 // End of operations of the logger and report final status in the logging file                
