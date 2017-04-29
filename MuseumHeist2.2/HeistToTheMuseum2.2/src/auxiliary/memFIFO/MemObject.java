@@ -2,52 +2,47 @@ package auxiliary.memFIFO;
 
 /**
  *
- * @author 
+ * @author
  */
-
 public abstract class MemObject {
+
     /**
-   *  Tamanho da memória em número de posições
-   *
-   *    @serialField nMax
-   */
+     * Tamanho da memória em número de posições
+     *
+     * @serialField nMax
+     */
+    protected int nMax = 0;
 
-   protected int nMax = 0;
+    /**
+     * Área de armazenamento
+     *
+     * @serialField mem
+     */
+    protected Object[] mem = null;
 
-  /**
-   *  Área de armazenamento
-   *
-   *    @serialField mem
-   */
+    /**
+     * Instanciação da memória.
+     *
+     * @param nElem tamanho da memória (n. de elementos do array de
+     * armazenamento)
+     */
+    protected MemObject(int nElem) {
+        mem = new Object[nElem];
+        nMax = nElem;
+    }
 
-   protected Object [] mem = null;
+    /**
+     * Escrita de um valor (método virtual).
+     *
+     * @param val valor a armazenar
+     */
+    protected abstract void write(Object val);
 
-  /**
-   *  Instanciação da memória.
-   *
-   *    @param nElem tamanho da memória (n. de elementos do array de armazenamento)
-   */
+    /**
+     * Leitura de um valor (método virtual).
+     *
+     * @return valor armazenado
+     */
+    protected abstract Object read();
 
-   protected MemObject (int nElem)
-   {
-     mem = new Object [nElem];
-     nMax = nElem;
-   }
-
-  /**
-   *  Escrita de um valor (método virtual).
-   *
-   *    @param val valor a armazenar
-   */
-
-   protected abstract void write (Object val);
-
-  /**
-   *  Leitura de um valor (método virtual).
-   *
-   *    @return valor armazenado
-   */
-
-   protected abstract Object read ();
-    
 }

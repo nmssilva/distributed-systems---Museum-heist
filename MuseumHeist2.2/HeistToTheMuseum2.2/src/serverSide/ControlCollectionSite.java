@@ -208,7 +208,7 @@ public class ControlCollectionSite {
             return 0;
         }
 
-        con = new ClientCom(hostname, PORT_AP +1);
+        con = new ClientCom(hostname, PORT_AP + 1);
         if (!con.open()) {
             return -1;
         }

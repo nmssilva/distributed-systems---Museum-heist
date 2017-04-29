@@ -46,7 +46,7 @@ public class ConcentrationSite_Interface extends Interface {
         if (inMessage.getType() == AMINEEDED) {
             System.out.println("CS - AMINEEDED");
             int partyID = cs.amINeeded(inMessage.getInteger(), inMessage.getInteger2());
-            
+
             outMessage = new Message(Message.ACK, partyID);
         }
         if (inMessage.getType() == STARTOP) {

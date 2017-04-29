@@ -95,7 +95,7 @@ public class MasterThief extends Thread {
             } catch (InterruptedException e) {
             }
         }
-        
+
         outMessage = new Message(APPRAISE_SIT, nAssaultThievesCS);
         con.writeObject(outMessage);
 

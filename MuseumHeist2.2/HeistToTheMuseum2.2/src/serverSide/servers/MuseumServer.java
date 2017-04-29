@@ -21,7 +21,6 @@ public class MuseumServer {
      *
      * @serialField portNumb
      */
-
     private static final int portNumb = Heist.PORT_MUSEUM;
 
     /**
@@ -38,7 +37,7 @@ public class MuseumServer {
         scon.start();                                       // com o endereço público
         museum = new Museum();                           // activação do serviço
         iMuseum = new Museum_Interface(museum);        // activação do interface com o serviço
-        
+
         GenericIO.writelnString("MUSEUM - PORT " + Heist.PORT_MUSEUM);
         GenericIO.writelnString("O serviço foi estabelecido!");
         GenericIO.writelnString("O servidor esta em escuta.");

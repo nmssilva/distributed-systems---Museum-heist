@@ -17,6 +17,7 @@ public class ClientHeistToTheMuseum {
 
     /**
      * Programa principal.
+     *
      * @param args
      */
     public static void main(String[] args) throws UnknownHostException {
@@ -84,7 +85,6 @@ public class ClientHeistToTheMuseum {
         } catch (InterruptedException e) {
         }
         GenericIO.writelnString("O masterthief terminou.");
-        
 
         GenericIO.writelnString();
     }

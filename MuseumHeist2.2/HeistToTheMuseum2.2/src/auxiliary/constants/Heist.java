@@ -6,7 +6,6 @@ package auxiliary.constants;
  */
 public class Heist {
 
-    
     /**
      * Total number of AssaultParties in the Heist.
      */
@@ -66,14 +65,26 @@ public class Heist {
      * Minimum distance from the Room in the Museum to the Outside.
      */
     public static final int MIN_DIST_OUTSIDE = 15;
-    
+
+    // Port numbers
     public static final int PORT_LOG = 4000;
-    
+
     public static final int PORT_CS = 4100;
-    
+
     public static final int PORT_CCS = 4200;
-    
+
     public static final int PORT_AP = 4300;
-    
+
     public static final int PORT_MUSEUM = 4400;
+    
+    // IPs
+    public static final String HOST_LOG = "ROG";
+
+    public static final String HOST_CS = "ROG";
+
+    public static final String HOST_CCS = "ROG";
+
+    public static final String HOST_AP = "ROG";
+
+    public static final String HOST_MUSEUM = "ROG";
 }

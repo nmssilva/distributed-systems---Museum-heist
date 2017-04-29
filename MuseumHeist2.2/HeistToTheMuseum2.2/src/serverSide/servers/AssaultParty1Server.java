@@ -16,14 +16,14 @@ public class AssaultParty1Server {
         ClientProxy assaultPartyProxy1;
 
         /* estabelecimento do servico */
-        scon1 = new ServerCom(PORT_AP +1);
+        scon1 = new ServerCom(PORT_AP + 1);
         scon1.start();
 
         assaultParty1 = new AssaultParty(1);
 
         iAssaultParty1 = new AssaultParty_Interface(assaultParty1);
 
-        GenericIO.writelnString("AP#1 - PORT " + (PORT_AP+1));
+        GenericIO.writelnString("AP#1 - PORT " + (PORT_AP + 1));
         GenericIO.writelnString("O serviço foi estabelecido!");
         GenericIO.writelnString("O servidor esta em escuta.");
 

@@ -8,8 +8,9 @@ package serverSide;
 /**
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-
 import static auxiliary.constants.Heist.*;
+import auxiliary.messages.Message;
+import clientSide.ClientCom;
 
 /**
  *
@@ -25,11 +26,13 @@ public class Museum {
      */
     public Museum() {
         this.rooms = new Room[ROOMS_NUMBER];
-        
+
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             this.rooms[i] = new Room(i);
         }
-        
+
+        logSetMuseum();
+
         System.out.println("Museum has " + getTotalPaintings() + " paintings");
     }
 
@@ -58,15 +61,57 @@ public class Museum {
     public Room getRoom(int roomID) {
         return rooms[roomID];
     }
-    
-    public int getTotalPaintings(){
+
+    private int getTotalPaintings() {
         int count = 0;
 
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             count += rooms[i].getNPaintings();
         }
-        
+
         return count;
+    }
+
+    private void logSetMuseum() {
+        /* Comunicação ao servidor dos parâmetros do problema */
+        ClientCom con;                                       // canal de comunicação
+        Message inMessage, outMessage;                       // mensagens trocadas
+
+        con = new ClientCom(HOST_LOG, PORT_LOG);
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
+        }
+
+        int[] roomsd = roomsdistance();
+        int[] roomsp = roomspaintings();
+
+        outMessage = new Message(Message.SETMUSEUM, roomsd, roomsp);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        con.close();
+    }
+
+    private int[] roomsdistance() {
+        int[] tmp = new int[ROOMS_NUMBER];
+
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            tmp[i] = rooms[i].getDistOutside();
+        }
+
+        return tmp;
+    }
+
+    private int[] roomspaintings() {
+        int[] tmp = new int[ROOMS_NUMBER];
+
+        for (int i = 0; i < ROOMS_NUMBER; i++) {
+            tmp[i] = rooms[i].getNPaintings();
+        }
+
+        return tmp;
     }
 
 }

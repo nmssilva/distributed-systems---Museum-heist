@@ -21,7 +21,6 @@ public class ConcentrationSiteServer {
      *
      * @serialField portNumb
      */
-
     private static final int portNumb = PORT_CS;
 
     /**
@@ -38,7 +37,7 @@ public class ConcentrationSiteServer {
         scon.start();                                       // com o endereço público
         CCS = new ConcentrationSite();                           // activação do serviço
         iCCS = new ConcentrationSite_Interface(CCS);        // activação do interface com o serviço
-        
+
         GenericIO.writelnString("CS - PORT " + PORT_CS);
         GenericIO.writelnString("O serviço foi estabelecido!");
         GenericIO.writelnString("O servidor esta em escuta.");

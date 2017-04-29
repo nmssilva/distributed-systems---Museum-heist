@@ -80,7 +80,7 @@ public class AssaultThief extends Thread {
             this.hasCanvas = 0;
             reportStatus();
         }
- 
+
         return inMessage.getInteger();
     }
 

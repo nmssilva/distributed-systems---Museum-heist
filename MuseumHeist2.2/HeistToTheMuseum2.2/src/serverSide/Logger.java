@@ -17,13 +17,14 @@ public class Logger {
     private String[] assaultThiefSituation;
     private int[] hasCanvas;
     private int nPaintings;
-    //private Room[] rooms;
+    private int[] roomsdistance;
+    private int[] roomspaintings;
     private TextFile log;
     private int[][] asspartiesPos;
     private int[][] assparties;
     private int[] asspartiesRoomID;
     private String lastLine, lastLine2;
-    
+
     private int nIter; // ver o que podemos fazer
 
     /**
@@ -143,14 +144,15 @@ public class Logger {
     }
 
     /**
-     * Set the Museum in the General Repository of Information.
-     *
-     * @param rooms
+     * Set the Museum in the General Repository of Information
+     * @param roomsd
+     * @param roomsp
      */
-   /* public void setMuseum(Room[] rooms) {
-        this.rooms = rooms;
+    public void setMuseum(int[] roomsd, int[] roomsp) {
+        this.roomsdistance = roomsd;
+        this.roomspaintings = roomsp;
     }
-*/
+
     /**
      * Start a file where all the operations will be written along with the
      * changes to the main attributes of the Heist.
@@ -242,7 +244,7 @@ public class Logger {
                 line2 += rooms[i].getNPaintings() + " " + rooms[i].getDistOutside() + "   ";
             }
         }
-        */
+         */
         if (!dontPrint) {
             if (!(lastLine.equals(line) && lastLine2.equals(line2))) {
                 log.writelnString(line);
@@ -251,7 +253,7 @@ public class Logger {
                 lastLine2 = line2;
             }
         }
-        
+
         if (!log.close()) {
             GenericIO.writelnString("A operação de fecho do ficheiro " + fileName + " falhou!");
             System.exit(1);

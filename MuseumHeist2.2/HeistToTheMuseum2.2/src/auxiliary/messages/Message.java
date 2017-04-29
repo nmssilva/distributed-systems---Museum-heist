@@ -54,6 +54,12 @@ public class Message implements Serializable {
     public static final int COLLECT_CANVAS = 38;
     public static final int SUM_UP_RESULTS = 39;
     public static final int NEXT_EMPTY_ROOM = 40;
+    public static final int SETMUSEUM = 41;
+    /*public static final int NEXT_EMPTY_ROOM = 40;
+    public static final int NEXT_EMPTY_ROOM = 40;
+    public static final int NEXT_EMPTY_ROOM = 40;
+    public static final int NEXT_EMPTY_ROOM = 40;
+    public static final int NEXT_EMPTY_ROOM = 40;*/
 
     private int msgType = -1;
 
@@ -72,11 +78,14 @@ public class Message implements Serializable {
     private String fName = null;
 
     private int nIter = -1;
-    
+
     private int integer;
     private int integer2;
     private int integer3;
     
+    private int[] intarray;
+    private int[] intarray2;
+
     private int partyID;
 
     public Message(int type) {
@@ -117,6 +126,14 @@ public class Message implements Serializable {
         msgType = type;
         this.b = b;
     }
+
+    public Message(int type, int[] intarray, int[] intarray2) {
+        this.msgType = type;
+        this.intarray = intarray;
+        this.intarray2 = intarray2;
+    }
+    
+    
 
     public int getInteger() {
         return integer;
@@ -215,5 +232,15 @@ public class Message implements Serializable {
     public boolean isB() {
         return b;
     }
+
+    public int[] getIntarray() {
+        return intarray;
+    }
+
+    public int[] getIntarray2() {
+        return intarray2;
+    }
+    
+    
 
 }

@@ -11,7 +11,6 @@ import static auxiliary.constants.Heist.*;
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-
 public class Room {
 
     int id;
@@ -48,9 +47,5 @@ public class Room {
     public String toString() {
         return "Room [" + "id=" + id + ", nPaintings=" + nPaintings + ", distOutside=" + distOutside + ']';
     }
-    
-    
-    
-    
 
 }

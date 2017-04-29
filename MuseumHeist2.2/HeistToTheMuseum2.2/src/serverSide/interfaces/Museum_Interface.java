@@ -43,20 +43,19 @@ public class Museum_Interface extends Interface {
         Message outMessage = null;                           // mensagem de resposta
 
         /* seu processamento */
-        
         if (inMessage.getType() == GET_DIST_OUTSIDE) {
             System.out.println("MUSEUM - GET DIST OUTSIDE Room:" + inMessage.getInteger());
             int distOutside = museum.getRoom(inMessage.getInteger()).getDistOutside();
-            
+
             outMessage = new Message(Message.ACK, distOutside);
         }
-         if (inMessage.getType() == ROLL_A_CANVAS) {
+        if (inMessage.getType() == ROLL_A_CANVAS) {
             System.out.println("MUSEUM - ROLL_A_CANVAS");
             int hasCanvas = museum.rollACanvas(inMessage.getInteger());
-            
+
             outMessage = new Message(Message.ACK, hasCanvas);
         }
-        
+
         return outMessage;
     }
 }

@@ -43,7 +43,7 @@ public class AssaultParty_Interface extends Interface {
         }
         if (inMessage.getType() == SET_AP_ROOM) {
             System.out.println("AP: SET_AP_ROOM: " + inMessage.getInteger());
-            
+
             assparty.setRoom(inMessage.getInteger());
 
             outMessage = new Message(Message.ACK);

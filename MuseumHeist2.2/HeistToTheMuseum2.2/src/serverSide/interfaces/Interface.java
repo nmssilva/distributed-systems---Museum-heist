@@ -7,7 +7,6 @@ package serverSide.interfaces;
 
 import auxiliary.messages.*;
 
-
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
