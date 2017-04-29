@@ -3,11 +3,6 @@ package serverSide.interfaces;
 import auxiliary.messages.*;
 import serverSide.Logger;
 
-/**
- * Este tipo de dados define o interface à barbearia numa solução do Problema
- * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
- * (replicação do servidor) com lançamento estático dos threads barbeiro.
- */
 public class Logger_Interface extends Interface {
 
     /**

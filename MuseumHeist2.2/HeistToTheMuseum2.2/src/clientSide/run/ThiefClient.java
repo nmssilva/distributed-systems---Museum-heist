@@ -14,7 +14,7 @@ public class ThiefClient {
      *
      */
     public static void main(String[] args) {
-        int nIter;                                           // número de iterações do ciclo de vida dos clientes
+        //int nIter;                                           // número de iterações do ciclo de vida dos clientes
 
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Heist to the Museum - AssaultThieves\n");
@@ -25,22 +25,22 @@ public class ThiefClient {
         //serverHostName = InetAddress.getLocalHost().getHostName();
 
         /* Criação dos threads barbeiro e cliente */
-        AssaultThief thiefs[] = new AssaultThief[THIEVES_NUMBER];
+        AssaultThief thieves[] = new AssaultThief[THIEVES_NUMBER];
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
-            thiefs[i] = new AssaultThief(i);
+            thieves[i] = new AssaultThief(i);
         }
 
         /* Arranque da simulação */
         for (int i = 0; i < THIEVES_NUMBER; i++) {
-            thiefs[i].start();
+            thieves[i].start();
         }
 
         /* Aguardar o fim da simulação */
         GenericIO.writelnString();
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             try {
-                thiefs[i].join();
+                thieves[i].join();
             } catch (InterruptedException e) {
             }
             GenericIO.writelnString("O thief " + i + " terminou.");

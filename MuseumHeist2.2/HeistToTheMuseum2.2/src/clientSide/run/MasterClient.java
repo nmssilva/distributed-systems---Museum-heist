@@ -1,4 +1,4 @@
-package clientSide.run;
+    package clientSide.run;
 
 import static auxiliary.constants.Heist.*;
 import auxiliary.messages.Message;

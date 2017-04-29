@@ -1,6 +1,5 @@
 package serverSide;
 
-import clientSide.*;
 import static auxiliary.constants.Heist.*;
 import genclass.*;
 import java.util.stream.IntStream;
