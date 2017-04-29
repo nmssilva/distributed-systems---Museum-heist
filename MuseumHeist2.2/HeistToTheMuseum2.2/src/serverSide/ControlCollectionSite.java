@@ -73,20 +73,19 @@ public class ControlCollectionSite {
         nextParty = nextEmptyParty();
         nextRoom = nextEmptyRoom();
 
-        System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
-
+        //System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
         if (nextParty == -1) {
             return 0;                                                // takeARest()
         }
         if (nAssaultThievesCS >= MAX_ASSAULT_PARTY_THIEVES) {
             if (nextRoom != -1) {
-                System.out.println("prepareAssaultParty()");
+                //System.out.println("prepareAssaultParty()");
                 return 1;                                            // prepareAssaultParty()
             } else if (nAssaultThievesCS != THIEVES_NUMBER) {
-                System.out.println("takeARest()");
+                //System.out.println("takeARest()");
                 return 0;                                            // takeARest()
             } else {
-                System.out.println("sumUpResults()");
+                //System.out.println("sumUpResults()");
                 return 2;                                            // sumUpResults()
             }
         } else {
@@ -342,7 +341,7 @@ public class ControlCollectionSite {
      * status to PRESENTING_THE_REPORT.
      */
     public synchronized void sumUpResults() {
-        System.out.println("Got " + nPaintings + " paintings!");
+        //System.out.println("Got " + nPaintings + " paintings!");
     }
 
     /**

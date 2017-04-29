@@ -151,7 +151,7 @@ public class ConcentrationSite {
         con.close();
 
         partyID = inMessage.getInteger();
-        System.out.println("PARTYID: " + partyID);
+        //System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             con = new ClientCom(hostname, PORT_AP + partyID);
             if (!con.open()) {

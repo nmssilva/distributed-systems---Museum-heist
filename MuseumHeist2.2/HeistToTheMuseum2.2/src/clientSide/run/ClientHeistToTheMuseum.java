@@ -83,9 +83,9 @@ public class ClientHeistToTheMuseum {
         GenericIO.writelnString("O masterthief terminou.");
 
         GenericIO.writelnString();
-        
+
         reportFinalStatus();
-        
+
     }
 
     private static void reportFinalStatus() {

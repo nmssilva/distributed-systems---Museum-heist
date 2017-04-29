@@ -80,7 +80,7 @@ public class Message implements Serializable {
     private int integer;
     private int integer2;
     private int integer3;
-    
+
     private int[] intarray;
     private int[] intarray2;
 
@@ -117,7 +117,6 @@ public class Message implements Serializable {
         msgType = type;
         fName = name;
         this.nIter = nIter;
-        System.out.println("Thief " + thiefID);
     }
 
     public Message(int type, boolean b) {
@@ -138,8 +137,6 @@ public class Message implements Serializable {
         this.intarray = partyThievesPos;
         this.integer = roomID;
     }
-    
-    
 
     public int getInteger() {
         return integer;
@@ -246,7 +243,5 @@ public class Message implements Serializable {
     public int[] getIntarray2() {
         return intarray2;
     }
-    
-    
 
 }

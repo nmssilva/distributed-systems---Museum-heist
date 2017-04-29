@@ -145,6 +145,7 @@ public class Logger {
 
     /**
      * Set the Museum in the General Repository of Information
+     *
      * @param roomsd
      * @param roomsp
      */
@@ -152,7 +153,7 @@ public class Logger {
         this.roomsdistance = roomsd;
         this.roomspaintings = roomsp;
         int p = IntStream.of(roomsp).sum();
-        if(p > this.nPaintings){
+        if (p > this.nPaintings) {
             this.nPaintings = p;
         }
     }
@@ -284,7 +285,6 @@ public class Logger {
         log.writelnString("Assault party # Elem # Cv – assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)");
         log.writelnString("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls");
         log.writelnString("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30");
-
 
         if (!log.close()) {
             GenericIO.writelnString("A operação de fecho do ficheiro " + fileName + " falhou!");

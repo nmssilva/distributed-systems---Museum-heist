@@ -31,9 +31,8 @@ public class ThiefClient {
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             thiefs[i] = new AssaultThief(i, nIter);
         }
-        
-        /* Arranque da simulação */
 
+        /* Arranque da simulação */
         for (int i = 0; i < THIEVES_NUMBER; i++) {
             thiefs[i].start();
         }
@@ -48,6 +47,6 @@ public class ThiefClient {
             GenericIO.writelnString("O thief " + i + " terminou.");
         }
         GenericIO.writelnString();
-        
+
     }
 }

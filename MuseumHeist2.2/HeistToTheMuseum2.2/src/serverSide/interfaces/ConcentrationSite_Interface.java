@@ -43,27 +43,30 @@ public class ConcentrationSite_Interface extends Interface {
         Message outMessage = null;                           // mensagem de resposta
 
         /* seu processamento */
-        if (inMessage.getType() == AMINEEDED) {
-            System.out.println("CS - AMINEEDED");
-            int partyID = cs.amINeeded(inMessage.getInteger(), inMessage.getInteger2());
+        switch (inMessage.getType()) {
+            case AMINEEDED:
+                System.out.println("CS - AMINEEDED");
+                int partyID = cs.amINeeded(inMessage.getInteger(), inMessage.getInteger2());
 
-            outMessage = new Message(Message.ACK, partyID);
+                outMessage = new Message(Message.ACK, partyID);
+                break;
+            case STARTOP:
+                System.out.println("CS - STARTOP");
+                cs.startOfOperations();
+                outMessage = new Message(Message.ACK, 2);
+                break;
+            case PREPARE_AP:
+                System.out.println("CS - PREPARE AP");
+                cs.prepareAssaultParty();
+                outMessage = new Message(Message.ACK);
+                break;
+            case GET_ASSAULT_THIEVES_CS:
+                System.out.println("CS - GET ASSAULT THIEVES CS");
+                int thievesCS = cs.getnAssaultThievesCS();
+                outMessage = new Message(Message.ACK, thievesCS);
+                break;
         }
-        if (inMessage.getType() == STARTOP) {
-            System.out.println("CS - STARTOP");
-            cs.startOfOperations();
-            outMessage = new Message(Message.ACK, 2);
-        }
-        if (inMessage.getType() == PREPARE_AP) {
-            System.out.println("CS - PREPARE AP");
-            cs.prepareAssaultParty();
-            outMessage = new Message(Message.ACK);
-        }
-        if (inMessage.getType() == GET_ASSAULT_THIEVES_CS) {
-            System.out.println("CS - GET ASSAULT THIEVES CS");
-            int thievesCS = cs.getnAssaultThievesCS();
-            outMessage = new Message(Message.ACK, thievesCS);
-        }
+
         return outMessage;
     }
 }

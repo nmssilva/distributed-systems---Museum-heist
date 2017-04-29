@@ -58,7 +58,7 @@ public class MasterThief extends Thread {
 
         this.status = DECIDING_WHAT_TO_DO;
         logSetMasterState();
-        
+
         return false;
     }
 
@@ -104,7 +104,7 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
         //con.close();
-        
+
         this.status = DECIDING_WHAT_TO_DO;
         logSetMasterState();
 
@@ -128,7 +128,7 @@ public class MasterThief extends Thread {
             System.exit(1);
         }
         con.close();
-        
+
         this.status = ASSEMBLING_A_GROUP;
         logSetMasterState();
 
@@ -153,7 +153,7 @@ public class MasterThief extends Thread {
 
         this.status = DECIDING_WHAT_TO_DO;
         logSetMasterState();
-        
+
         return true;
     }
 
@@ -172,7 +172,7 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         this.status = WAITING_FOR_ARRIVAL;
         logSetMasterState();
 
@@ -194,7 +194,7 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         this.status = DECIDING_WHAT_TO_DO;
         logSetMasterState();
 
@@ -216,7 +216,7 @@ public class MasterThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         this.status = PRESENTING_REPORT;
         logSetMasterState();
 
@@ -241,7 +241,7 @@ public class MasterThief extends Thread {
         inMessage = (Message) con.readObject();
         con.close();
     }
-    
+
     private boolean reportStatus() {
         Message inMessage, outMessage;
         ClientCom con = new ClientCom(HOST_LOG, PORT_LOG);

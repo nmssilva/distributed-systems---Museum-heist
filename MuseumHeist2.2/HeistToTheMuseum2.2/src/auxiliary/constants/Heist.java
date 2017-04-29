@@ -65,9 +65,8 @@ public class Heist {
      * Minimum distance from the Room in the Museum to the Outside.
      */
     public static final int MIN_DIST_OUTSIDE = 15;
-    
+
     public static final int N_ITER = 1;
-    
 
     // Port numbers
     public static final int PORT_LOG = 4000;
@@ -79,7 +78,7 @@ public class Heist {
     public static final int PORT_AP = 4300;
 
     public static final int PORT_MUSEUM = 4400;
-    
+
     // IPs
     public static final String HOST_LOG = "ROG";
 
@@ -87,7 +86,7 @@ public class Heist {
 
     public static final String HOST_CCS = "ROG";
 
-    public static final String[] HOST_AP = {"ROG","ROG"};
+    public static final String[] HOST_AP = {"ROG", "ROG"};
 
     public static final String HOST_MUSEUM = "ROG";
 }

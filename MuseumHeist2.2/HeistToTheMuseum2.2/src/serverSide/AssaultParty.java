@@ -78,8 +78,7 @@ public class AssaultParty {
             int myAgility = partyThievesMaxDisp[myIndex];
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
-
+            //System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
             int count = 0;
             int i = 0;
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -179,9 +178,9 @@ public class AssaultParty {
                 notifyAll();
             }
 
-            System.out.println("Turns: " + Arrays.toString(myTurn));
+            //System.out.println("Turns: " + Arrays.toString(myTurn));
         }
-        
+
         logSetAp();
 
         return true;
@@ -236,8 +235,7 @@ public class AssaultParty {
             int myAgility = partyThievesMaxDisp[myIndex];
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
-
+            //System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
             int count = 0;
             int i = 0;
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -337,11 +335,11 @@ public class AssaultParty {
                 notifyAll();
             }
 
-            System.out.println("Turns: " + Arrays.toString(myTurn));
+            //System.out.println("Turns: " + Arrays.toString(myTurn));
         }
 
         logSetAp();
-        
+
         return true;
     }
 
@@ -358,11 +356,11 @@ public class AssaultParty {
                 partyThieves[i] = thiefID;
                 partyThievesPos[i] = 0;
                 partyThievesMaxDisp[i] = maxDisp;
-                System.out.println("Added " + thiefID + " with disp " + maxDisp);
+                //System.out.println("Added " + thiefID + " with disp " + maxDisp);
                 return true;
             }
         }
-        
+
         logSetAp();
 
         return false;
