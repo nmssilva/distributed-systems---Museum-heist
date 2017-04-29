@@ -87,5 +87,25 @@ public class ClientHeistToTheMuseum {
         GenericIO.writelnString("O masterthief terminou.");
 
         GenericIO.writelnString();
+        
+        reportFinalStatus();
+        
+    }
+
+    private static void reportFinalStatus() {
+        ClientCom con;                                       // canal de comunicação
+        Message inMessage, outMessage;                       // mensagens trocadas
+
+        con = new ClientCom(HOST_LOG, PORT_LOG);
+        while (!con.open()) {
+            try {
+                Thread.sleep((long) (1000));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.ENDOP);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        con.close();
     }
 }

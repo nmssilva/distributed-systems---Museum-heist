@@ -271,6 +271,18 @@ public class Logger {
         }
 
         log.writelnString("My friends, tonight's effor produced " + nPaintings + " priceless paintings!");
+        log.writelnString("\nLegend:");
+        log.writelnString("MstT Stat – state of the master thief");
+        log.writelnString("Thief # Stat - state of the ordinary thief # (# - 1 .. 6)");
+        log.writelnString("Thief # S – situation of the ordinary thief # (# - 1 .. 6) either 'W' (waiting to join a party) or 'P' (in party)");
+        log.writelnString("Thief # MD – maximum displacement of the ordinary thief # (# - 1 .. 6) a random number between 2 and 6");
+        log.writelnString("Assault party # RId – assault party # (# - 1,2) elem # (# - 1 .. 3) room identification (1 .. 5)");
+        log.writelnString("Assault party # Elem # Id – assault party # (# - 1,2) elem # (# - 1 .. 3) member identification (1 .. 6)");
+        log.writelnString("Assault party # Elem # Pos – assault party # (# - 1,2) elem # (# - 1 .. 3) present position (0 .. DT RId)");
+        log.writelnString("Assault party # Elem # Cv – assault party # (# - 1,2) elem # (# - 1 .. 3) carrying a canvas (0,1)");
+        log.writelnString("Museum Room # NP - room identification (1 .. 5) number of paintings presently hanging on the walls");
+        log.writelnString("Museum Room # DT - room identification (1 .. 5) distance from outside gathering site, a random number between 15 and 30");
+
 
         if (!log.close()) {
             GenericIO.writelnString("A operação de fecho do ficheiro " + fileName + " falhou!");
