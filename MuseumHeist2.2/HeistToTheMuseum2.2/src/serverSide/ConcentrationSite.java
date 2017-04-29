@@ -57,9 +57,9 @@ public class ConcentrationSite {
      * prepareAssaultParty or the heist ends. The status of the Assault Thief
      * current thread is changed to OUTSIDE in the end of the operation.
      *
-     * @param thiefID
-     * @param maxDisp
-     * @return
+     * @param thiefID ID of Assault Thief
+     * @param maxDisp Maximum Displacement of Assault Thief
+     * @return Party ID if Needed, -1 if Not Needed
      */
     public synchronized int amINeeded(int thiefID, int maxDisp) {
         // Reset thief
@@ -107,6 +107,7 @@ public class ConcentrationSite {
     /**
      * Checks if the Assault Thief current thread is in the Assault Party.
      *
+     * @param thiefID ID of Assault Thief
      * @return True, if the Assault Thief current thread is in the Assault Party
      * or false if otherwise.
      */
@@ -138,6 +139,7 @@ public class ConcentrationSite {
      * Party and then assigns it a room and the turn of the element to first
      * crawl in. The status of the Master Thief is changed to ASSEMBLING_A_GROUP
      * in the end of the operation.
+     * @return true if operation completed successfully, false if otherwise
      */
     public synchronized boolean prepareAssaultParty() {
         Message inMessage, outMessage;
@@ -151,7 +153,7 @@ public class ConcentrationSite {
         con.close();
 
         partyID = inMessage.getValue();
-        //System.out.println("PARTYID: " + partyID);
+        ////System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             con = new ClientCom(hostname, PORT_AP + partyID);
             if (!con.open()) {

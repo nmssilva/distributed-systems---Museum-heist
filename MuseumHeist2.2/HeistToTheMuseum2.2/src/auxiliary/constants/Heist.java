@@ -66,7 +66,7 @@ public class Heist {
      */
     public static final int MIN_DIST_OUTSIDE = 15;
 
-    public static final int N_ITER = 1;
+    //public static final int N_ITER = 1;
 
     // Port numbers
     public static final int PORT_LOG = 4000;

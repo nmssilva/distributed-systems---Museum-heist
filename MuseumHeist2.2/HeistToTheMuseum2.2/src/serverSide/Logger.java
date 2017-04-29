@@ -60,7 +60,7 @@ public class Logger {
     /**
      * Set the number of Paintings in the General Repository of Information.
      *
-     * @param nPaintings
+     * @param nPaintings Number of Paintings in the General Repository of Information
      */
     public void setnPaintings(int nPaintings) {
         this.nPaintings = nPaintings;
@@ -69,10 +69,10 @@ public class Logger {
     /**
      * Set an Assault Party in the General Repository of Information.
      *
-     * @param id
-     * @param elements
-     * @param positions
-     * @param roomID
+     * @param id Assault Party ID
+     * @param elements Assault Party int array of thieves IDs
+     * @param positions Assault Party int array of thieves positions
+     * @param roomID Assault Party designated room ID
      */
     public void setAssaultParty(int id, int[] elements, int[] positions, int roomID) {
         assparties[id] = elements;
@@ -83,6 +83,7 @@ public class Logger {
     /**
      * Set the Master Thief in the General Repository of Information.
      *
+     * @param status Status of Master Thief to be set
      */
     public void setMasterThief(int status) {
         switch (status) {
@@ -108,6 +109,11 @@ public class Logger {
     /**
      * Set an Assault Thief in the General Repository of Information.
      *
+     * @param thiefID ID of Assault Thief
+     * @param status Status of Assault Thief
+     * @param maxDisp Maximum Displacement of Assault Thief
+     * @param partyID Party ID of Assault Thief
+     * @param hasCanvas 1 if Assault Thief has canvas, 0 if otherwise
      */
     public void setAssaultThief(int thiefID, int status, int maxDisp, int partyID, int hasCanvas) {
         switch (status) {
@@ -146,8 +152,8 @@ public class Logger {
     /**
      * Set the Museum in the General Repository of Information
      *
-     * @param roomsd
-     * @param roomsp
+     * @param roomsd Rooms Distances Array
+     * @param roomsp Rooms Number of Paintings Array
      */
     public void setMuseum(int[] roomsd, int[] roomsp) {
         this.roomsdistance = roomsd;
@@ -162,6 +168,8 @@ public class Logger {
      * Start a file where all the operations will be written along with the
      * changes to the main attributes of the Heist.
      *
+     * @param fileName Logger File Name
+     * @param nIter Number of Iterations
      */
     public synchronized void setFileName(String fileName, int nIter) {
         if ((fileName != null) && !("".equals(fileName))) {

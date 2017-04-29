@@ -18,9 +18,13 @@ public class AssaultThief extends Thread {
     private int partyID;
     private int hasCanvas;
 
-    private int nIter;
-
-    public AssaultThief(int thiefID, int nIter) {
+    /**
+     *
+     * Assault Thief Constructor 
+     * 
+     * @param thiefID ID of Assault Thief
+     */
+    public AssaultThief(int thiefID) {
         super("Thief_" + thiefID);
 
         this.thiefID = thiefID;
@@ -29,11 +33,9 @@ public class AssaultThief extends Thread {
         partyID = -1;
         hasCanvas = 0;
 
-        this.nIter = nIter;
-
         logSetThief();
 
-        //System.out.println("THIEF #" + thiefID + " created");
+        ////System.out.println("THIEF #" + thiefID + " created");
     }
 
     /**
@@ -75,7 +77,7 @@ public class AssaultThief extends Thread {
         con.close();
 
         if (inMessage.getValue() != -1) {
-            //System.out.println("THIEF #" + thiefID + "NEEDED");
+            ////System.out.println("THIEF #" + thiefID + "NEEDED");
             this.partyID = inMessage.getValue();
             this.hasCanvas = 0;
             reportStatus();

@@ -45,19 +45,19 @@ public class ControlCollectionSite_Interface extends Interface {
         /* seu processamento */
         switch (inMessage.getType()) {
             case GET_NEXT_ROOM:
-                System.out.println("CCS - GET NEXT ROOM");
+                //System.out.println("CCS - GET NEXT ROOM");
                 int nextRoom = ccs.getNextRoom();
 
                 outMessage = new Message(Message.ACK, nextRoom);
                 break;
             case ISREADY:
-                System.out.println("CCS - ISREADY");
+                //System.out.println("CCS - ISREADY");
                 ccs.isReady();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case APPRAISE_SIT:
-                System.out.println("CCS - APPRAISE SIT");
+                //System.out.println("CCS - APPRAISE SIT");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -67,49 +67,49 @@ public class ControlCollectionSite_Interface extends Interface {
 
                 break;
             case GET_NEXT_AP:
-                System.out.println("CCS - GET_NEXT_AP");
+                //System.out.println("CCS - GET_NEXT_AP");
                 int partyID = ccs.getNextParty();
 
                 outMessage = new Message(Message.ACK, partyID);
                 break;
             case SENDAP:
-                System.out.println("CCS - SENDAP");
+                //System.out.println("CCS - SENDAP");
                 ccs.sendAssaultParty();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case PREPAREEXCURSION:
-                System.out.println("CCS - PREPARE EXCURSION");
+                //System.out.println("CCS - PREPARE EXCURSION");
                 ccs.prepareExcursion();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case HAND_CANVAS:
-                System.out.println("CCS - HAND_CANVAS");
+                //System.out.println("CCS - HAND_CANVAS");
                 ccs.handCanvas(inMessage.getValue(), inMessage.getValue2(), inMessage.getValue3());
 
                 outMessage = new Message(Message.ACK);
                 break;
             case TAKE_A_REST:
-                System.out.println("CCS - TAKE_A_REST");
+                //System.out.println("CCS - TAKE_A_REST");
                 ccs.takeARest();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case COLLECT_CANVAS:
-                System.out.println("CCS - COLLECT_CANVAS");
+                //System.out.println("CCS - COLLECT_CANVAS");
                 ccs.collectCanvas();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case SUM_UP_RESULTS:
-                System.out.println("CCS - SUM_UP_RESULTS");
+                //System.out.println("CCS - SUM_UP_RESULTS");
                 ccs.sumUpResults();
 
                 outMessage = new Message(Message.ACK);
                 break;
             case NEXT_EMPTY_ROOM:
-                System.out.println("CCS - NEXT_EMPTY_ROOM");
+                //System.out.println("CCS - NEXT_EMPTY_ROOM");
                 int nextEmptyRoom = ccs.nextEmptyRoom();
 
                 outMessage = new Message(Message.ACK, nextEmptyRoom);

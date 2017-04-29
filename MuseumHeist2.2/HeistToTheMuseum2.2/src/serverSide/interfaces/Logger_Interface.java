@@ -58,7 +58,7 @@ public class Logger_Interface extends Interface {
         /* Message processing */
         switch (inMessage.getType()) {
             case Message.SETNFIC:                           // Initialize logging file
-                System.out.println("LOGGER - SETNFIC");
+                //System.out.println("LOGGER - SETNFIC");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -67,7 +67,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.NFICDONE);
                 break;
             case Message.SETREP:                            // Update GRI and report in logging file
-                System.out.println("LOGGER - SETREP");
+                //System.out.println("LOGGER - SETREP");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -76,7 +76,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.REPDONE);
                 break;
             case Message.ENDOP:                             // End of operations of the logger and report final status in the logging file
-                System.out.println("LOGGER - ENDOP");
+                //System.out.println("LOGGER - ENDOP");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -85,7 +85,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SETMUSEUM:                         // End of operations of the logger and report final status in the logging file                
-                System.out.println("LOGGER - SETMUSEUM");
+                //System.out.println("LOGGER - SETMUSEUM");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -94,7 +94,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SETAP:                             // End of operations of the logger and report final status in the logging file                
-                System.out.println("LOGGER - SETAP");
+                //System.out.println("LOGGER - SETAP");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -103,7 +103,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SETMTSTATUS:                       // End of operations of the logger and report final status in the logging file                
-                System.out.println("LOGGER - SETMTSTATUS");
+                //System.out.println("LOGGER - SETMTSTATUS");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {
@@ -112,7 +112,7 @@ public class Logger_Interface extends Interface {
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SET_ASSAULT_THIEF:                 // End of operations of the logger and report final status in the logging file                
-                System.out.println("LOGGER - SET_ASSAULT_THIEF");
+                //System.out.println("LOGGER - SET_ASSAULT_THIEF");
                 try {
                     Thread.sleep((long) (100));
                 } catch (InterruptedException e) {

@@ -12,7 +12,6 @@ public class ThiefClient {
     /**
      * Programa principal.
      *
-     * @param args
      */
     public static void main(String[] args) {
         int nIter;                                           // número de iterações do ciclo de vida dos clientes
@@ -20,7 +19,7 @@ public class ThiefClient {
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Heist to the Museum - AssaultThieves\n");
         //GenericIO.writeString("Numero de iterações? ");
-        nIter = N_ITER;
+        //nIter = N_ITER;
         //GenericIO.writeString("Nome do ficheiro de logging? ");
         //GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
         //serverHostName = InetAddress.getLocalHost().getHostName();
@@ -29,7 +28,7 @@ public class ThiefClient {
         AssaultThief thiefs[] = new AssaultThief[THIEVES_NUMBER];
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
-            thiefs[i] = new AssaultThief(i, nIter);
+            thiefs[i] = new AssaultThief(i);
         }
 
         /* Arranque da simulação */

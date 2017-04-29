@@ -13,8 +13,6 @@ public class MasterClient {
 
     /**
      * Programa principal.
-     *
-     * @param args
      */
     public static void main(String[] args) {
         int nIter;                                           // número de iterações do ciclo de vida dos clientes
@@ -22,7 +20,7 @@ public class MasterClient {
 
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Heist to the Museum - Master Thief\n");
-        nIter = N_ITER;
+        //nIter = N_ITER;
         //GenericIO.writeString("Nome do ficheiro de logging? ");
         fName = "logger.log";
         //GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
@@ -42,7 +40,7 @@ public class MasterClient {
             } catch (InterruptedException e) {
             }
         }
-        outMessage = new Message(Message.SETNFIC, fName, nIter);
+        outMessage = new Message(Message.SETNFIC, fName, 1);
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         con.close();

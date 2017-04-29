@@ -6,7 +6,6 @@ import clientSide.AssaultThief;
 import clientSide.ClientCom;
 import clientSide.MasterThief;
 import genclass.*;
-import java.net.UnknownHostException;
 
 /**
  * Client with both MasterThief and AssaultThieves
@@ -16,16 +15,15 @@ public class ClientHeistToTheMuseum {
     /**
      * Programa principal.
      *
-     * @param args
      */
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         int nIter;                                           // número de iterações do ciclo de vida dos clientes
         String fName;                                        // nome do ficheiro de logging
 
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Heist to the Museum\n");
         //GenericIO.writeString("Numero de iterações? ");
-        nIter = N_ITER;
+        //nIter = N_ITER;
         //GenericIO.writeString("Nome do ficheiro de logging? ");
         fName = "logger.log";
         //GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
@@ -36,7 +34,7 @@ public class ClientHeistToTheMuseum {
         AssaultThief thiefs[] = new AssaultThief[THIEVES_NUMBER];
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {
-            thiefs[i] = new AssaultThief(i, nIter);
+            thiefs[i] = new AssaultThief(i);
         }
 
         /* Comunicação ao servidor dos parâmetros do problema */
@@ -50,7 +48,7 @@ public class ClientHeistToTheMuseum {
             } catch (InterruptedException e) {
             }
         }
-        outMessage = new Message(Message.SETNFIC, fName, nIter);
+        outMessage = new Message(Message.SETNFIC, fName, 1);
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         con.close();

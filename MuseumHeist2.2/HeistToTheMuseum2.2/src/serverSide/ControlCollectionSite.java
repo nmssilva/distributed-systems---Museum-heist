@@ -65,7 +65,7 @@ public class ControlCollectionSite {
      * execute. The Master Thief sets its status to DECIDING_WHAT_TO_DO before
      * returning the operation.
      *
-     * @param nAssaultThievesCS
+     * @param nAssaultThievesCS Nuber of Assault Thieves in Concentration site
      * @return ID of the operation to execute.
      */
     public synchronized int appraiseSit(int nAssaultThievesCS) {
@@ -73,19 +73,19 @@ public class ControlCollectionSite {
         nextParty = nextEmptyParty();
         nextRoom = nextEmptyRoom();
 
-        //System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
+        ////System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
         if (nextParty == -1) {
             return 0;                                                // takeARest()
         }
         if (nAssaultThievesCS >= MAX_ASSAULT_PARTY_THIEVES) {
             if (nextRoom != -1) {
-                //System.out.println("prepareAssaultParty()");
+                ////System.out.println("prepareAssaultParty()");
                 return 1;                                            // prepareAssaultParty()
             } else if (nAssaultThievesCS != THIEVES_NUMBER) {
-                //System.out.println("takeARest()");
+                ////System.out.println("takeARest()");
                 return 0;                                            // takeARest()
             } else {
-                //System.out.println("sumUpResults()");
+                ////System.out.println("sumUpResults()");
                 return 2;                                            // sumUpResults()
             }
         } else {
@@ -252,8 +252,11 @@ public class ControlCollectionSite {
      * Assault thieves hands a canvas to the Master Thief or shows up empty
      * handed.
      *
-     * @param roomID ID of the room from which the Assault Thief current thread
-     * has returned from.
+     * 
+     * @param thiefID ID of Assault Thief
+     * @param partyID ID of Assault Thief Party
+     * @param hasCanvas 1 if Assault Thief has canvas, 0 if otherwise
+     * @return true if operation successful, false if otherwise
      */
     public synchronized boolean handCanvas(int thiefID, int partyID, int hasCanvas) {
 
@@ -341,13 +344,13 @@ public class ControlCollectionSite {
      * status to PRESENTING_THE_REPORT.
      */
     public synchronized void sumUpResults() {
-        //System.out.println("Got " + nPaintings + " paintings!");
+        ////System.out.println("Got " + nPaintings + " paintings!");
     }
 
     /**
      * Set the next Assault Party ID to be assigned.
      *
-     * @param nextParty
+     * @param nextParty Value to be set
      */
     public void setNextParty(int nextParty) {
         this.nextParty = nextParty;
@@ -356,7 +359,7 @@ public class ControlCollectionSite {
     /**
      * Set the next Room ID to be assigned.
      *
-     * @param nextRoom
+     * @param nextRoom value to be set
      */
     public void setNextRoom(int nextRoom) {
         this.nextRoom = nextRoom;
@@ -365,7 +368,7 @@ public class ControlCollectionSite {
     /**
      * Get the ID of the next Room to be assigned.
      *
-     * @return
+     * @return ID of the next Room to be assigned
      */
     public int getNextRoom() {
         return nextRoom;

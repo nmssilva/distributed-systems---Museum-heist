@@ -33,7 +33,7 @@ public class Museum {
 
         logSetMuseum();
 
-        System.out.println("Museum has " + getTotalPaintings() + " paintings");
+        //System.out.println("Museum has " + getTotalPaintings() + " paintings");
     }
 
     /**

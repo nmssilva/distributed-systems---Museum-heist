@@ -62,6 +62,8 @@ public class AssaultParty {
      * Simulates the movement crawlIn of the Assault Thief current thread.
      *
      *
+     * @param thiefID ID of Assault Thief
+     * @return true
      */
     public synchronized boolean crawlIn(int thiefID) {
         while (partyThievesPos[getIndexParty(thiefID)] != getDistOutsideRoom()) {
@@ -69,7 +71,7 @@ public class AssaultParty {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
-                    System.out.println(ex.getMessage());
+                    //System.out.println(ex.getMessage());
                 }
             }
 
@@ -78,7 +80,7 @@ public class AssaultParty {
             int myAgility = partyThievesMaxDisp[myIndex];
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            //System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
+            ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
             int count = 0;
             int i = 0;
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -92,7 +94,7 @@ public class AssaultParty {
 
             // Predict maximum displacement
             for (i = myAgility; i > 0; i--) {
-                boolean tooFarOrOcupada = false;
+                boolean BadToGo = false;
                 // Array que vai ter myPos no inicio e assaultThievesPos de seguida
                 int[] posAfterMove = new int[assaultThievesPos.length + 1];
                 posAfterMove[0] = myPos + i;
@@ -101,13 +103,13 @@ public class AssaultParty {
 
                 for (int j = 0; j < posAfterMove.length - 1; j++) {
                     if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
-                        tooFarOrOcupada = true;
+                        BadToGo = true;
                         break;
                     }
                 }
 
                 // Set new position
-                if ((!tooFarOrOcupada)) {
+                if ((!BadToGo)) {
                     if (myPos + i >= getDistOutsideRoom()) {
                         partyThievesPos[myIndex] = getDistOutsideRoom();
                         nThievesRoom++;
@@ -124,7 +126,7 @@ public class AssaultParty {
             boolean canMoveAgain = false;
             if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
                 for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
-                    boolean tooFarOrOcupada = false;
+                    boolean BadToGo = false;
                     int[] posAfterMove = new int[assaultThievesPos.length + 1];
                     posAfterMove[0] = myPos + i;
                     System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
@@ -132,12 +134,12 @@ public class AssaultParty {
 
                     for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
                         if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
-                            tooFarOrOcupada = true;
+                            BadToGo = true;
                             break;
                         }
                     }
 
-                    if ((!tooFarOrOcupada)) {
+                    if ((!BadToGo)) {
                         canMoveAgain = true;
                         break;
                     }
@@ -178,7 +180,7 @@ public class AssaultParty {
                 notifyAll();
             }
 
-            //System.out.println("Turns: " + Arrays.toString(myTurn));
+            ////System.out.println("Turns: " + Arrays.toString(myTurn));
         }
 
         logSetAp();
@@ -192,6 +194,7 @@ public class AssaultParty {
      * Assault Thief current thread blocks until the last element of the Assault
      * Party executes this action.
      *
+     * @param thiefID Id of Assault Thief
      */
     public synchronized void reverseDirection(int thiefID) {
         myTurn[getIndexParty(thiefID)] = false;
@@ -208,7 +211,7 @@ public class AssaultParty {
             try {
                 wait();
             } catch (InterruptedException ex) {
-                System.out.println(ex.getMessage());
+                //System.out.println(ex.getMessage());
             }
         }
 
@@ -219,6 +222,8 @@ public class AssaultParty {
      *
      * Simulates the movement crawlOut of the Assault Thief current thread.
      *
+     * @param thiefID ID of Assault Thief
+     * @return true
      */
     public synchronized boolean crawlOut(int thiefID) {
         while (partyThievesPos[getIndexParty(thiefID)] != 0) {
@@ -226,7 +231,7 @@ public class AssaultParty {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
-                    System.out.println(ex.getMessage());
+                    //System.out.println(ex.getMessage());
                 }
             }
 
@@ -235,7 +240,7 @@ public class AssaultParty {
             int myAgility = partyThievesMaxDisp[myIndex];
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            //System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
+            ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
             int count = 0;
             int i = 0;
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -335,7 +340,7 @@ public class AssaultParty {
                 notifyAll();
             }
 
-            //System.out.println("Turns: " + Arrays.toString(myTurn));
+            ////System.out.println("Turns: " + Arrays.toString(myTurn));
         }
 
         logSetAp();
@@ -346,8 +351,8 @@ public class AssaultParty {
     /**
      * Add an Assault Thief to the Assault Party.
      *
-     * @param thiefID
-     * @param thief
+     * @param thiefID ID of Assault Thief
+     * @param maxDisp Maximum Displacement of Assault Thief
      * @return True, if the operation was successful or false if otherwise
      */
     public synchronized boolean addThief(int thiefID, int maxDisp) {
@@ -356,7 +361,7 @@ public class AssaultParty {
                 partyThieves[i] = thiefID;
                 partyThievesPos[i] = 0;
                 partyThievesMaxDisp[i] = maxDisp;
-                //System.out.println("Added " + thiefID + " with disp " + maxDisp);
+                ////System.out.println("Added " + thiefID + " with disp " + maxDisp);
                 return true;
             }
         }
@@ -369,6 +374,7 @@ public class AssaultParty {
     /**
      * Get index of current Assault Thief thread in the partyThieves array.
      *
+     * @param thiefID ID of Assault Thief
      * @return Returns the index of the current Assault Thief thread in the
      * partyThieves array
      */
@@ -394,8 +400,8 @@ public class AssaultParty {
     /**
      * Set the ID of an Assault Thief in the current Assault Party.
      *
-     * @param i
-     * @param value
+     * @param i Index
+     * @param value Value to set
      */
     public void setPartyThieves(int i, int value) {
         partyThieves[i] = value;
@@ -443,7 +449,7 @@ public class AssaultParty {
      *
      * Set a roomID to this Assault Party.
      *
-     * @param roomID
+     * @param roomID ID of Room
      */
     public void setRoom(int roomID) {
         this.roomID = roomID;
