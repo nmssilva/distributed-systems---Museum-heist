@@ -6,8 +6,8 @@ import java.io.*;
  *
  * This data type defines the exchanged messages between server and clients in a
  * solution of the Heist to the Museum that implements a type 2 client-server
- * model (with server replication) with static initialization of thieves threads
- * The communication is based on the exchange of type Message objectes in a TCP
+ * model (with server replication) with static initialisation of thieves threads
+ * The communication is based on the exchange of type Message objects in a TCP
  * channel.
  */
 
