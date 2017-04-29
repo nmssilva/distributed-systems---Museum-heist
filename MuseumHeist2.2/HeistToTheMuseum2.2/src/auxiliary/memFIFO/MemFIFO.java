@@ -72,8 +72,7 @@ public class MemFIFO extends MemObject {
     /**
      * Detecção de FIFO vazio.
      *
-     * @return <li> true, se o FIFO estiver vazio
-     * <li> false, em caso contrário
+     * @return true, se o FIFO estiver vazio. false, em caso contrário
      */
     public boolean empty() {
         return (this.empty);
@@ -82,8 +81,7 @@ public class MemFIFO extends MemObject {
     /**
      * Detecção de FIFO cheio.
      *
-     * @return <li> true, se o FIFO estiver cheio
-     * <li> false, em caso contrário
+     * @return true, se o FIFO estiver cheio. false, em caso contrário
      */
     public boolean full() {
         return (!this.empty && (outPnt == inPnt));

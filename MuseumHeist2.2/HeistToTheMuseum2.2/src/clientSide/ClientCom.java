@@ -64,8 +64,7 @@ public class ClientCom {
      * comunicação e sua associação ao endereço do servidor. Abertura dos
      * streams de entrada e de saída do socket.
      *
-     * @return <li>true, se o canal de comunicação foi aberto
-     * <li>false, em caso contrário
+     * @return true, se o canal de comunicação foi aberto. false, em caso contrário
      */
     public boolean open() {
         boolean success = true;

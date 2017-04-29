@@ -9,15 +9,10 @@ public abstract class MemObject {
     /**
      * Tamanho da memória em número de posições
      *
-     * @serialField nMax
+     * @serialField nMax nMax
      */
     protected int nMax = 0;
-
-    /**
-     * Área de armazenamento
-     *
-     * @serialField mem
-     */
+    
     protected Object[] mem = null;
 
     /**
