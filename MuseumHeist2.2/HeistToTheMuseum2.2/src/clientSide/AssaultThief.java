@@ -34,9 +34,9 @@ public class AssaultThief extends Thread {
         this.nIter = nIter;
         serverHostName = hostName;
         this.serverPort = serverPort;
-        
+
         logSetThief();
-        
+
         System.out.println("THIEF #" + thiefID + " created");
     }
 
@@ -84,8 +84,9 @@ public class AssaultThief extends Thread {
             this.hasCanvas = 0;
             reportStatus();
         }
-        
+
         logSetThief();
+        reportStatus();
 
         return inMessage.getInteger();
     }
@@ -105,9 +106,10 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         status = CRAWLING_INWARDS;
         logSetThief();
+        reportStatus();
 
         return false;
     }
@@ -146,9 +148,10 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         status = CRAWLING_INWARDS;
         logSetThief();
+        reportStatus();
 
         return false;
     }
@@ -189,9 +192,10 @@ public class AssaultThief extends Thread {
         }
 
         hasCanvas = inMessage.getInteger();
-        
+
         status = AT_A_ROOM;
         logSetThief();
+        reportStatus();
 
         return true;
     }
@@ -214,7 +218,8 @@ public class AssaultThief extends Thread {
 
         status = CRAWLING_OUTWARDS;
         logSetThief();
-        
+        reportStatus();
+
         return true;
     }
 
@@ -233,10 +238,11 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         status = CRAWLING_OUTWARDS;
         logSetThief();
-        
+        reportStatus();
+
         return false;
     }
 
@@ -255,9 +261,10 @@ public class AssaultThief extends Thread {
             GenericIO.writelnString(inMessage.toString());
             System.exit(1);
         }
-        
+
         status = AT_COLLECTION_SITE;
         logSetThief();
+        reportStatus();
 
         return true;
     }
@@ -269,7 +276,7 @@ public class AssaultThief extends Thread {
         if (!con.open()) {
             return false;
         }
-        outMessage = new Message(SETREP, thiefID, status, maxDisp, partyID, hasCanvas);        // pede a realização do serviço
+        outMessage = new Message(SETREP);        // pede a realização do serviço
         con.writeObject(outMessage);
 
         inMessage = (Message) con.readObject();

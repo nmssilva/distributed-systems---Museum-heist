@@ -246,4 +246,29 @@ public class MasterThief extends Thread {
         inMessage = (Message) con.readObject();
         con.close();
     }
+    
+    private boolean reportStatus() {
+        Message inMessage, outMessage;
+        ClientCom con = new ClientCom(serverHostName, PORT_LOG);
+
+        if (!con.open()) {
+            return false;
+        }
+        outMessage = new Message(SETREP);        // pede a realização do serviço
+        con.writeObject(outMessage);
+
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != REPDONE) {
+            GenericIO.writelnString("Thread " + getName() + ": Tipo inválido!");
+            GenericIO.writelnString(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+
+        if (inMessage.getType() == REPDONE) {
+            return true;                                                // operação bem sucedida - corte efectuado
+        }
+
+        return false;
+    }
 }

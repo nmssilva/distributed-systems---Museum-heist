@@ -235,15 +235,13 @@ public class Logger {
             }
             line2 += "";
         }
-        /*
         for (int i = 0; i < ROOMS_NUMBER; i++) {
-            if (rooms[i].getNPaintings() < 10) {
-                line2 += " " + rooms[i].getNPaintings() + " " + rooms[i].getDistOutside() + "   ";
+            if (roomspaintings[i] < 10) {
+                line2 += " " + roomspaintings[i] + " " + roomsdistance[i] + "   ";
             } else {
-                line2 += rooms[i].getNPaintings() + " " + rooms[i].getDistOutside() + "   ";
+                line2 += roomspaintings[i] + " " + roomsdistance[i] + "   ";
             }
         }
-         */
         if (!dontPrint) {
             if (!(lastLine.equals(line) && lastLine2.equals(line2))) {
                 log.writelnString(line);

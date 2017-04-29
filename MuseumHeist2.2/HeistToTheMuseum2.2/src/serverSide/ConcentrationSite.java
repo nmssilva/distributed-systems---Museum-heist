@@ -29,7 +29,7 @@ public class ConcentrationSite {
         } catch (UnknownHostException ex) {
             java.util.logging.Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     /**
@@ -204,6 +204,10 @@ public class ConcentrationSite {
      * @return Number of Assault Thieves in Concentration Site
      */
     public int getnAssaultThievesCS() {
+        try {
+            Thread.sleep((long) (100));
+        } catch (InterruptedException e) {
+        }
         return nAssaultThievesCS;
     }
 
