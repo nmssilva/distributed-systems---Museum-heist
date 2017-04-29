@@ -47,8 +47,10 @@ public class Museum {
         if (nPaintings > 0) {
             rooms[nRoom].setnPaintings(nPaintings - 1);
             System.out.println("REMAINING CANVAS: " + getTotalPaintings());
+            logSetMuseum();
             return 1;
         } else {
+            logSetMuseum();
             return 0;
         }
     }

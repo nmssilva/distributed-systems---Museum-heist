@@ -181,6 +181,8 @@ public class AssaultParty {
 
             System.out.println("Turns: " + Arrays.toString(myTurn));
         }
+        
+        logSetAp();
 
         return true;
     }
@@ -338,6 +340,8 @@ public class AssaultParty {
             System.out.println("Turns: " + Arrays.toString(myTurn));
         }
 
+        logSetAp();
+        
         return true;
     }
 
@@ -358,6 +362,8 @@ public class AssaultParty {
                 return true;
             }
         }
+        
+        logSetAp();
 
         return false;
     }

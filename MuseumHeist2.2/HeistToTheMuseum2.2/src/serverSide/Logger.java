@@ -3,6 +3,7 @@ package serverSide;
 import clientSide.*;
 import static auxiliary.constants.Heist.*;
 import genclass.*;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -150,6 +151,10 @@ public class Logger {
     public void setMuseum(int[] roomsd, int[] roomsp) {
         this.roomsdistance = roomsd;
         this.roomspaintings = roomsp;
+        int p = IntStream.of(roomsp).sum();
+        if(p > this.nPaintings){
+            this.nPaintings = p;
+        }
     }
 
     /**

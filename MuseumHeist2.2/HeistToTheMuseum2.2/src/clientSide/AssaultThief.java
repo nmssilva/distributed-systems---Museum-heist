@@ -37,7 +37,7 @@ public class AssaultThief extends Thread {
 
         logSetThief();
 
-        System.out.println("THIEF #" + thiefID + " created");
+        //System.out.println("THIEF #" + thiefID + " created");
     }
 
     /**
@@ -79,7 +79,7 @@ public class AssaultThief extends Thread {
         con.close();
 
         if (inMessage.getInteger() != -1) {
-            System.out.println("THIEF #" + thiefID + "NEEDED");
+            //System.out.println("THIEF #" + thiefID + "NEEDED");
             this.partyID = inMessage.getInteger();
             this.hasCanvas = 0;
             reportStatus();
