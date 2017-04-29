@@ -19,10 +19,8 @@ public class AssaultThief extends Thread {
     private int hasCanvas;
 
     private int nIter;
-    private String serverHostName = null;
-    private int serverPort;
 
-    public AssaultThief(int thiefID, int nIter, String hostName, int serverPort) {
+    public AssaultThief(int thiefID, int nIter) {
         super("Thief_" + thiefID);
 
         this.thiefID = thiefID;
@@ -32,8 +30,6 @@ public class AssaultThief extends Thread {
         hasCanvas = 0;
 
         this.nIter = nIter;
-        serverHostName = hostName;
-        this.serverPort = serverPort;
 
         logSetThief();
 
@@ -61,7 +57,7 @@ public class AssaultThief extends Thread {
         status = OUTSIDE;
 
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CS);
+        ClientCom con = new ClientCom(HOST_CS, PORT_CS);
 
         if (!con.open()) {
             return -1;
@@ -93,7 +89,7 @@ public class AssaultThief extends Thread {
 
     private boolean prepareExcursion() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -116,7 +112,7 @@ public class AssaultThief extends Thread {
 
     private int getDistOutsideRoom() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return -1;
         }
@@ -135,7 +131,7 @@ public class AssaultThief extends Thread {
 
     private boolean crawlIn() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
@@ -158,7 +154,7 @@ public class AssaultThief extends Thread {
 
     private int getRoomID() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return -1;
         }
@@ -177,7 +173,7 @@ public class AssaultThief extends Thread {
 
     private boolean rollACanvas(int roomID) {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_MUSEUM);
+        ClientCom con = new ClientCom(HOST_MUSEUM, PORT_MUSEUM);
         if (!con.open()) {
             return false;
         }
@@ -202,7 +198,7 @@ public class AssaultThief extends Thread {
 
     private boolean reverseDirection() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
@@ -225,7 +221,7 @@ public class AssaultThief extends Thread {
 
     private boolean crawlOut() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
@@ -248,7 +244,7 @@ public class AssaultThief extends Thread {
 
     private boolean handCanvas() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -271,7 +267,7 @@ public class AssaultThief extends Thread {
 
     private boolean reportStatus() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_LOG);
+        ClientCom con = new ClientCom(HOST_LOG, PORT_LOG);
 
         if (!con.open()) {
             return false;

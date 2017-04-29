@@ -14,13 +14,8 @@ public class MasterThief extends Thread {
 
     private int status;
 
-    private String serverHostName = null;
-    private int serverPortNumb;
-
-    public MasterThief(String hostName) {
+    public MasterThief() {
         status = PLANNING_THE_HEIST;
-
-        serverHostName = hostName;
     }
 
     @Override
@@ -47,7 +42,7 @@ public class MasterThief extends Thread {
 
     private boolean startOfOperations() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CS);
+        ClientCom con = new ClientCom(HOST_CS, PORT_CS);
         if (!con.open()) {
             return false;
         }
@@ -69,7 +64,7 @@ public class MasterThief extends Thread {
 
     private int getnAssaultThievesCS() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CS);
+        ClientCom con = new ClientCom(HOST_CS, PORT_CS);
 
         if (!con.open()) {
             return -1;
@@ -90,7 +85,7 @@ public class MasterThief extends Thread {
 
     private int appraiseSit(int nAssaultThievesCS) {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
 
         while (!con.open()) {
             try {
@@ -118,7 +113,7 @@ public class MasterThief extends Thread {
 
     private boolean prepareAssaultParty() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CS);
+        ClientCom con = new ClientCom(HOST_CS, PORT_CS);
 
         if (!con.open()) {
             return false;
@@ -142,7 +137,7 @@ public class MasterThief extends Thread {
 
     private boolean sendAssaultParty() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -164,7 +159,7 @@ public class MasterThief extends Thread {
 
     private boolean takeARest() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -186,7 +181,7 @@ public class MasterThief extends Thread {
 
     private boolean collectCanvas() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -208,7 +203,7 @@ public class MasterThief extends Thread {
 
     private boolean sumUpResults() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -249,7 +244,7 @@ public class MasterThief extends Thread {
     
     private boolean reportStatus() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(serverHostName, PORT_LOG);
+        ClientCom con = new ClientCom(HOST_LOG, PORT_LOG);
 
         if (!con.open()) {
             return false;
