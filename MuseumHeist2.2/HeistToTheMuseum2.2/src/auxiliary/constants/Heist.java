@@ -85,8 +85,8 @@ public class Heist{
     public static final int PORT_AP = 22354;
 
     // IPs
-    /*
-    public static final String HOST_LOG = "sd0305@l040101-ws04";
+    
+    public static final String HOST_LOG = "l040101-ws03.ua.pt";
 
     public static final String HOST_CS = "l040101-ws05.ua.pt";
 
@@ -94,9 +94,9 @@ public class Heist{
 
     public static final String[] HOST_AP = {"l040101-ws09.ua.pt", "l040101-ws10.ua.pt"};
 
-    public static final String HOST_MUSEUM = "l040101-ws03.ua.pt";
-    */
+    public static final String HOST_MUSEUM = "l040101-ws04.ua.pt";
     
+    /*
     public static final String HOST_LOG = getPcname();
 
     public static final String HOST_CS = getPcname();
@@ -106,7 +106,7 @@ public class Heist{
     public static final String[] HOST_AP = {getPcname(), getPcname()};
 
     public static final String HOST_MUSEUM = getPcname();
-    
+    */
     private static String getPcname(){
         try {
             return InetAddress.getLocalHost().getHostName();
