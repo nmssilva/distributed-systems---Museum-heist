@@ -14,7 +14,7 @@ public class ThiefClient {
      *
      */
     public static void main(String[] args) {
-        //int nIter;                                           // número de iterações do ciclo de vida dos clientes
+        //int nIter;   // número de iterações do ciclo de vida dos clientes
 
         /* Obtenção dos parâmetros do problema */
         GenericIO.writelnString("\n" + "      Heist to the Museum - AssaultThieves\n");
