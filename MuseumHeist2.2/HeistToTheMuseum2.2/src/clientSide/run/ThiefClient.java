@@ -24,7 +24,6 @@ public class ThiefClient {
         //GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
         //serverHostName = InetAddress.getLocalHost().getHostName();
 
-        /* Criação dos threads barbeiro e cliente */
         AssaultThief thieves[] = new AssaultThief[THIEVES_NUMBER];
 
         for (int i = 0; i < THIEVES_NUMBER; i++) {

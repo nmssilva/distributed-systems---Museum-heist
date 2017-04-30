@@ -20,8 +20,8 @@ public class ConcentrationSiteServer {
      * Programa principal.
      */
     public static void main(String[] args) {
-        ConcentrationSite CCS;                                    // barbearia (representa o serviço a ser prestado)
-        ConcentrationSite_Interface iCCS;                      // interface à barbearia
+        ConcentrationSite CCS;                         
+        ConcentrationSite_Interface iCCS;                
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 

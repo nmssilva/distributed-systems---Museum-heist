@@ -20,8 +20,8 @@ public class ControlCollectionServer {
      * Programa principal.
      */
     public static void main(String[] args) {
-        ControlCollectionSite CCS;                                    // barbearia (representa o serviço a ser prestado)
-        ControlCollectionSite_Interface iCCS;                      // interface à barbearia
+        ControlCollectionSite CCS;                        
+        ControlCollectionSite_Interface iCCS;               
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 

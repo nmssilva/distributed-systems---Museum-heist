@@ -20,8 +20,8 @@ public class MuseumServer {
      * Programa principal.
      */
     public static void main(String[] args) {
-        Museum museum;                                    // barbearia (representa o serviço a ser prestado)
-        Museum_Interface iMuseum;                      // interface à barbearia
+        Museum museum;                             
+        Museum_Interface iMuseum;                   
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 

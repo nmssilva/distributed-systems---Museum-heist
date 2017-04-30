@@ -26,7 +26,6 @@ public class MasterClient {
         //GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
         //serverHostName = InetAddress.getLocalHost().getHostName();
 
-        /* Criação dos threads barbeiro e cliente */
         MasterThief mthief = new MasterThief();
 
         /* Comunicação ao servidor dos parâmetros do problema */

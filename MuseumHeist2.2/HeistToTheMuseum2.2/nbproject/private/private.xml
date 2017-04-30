@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/serverSide/servers/LoggerServer.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/serverSide/Museum.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/clientSide/AssaultThief.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/clientSide/MasterThief.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/clientSide/run/ThiefClient.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/serverSide/com/ClientProxy.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/clientSide/ClientCom.java</file>
+            <file>file:/D:/Nuno%20Silva/Documents/UA/ano4/2sem/SD/distributed-systems---Museum-heist/MuseumHeist2.2/HeistToTheMuseum2.2/src/serverSide/interfaces/Museum_Interface.java</file>
+        </group>
     </open-files>
 </project-private>

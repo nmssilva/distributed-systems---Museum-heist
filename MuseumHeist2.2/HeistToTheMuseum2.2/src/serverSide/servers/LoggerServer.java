@@ -20,8 +20,8 @@ public class LoggerServer {
      * Programa principal.
      */
     public static void main(String[] args) {
-        Logger logger;                                    // barbearia (representa o serviço a ser prestado)
-        Logger_Interface iLogger;                      // interface à barbearia
+        Logger logger;                               
+        Logger_Interface iLogger;                 
         ServerCom scon, sconi;                               // canais de comunicação
         ClientProxy cliProxy;                                // thread agente prestador do serviço
 
