@@ -1,10 +1,15 @@
 package auxiliary.constants;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class Heist {
+public class Heist{
 
     /**
      * Total number of AssaultParties in the Heist.
@@ -69,24 +74,45 @@ public class Heist {
     //public static final int N_ITER = 1;
 
     // Port numbers
-    public static final int PORT_LOG = 4000;
+    public static final int PORT_LOG = 22350;
 
-    public static final int PORT_CS = 4100;
+    public static final int PORT_CS = 22351;
 
-    public static final int PORT_CCS = 4200;
+    public static final int PORT_CCS = 22352;
 
-    public static final int PORT_AP = 4300;
+    public static final int PORT_MUSEUM = 22353;
 
-    public static final int PORT_MUSEUM = 4400;
+    public static final int PORT_AP = 22354;
 
     // IPs
-    public static final String HOST_LOG = "ROG";
+    /*
+    public static final String HOST_LOG = "sd0305@l040101-ws04";
 
-    public static final String HOST_CS = "ROG";
+    public static final String HOST_CS = "l040101-ws05.ua.pt";
 
-    public static final String HOST_CCS = "ROG";
+    public static final String HOST_CCS = "l040101-ws07.ua.pt";
 
-    public static final String[] HOST_AP = {"ROG", "ROG"};
+    public static final String[] HOST_AP = {"l040101-ws09.ua.pt", "l040101-ws10.ua.pt"};
 
-    public static final String HOST_MUSEUM = "ROG";
+    public static final String HOST_MUSEUM = "l040101-ws03.ua.pt";
+    */
+    
+    public static final String HOST_LOG = getPcname();
+
+    public static final String HOST_CS = getPcname();
+
+    public static final String HOST_CCS = getPcname();
+
+    public static final String[] HOST_AP = {getPcname(), getPcname()};
+
+    public static final String HOST_MUSEUM = getPcname();
+    
+    private static String getPcname(){
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Heist.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

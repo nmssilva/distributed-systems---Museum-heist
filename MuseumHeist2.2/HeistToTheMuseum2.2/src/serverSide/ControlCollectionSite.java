@@ -195,7 +195,7 @@ public class ControlCollectionSite {
      */
     public synchronized int nextEmptyParty() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(hostname, PORT_AP);
+        ClientCom con = new ClientCom(HOST_AP[0], PORT_AP);
         if (!con.open()) {
             return -1;
         }
@@ -207,7 +207,7 @@ public class ControlCollectionSite {
             return 0;
         }
 
-        con = new ClientCom(hostname, PORT_AP + 1);
+        con = new ClientCom(HOST_AP[1], PORT_AP + 1);
         if (!con.open()) {
             return -1;
         }
@@ -271,7 +271,7 @@ public class ControlCollectionSite {
         rest = false;
 
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(hostname, PORT_AP + partyID);
+        ClientCom con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
@@ -299,7 +299,7 @@ public class ControlCollectionSite {
 
         // Reset Party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            con = new ClientCom(hostname, PORT_AP + partyID);
+            con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
             if (!con.open()) {
                 return false;
             }
@@ -311,7 +311,7 @@ public class ControlCollectionSite {
             int[] pthieves = inMessage.getPartyThieves();
 
             if (pthieves[i] == thiefID) {
-                con = new ClientCom(hostname, PORT_AP + partyID);
+                con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
                 if (!con.open()) {
                     return false;
                 }

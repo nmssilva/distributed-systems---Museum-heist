@@ -19,7 +19,7 @@ public class LoggerServer {
     /**
      * Programa principal.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Logger logger;                               
         Logger_Interface iLogger;                 
         ServerCom scon, sconi;                               // canais de comunicação

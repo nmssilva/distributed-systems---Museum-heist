@@ -473,7 +473,7 @@ public class AssaultParty {
      */
     public int getDistOutsideRoom() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(hostname, PORT_MUSEUM);
+        ClientCom con = new ClientCom(HOST_MUSEUM, PORT_MUSEUM);
         if (!con.open()) {
             return -1;
         }

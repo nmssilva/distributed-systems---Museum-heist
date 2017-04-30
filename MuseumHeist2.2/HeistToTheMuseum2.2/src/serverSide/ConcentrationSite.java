@@ -69,7 +69,7 @@ public class ConcentrationSite {
         waitQueueDisp.write(maxDisp);
 
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(hostname, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return -1;
         }
@@ -82,7 +82,7 @@ public class ConcentrationSite {
 
         while (!inParty(thiefID)) {
             try {
-                con = new ClientCom(hostname, PORT_CCS);
+                con = new ClientCom(HOST_CCS, PORT_CCS);
                 if (!con.open()) {
                     return -1;
                 }
@@ -114,7 +114,7 @@ public class ConcentrationSite {
     public synchronized boolean inParty(int thiefID) {
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             Message inMessage, outMessage;
-            ClientCom con = new ClientCom(hostname, PORT_AP + i);
+            ClientCom con = new ClientCom(HOST_AP[i], PORT_AP + i);
             if (!con.open()) {
                 return false;
             }
@@ -143,7 +143,7 @@ public class ConcentrationSite {
      */
     public synchronized boolean prepareAssaultParty() {
         Message inMessage, outMessage;
-        ClientCom con = new ClientCom(hostname, PORT_CCS);
+        ClientCom con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -155,7 +155,7 @@ public class ConcentrationSite {
         partyID = inMessage.getValue();
         ////System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-            con = new ClientCom(hostname, PORT_AP + partyID);
+            con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
             if (!con.open()) {
                 return false;
             }
@@ -167,7 +167,7 @@ public class ConcentrationSite {
             nAssaultThievesCS--;
         }
 
-        con = new ClientCom(hostname, PORT_AP + partyID);
+        con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
@@ -177,7 +177,7 @@ public class ConcentrationSite {
         con.close();
 
         notifyAll();
-        con = new ClientCom(hostname, PORT_CCS);
+        con = new ClientCom(HOST_CCS, PORT_CCS);
         if (!con.open()) {
             return false;
         }
@@ -188,7 +188,7 @@ public class ConcentrationSite {
 
         int roomID = inMessage.getValue();
 
-        con = new ClientCom(hostname, PORT_AP + partyID);
+        con = new ClientCom(HOST_AP[partyID], PORT_AP + partyID);
         if (!con.open()) {
             return false;
         }
