@@ -12,11 +12,6 @@ import static auxiliary.constants.Heist.*;
 import auxiliary.messages.Message;
 import clientSide.ClientCom;
 
-/**
- *
- * @author António Mota
- * @author Marcos Pires
- */
 public class Museum {
 
     private Room[] rooms;
