@@ -38,6 +38,7 @@ public class MasterThief extends Thread {
                     break;
             }
         }
+        //killServers();
     }
 
     private boolean startOfOperations() {

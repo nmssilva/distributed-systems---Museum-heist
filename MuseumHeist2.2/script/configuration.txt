@@ -1,0 +1,7 @@
+l040101-ws01.ua.pt;Thieves
+l040101-ws03.ua.pt;22350;Logger
+l040101-ws04.ua.pt;22353;Museum
+l040101-ws05.ua.pt;22351;CS
+l040101-ws07.ua.pt;22352;CCS
+l040101-ws09.ua.pt;22354;AP0
+l040101-ws10.ua.pt;22355;AP1

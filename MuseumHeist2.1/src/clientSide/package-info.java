@@ -1,4 +1,0 @@
-/**
- * Entities package.
- */
-package clientSide;
