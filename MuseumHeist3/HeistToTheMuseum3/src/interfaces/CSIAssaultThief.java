@@ -5,12 +5,15 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface CSIAssaultThief {
+public interface CSIAssaultThief  extends Remote{
 
-    public int amINeeded(int thiefID, int maxDisp);
+    public int amINeeded(int thiefID, int maxDisp) throws RemoteException;
     
 }

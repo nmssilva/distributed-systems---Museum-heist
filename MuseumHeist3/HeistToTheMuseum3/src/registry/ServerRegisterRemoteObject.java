@@ -26,10 +26,8 @@ public class ServerRegisterRemoteObject
      String rmiRegHostName;
      int rmiRegPortNumb;
 
-     GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-     rmiRegHostName = GenericIO.readlnString ();
-     GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-     rmiRegPortNumb = GenericIO.readlnInt ();
+     rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+     rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
     /* create and install the security manager */
 
@@ -41,7 +39,7 @@ public class ServerRegisterRemoteObject
 
      RegisterRemoteObject regEngine = new RegisterRemoteObject (rmiRegHostName, rmiRegPortNumb);
      RegisterInterface regEngineStub = null;
-     int listeningPort = 22000;                            /* it should be set accordingly in each case */
+     int listeningPort = RegistryConfig.RMI_REGISTER_PORT;                            /* it should be set accordingly in each case */
 
      try
      { regEngineStub = (RegisterInterface) UnicastRemoteObject.exportObject (regEngine, listeningPort);
@@ -54,7 +52,7 @@ public class ServerRegisterRemoteObject
 
     /* register it with the local registry service */
 
-     String nameEntry = "RegisterHandler";
+     String nameEntry = RegistryConfig.RMI_REGISTER_NAME;
      Registry registry = null;
 
      try

@@ -3,6 +3,9 @@ package serverSide;
 import static auxiliary.Heist.*;
 import interfaces.APInterface;
 import interfaces.CCSInterface;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -66,7 +69,11 @@ public class ControlCollectionSite implements CCSInterface {
     @Override
     public synchronized int appraiseSit(int nAssaultThievesCS) {
 
-        nextParty = nextEmptyParty();
+        try {
+            nextParty = nextEmptyParty();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
         nextRoom = nextEmptyRoom();
 
         ////System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
@@ -193,7 +200,7 @@ public class ControlCollectionSite implements CCSInterface {
      * @return the ID of the Assault Party or -1 if there is no empty Assault.
      * Party
      */
-    public synchronized int nextEmptyParty() {
+    public synchronized int nextEmptyParty() throws RemoteException {
         
         if (this.ap[0].isEmptyAP() == true) {
             return 0;
@@ -243,9 +250,10 @@ public class ControlCollectionSite implements CCSInterface {
      * @param partyID ID of Assault Thief Party
      * @param hasCanvas 1 if Assault Thief has canvas, 0 if otherwise
      * @return true if operation successful, false if otherwise
+     * @throws java.rmi.RemoteException
      */
     @Override
-    public synchronized boolean handCanvas(int thiefID, int partyID, int hasCanvas) {
+    public synchronized boolean handCanvas(int thiefID, int partyID, int hasCanvas) throws RemoteException {
 
         while (!rest) {
             try {
@@ -277,11 +285,20 @@ public class ControlCollectionSite implements CCSInterface {
         // Reset Party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
 
-            int[] pthieves = this.ap[partyID].getPartyThieves();
+            int[] pthieves = null;
+            try {
+                pthieves = this.ap[partyID].getPartyThieves();
+            } catch (RemoteException ex) {
+                Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             if (pthieves[i] == thiefID) {
                 
-                this.ap[partyID].setPartyThieves(i,-1);
+                try {
+                    this.ap[partyID].setPartyThieves(i,-1);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             }
         }

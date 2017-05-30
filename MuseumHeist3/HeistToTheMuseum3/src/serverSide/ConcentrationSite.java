@@ -5,6 +5,9 @@ import auxiliary.MemFIFO;
 import interfaces.APInterface;
 import interfaces.CCSInterface;
 import interfaces.CSInterface;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -69,23 +72,33 @@ public class ConcentrationSite implements CSInterface {
         waitQueue.write(thiefID);
         waitQueueDisp.write(maxDisp);
         
-        this.ccs.isReady();
+        try {
+            this.ccs.isReady();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         notifyAll();
 
-        while (!inParty(thiefID)) {
-            try {
-                
-                int value = this.ccs.nextEmptyRoom();
-
-                if (value == -1 && nAssaultThievesCS == THIEVES_NUMBER) {
-                    return -1;
+        try {
+            while (!inParty(thiefID)) {
+                try {
+                    
+                    int value = this.ccs.nextEmptyRoom();
+                    
+                    if (value == -1 && nAssaultThievesCS == THIEVES_NUMBER) {
+                        return -1;
+                    }
+                    
+                    wait();
+                } catch (InterruptedException e) {
+                    
+                } catch (RemoteException ex) {
+                    Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                wait();
-            } catch (InterruptedException e) {
-
             }
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return partyID;
@@ -98,7 +111,7 @@ public class ConcentrationSite implements CSInterface {
      * @return True, if the Assault Thief current thread is in the Assault Party
      * or false if otherwise.
      */
-    public synchronized boolean inParty(int thiefID) {
+    public synchronized boolean inParty(int thiefID) throws RemoteException {
         for (int i = 0; i < MAX_ASSAULT_PARTIES; i++) {
             
             int[] pthieves = this.ap[i].getPartyThieves();
@@ -122,22 +135,43 @@ public class ConcentrationSite implements CSInterface {
     @Override
     public synchronized void prepareAssaultParty() { 
 
-        partyID = this.ccs.getNextParty();
+        try {
+            partyID = this.ccs.getNextParty();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
         ////System.out.println("PARTYID: " + partyID);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             
-            this.ap[partyID].addThief((int) waitQueue.read(), (int) waitQueueDisp.read());
+            try {
+                this.ap[partyID].addThief((int) waitQueue.read(), (int) waitQueueDisp.read());
+            } catch (RemoteException ex) {
+                Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             nAssaultThievesCS--;
         }
         
-        this.ap[partyID].setFirst();
+        try {
+            this.ap[partyID].setFirst();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         notifyAll();        
 
-        int roomID = this.ccs.getNextRoom();
+        int roomID = 0;
+        try {
+            roomID = this.ccs.getNextRoom();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        this.ap[partyID].setRoom(roomID);
+        try {
+            this.ap[partyID].setRoom(roomID);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ConcentrationSite.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

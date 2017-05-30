@@ -5,12 +5,15 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface LogIMasterThief {
+public interface LogIMasterThief  extends Remote{
 
-    public void setMasterThief(int status);
+    public void setMasterThief(int status) throws RemoteException;
     
 }

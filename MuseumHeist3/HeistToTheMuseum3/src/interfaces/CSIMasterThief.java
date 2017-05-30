@@ -5,16 +5,19 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface CSIMasterThief {
+public interface CSIMasterThief  extends Remote{
 
-    public int getnAssaultThievesCS();
+    public int getnAssaultThievesCS() throws RemoteException;
 
-    public void startOfOperations();
+    public void startOfOperations() throws RemoteException;
 
-    public void prepareAssaultParty();
+    public void prepareAssaultParty() throws RemoteException;
     
 }

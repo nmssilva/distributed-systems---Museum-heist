@@ -17,9 +17,9 @@ public interface LoggerInterface extends LogIAssaultThief, LogIMasterThief, Remo
     
     public void signalShutdown() throws RemoteException;
 
-    public void setAssaultParty(int id, int[] partyThieves, int[] partyThievesPos, int roomID);
+    public void setAssaultParty(int id, int[] partyThieves, int[] partyThievesPos, int roomID) throws RemoteException;
 
-    public void setMuseum(int[] roomsdistance, int[] roomspaintings);
+    public void setMuseum(int[] roomsdistance, int[] roomspaintings) throws RemoteException;
     
     
 }

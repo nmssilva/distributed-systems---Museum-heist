@@ -5,14 +5,17 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface CCSIAssaultThief {
+public interface CCSIAssaultThief  extends Remote{
 
-    public void prepareExcursion();
+    public void prepareExcursion()  throws RemoteException;
 
-    public boolean handCanvas(int thiefID, int partyID, int hasCanvas);
+    public boolean handCanvas(int thiefID, int partyID, int hasCanvas)  throws RemoteException;
     
 }

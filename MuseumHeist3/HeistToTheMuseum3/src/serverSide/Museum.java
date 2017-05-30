@@ -11,6 +11,9 @@ package serverSide;
 import static auxiliary.Heist.*;
 import interfaces.LoggerInterface;
 import interfaces.MuseumInterface;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Museum implements MuseumInterface{ 
 
@@ -22,7 +25,7 @@ public class Museum implements MuseumInterface{
      * Museum constructor 
      * @param log Logger
      */
-    public Museum(LoggerInterface log) {
+    public Museum(LoggerInterface log) throws RemoteException {
         
         this.log = log;
         this.rooms = new Room[ROOMS_NUMBER];
@@ -48,10 +51,18 @@ public class Museum implements MuseumInterface{
         if (nPaintings > 0) {
             rooms[nRoom].setnPaintings(nPaintings - 1);
             System.out.println("REMAINING CANVAS: " + getTotalPaintings());
-            logSetMuseum();
+            try {
+                logSetMuseum();
+            } catch (RemoteException ex) {
+                Logger.getLogger(Museum.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return 1;
         } else {
-            logSetMuseum();
+            try {
+                logSetMuseum();
+            } catch (RemoteException ex) {
+                Logger.getLogger(Museum.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return 0;
         }
     }
@@ -76,7 +87,7 @@ public class Museum implements MuseumInterface{
         return count;
     }
 
-    private void logSetMuseum() {
+    private void logSetMuseum() throws RemoteException {
         
         this.log.setMuseum(roomsdistance(),roomspaintings());
     }
@@ -99,6 +110,11 @@ public class Museum implements MuseumInterface{
         }
 
         return tmp;
+    }
+
+    @Override
+    public int getDistRoom(int roomID) {
+        return rooms[roomID].distOutside;
     }
 
 }

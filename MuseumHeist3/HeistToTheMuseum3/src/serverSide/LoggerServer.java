@@ -9,8 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import serverSide.Logger;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 public class LoggerServer {
 
@@ -31,10 +30,9 @@ public class LoggerServer {
 
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
         
          /* instanciação e instalação do gestor de segurança */
         if (System.getSecurityManager() == null) {
@@ -45,17 +43,17 @@ public class LoggerServer {
         Logger logger = new Logger();
         
         try {
-            li = (LoggerInterface) UnicastRemoteObject.exportObject(logger, rc.loggerPort());
+            li = (LoggerInterface) UnicastRemoteObject.exportObject(logger, RegistryConfig.REGISTRY_LOGGER_PORT);
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o bench: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para o logger: " + e.getMessage());
             System.exit(1);
         }
         
         System.out.println("O stub para o logger foi gerado!");
         
                 /* seu registo no serviço de registo RMI */
-        String nameEntryBase = RegistryConfig.registerHandler;
-        String nameEntryObject = RegistryConfig.loggerNameEntry;
+        String nameEntryBase = RegistryConfig.RMI_REGISTER_NAME;
+        String nameEntryObject = RegistryConfig.REGISTRY_LOGGER_NAME;
         Registry registry = null;
         RegisterInterface reg = null;
 

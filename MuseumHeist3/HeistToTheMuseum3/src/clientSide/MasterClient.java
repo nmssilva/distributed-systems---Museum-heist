@@ -8,7 +8,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 /**
  * Client for MasterThief
@@ -27,10 +27,9 @@ public class MasterClient {
         String rmiRegHostName;
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
         
         String fName = "logger.log";                                       // nome do ficheiro de logging
 
@@ -41,48 +40,48 @@ public class MasterClient {
         try
         { 
             Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
-            loggerInt = (LoggerInterface) registry.lookup (RegistryConfig.loggerNameEntry);
+            loggerInt = (LoggerInterface) registry.lookup (RegistryConfig.REGISTRY_LOGGER_NAME);
         }
         catch (RemoteException e)
         { 
-            System.out.println("Exception thrown while locating bench: " + e.getMessage () + "!");
+            System.out.println("Exception thrown while locating logger: " + e.getMessage () + "!");
             System.exit (1);
         }
         catch (NotBoundException e)
         { 
-            System.out.println("Bench is not registered: " + e.getMessage () + "!");
+            System.out.println("logger is not registered: " + e.getMessage () + "!");
             System.exit(1);
         }
         
         try
         { 
             Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
-            csInt = (CSInterface) registry.lookup (RegistryConfig.CSNameEntry);
+            csInt = (CSInterface) registry.lookup (RegistryConfig.REGISTRY_CONCENTRATION_SITE_NAME);
         }
         catch (RemoteException e)
         { 
-            System.out.println("Exception thrown while locating bench: " + e.getMessage () + "!");
+            System.out.println("Exception thrown while locating CS: " + e.getMessage () + "!");
             System.exit (1);
         }
         catch (NotBoundException e)
         { 
-            System.out.println("Bench is not registered: " + e.getMessage () + "!");
+            System.out.println("CS is not registered: " + e.getMessage () + "!");
             System.exit(1);
         }
         
         try
         { 
             Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
-            ccsInt = (CCSInterface) registry.lookup (RegistryConfig.CCSNameEntry);
+            ccsInt = (CCSInterface) registry.lookup (RegistryConfig.REGISTRY_COLLECTION_SITE_NAME);
         }
         catch (RemoteException e)
         { 
-            System.out.println("Exception thrown while locating bench: " + e.getMessage () + "!");
+            System.out.println("Exception thrown while locating CCS: " + e.getMessage () + "!");
             System.exit (1);
         }
         catch (NotBoundException e)
         { 
-            System.out.println("Bench is not registered: " + e.getMessage () + "!");
+            System.out.println("CCS is not registered: " + e.getMessage () + "!");
             System.exit(1);
         }
         

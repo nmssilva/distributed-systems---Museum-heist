@@ -4,7 +4,10 @@ import static auxiliary.Heist.*;
 import interfaces.APInterface;
 import interfaces.LoggerInterface;
 import interfaces.MuseumInterface;
+import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,9 +29,10 @@ public class AssaultParty implements APInterface{
     private LoggerInterface log;
 
 
-    public AssaultParty(int id, MuseumInterface museum) {
+    public AssaultParty(int id, MuseumInterface museum, LoggerInterface log) throws RemoteException {
         
         this.museum = museum;
+        this.log = log;
         
         this.id = id;
         roomID = -1;
@@ -62,124 +66,132 @@ public class AssaultParty implements APInterface{
      */
     @Override
     public synchronized void crawlIn(int thiefID) {
-        while (partyThievesPos[getIndexParty(thiefID)] != getDistOutsideRoom()) {
-            while (!myTurn[getIndexParty(thiefID)]) {
-                try {
-                    wait();
-                } catch (InterruptedException ex) {
-                    //System.out.println(ex.getMessage());
-                }
-            }
-
-            int myIndex = getIndexParty(thiefID);
-            int myPos = partyThievesPos[myIndex];
-            int myAgility = partyThievesMaxDisp[myIndex];
-            int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
-
-            ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
-            int count = 0;
-            int i = 0;
-            for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
-                if (i != myIndex) {
-                    assaultThievesPos[count] = partyThievesPos[i];
-                    count++;
-                }
-            }
-
-            Arrays.sort(assaultThievesPos);
-
-            // Predict maximum displacement
-            for (i = myAgility; i > 0; i--) {
-                boolean BadToGo = false;
-                // Array que vai ter myPos no inicio e assaultThievesPos de seguida
-                int[] posAfterMove = new int[assaultThievesPos.length + 1];
-                posAfterMove[0] = myPos + i;
-                System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
-                Arrays.sort(posAfterMove);
-
-                for (int j = 0; j < posAfterMove.length - 1; j++) {
-                    if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
-                        BadToGo = true;
-                        break;
+        try {
+            while (partyThievesPos[getIndexParty(thiefID)] != getDistOutsideRoom()) {
+                while (!myTurn[getIndexParty(thiefID)]) {
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        //System.out.println(ex.getMessage());
                     }
                 }
-
-                // Set new position
-                if ((!BadToGo)) {
-                    if (myPos + i >= getDistOutsideRoom()) {
-                        partyThievesPos[myIndex] = getDistOutsideRoom();
-                        nThievesRoom++;
-                        inRoom[myIndex] = true;
-                    } else {
-                        partyThievesPos[myIndex] = myPos + i;
+                
+                int myIndex = getIndexParty(thiefID);
+                int myPos = partyThievesPos[myIndex];
+                int myAgility = partyThievesMaxDisp[myIndex];
+                int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
+                
+                ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
+                int count = 0;
+                int i = 0;
+                for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
+                    if (i != myIndex) {
+                        assaultThievesPos[count] = partyThievesPos[i];
+                        count++;
                     }
-
-                    break;
                 }
-            }
-
-            // Check if it is possible to move even further
-            boolean canMoveAgain = false;
-            if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
-                for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
+                
+                Arrays.sort(assaultThievesPos);
+                
+                // Predict maximum displacement
+                for (i = myAgility; i > 0; i--) {
                     boolean BadToGo = false;
+                    // Array que vai ter myPos no inicio e assaultThievesPos de seguida
                     int[] posAfterMove = new int[assaultThievesPos.length + 1];
                     posAfterMove[0] = myPos + i;
                     System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
                     Arrays.sort(posAfterMove);
-
-                    for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
-                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
+                    
+                    for (int j = 0; j < posAfterMove.length - 1; j++) {
+                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
                             BadToGo = true;
                             break;
                         }
                     }
 
+                    // Set new position
                     if ((!BadToGo)) {
-                        canMoveAgain = true;
+                        if (myPos + i >= getDistOutsideRoom()) {
+                            partyThievesPos[myIndex] = getDistOutsideRoom();
+                            nThievesRoom++;
+                            inRoom[myIndex] = true;
+                        } else {
+                            partyThievesPos[myIndex] = myPos + i;
+                        }
+                        
                         break;
                     }
                 }
-                // Didn't get to room or can't walk further
-            } else if (!canMoveAgain) {
-                myTurn[myIndex] = false;
-
-                int min = ROOM_MAX_DISTANCE;
-                int minIndex = -1;
-
-                for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
-                    if (min >= partyThievesPos[x]) {
-                        min = partyThievesPos[x];
-                        minIndex = x;
-                    }
-                }
-
-                if (minIndex == myIndex) {
-                    boolean changed = true;
-                    while (changed) {
-                        changed = false;
-                        for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
-
-                            if (partyThievesPos[minIndex] + 1 == partyThievesPos[x] && partyThievesMaxDisp[minIndex] == 2) {
-                                if (partyThievesPos[minIndex] + 1 == getDistOutsideRoom()) {
-                                    continue;
-                                }
-                                minIndex = x;
-                                changed = true;
+                
+                // Check if it is possible to move even further
+                boolean canMoveAgain = false;
+                if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
+                    for (i = partyThievesMaxDisp[myIndex]; i > 0; i--) {
+                        boolean BadToGo = false;
+                        int[] posAfterMove = new int[assaultThievesPos.length + 1];
+                        posAfterMove[0] = myPos + i;
+                        System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
+                        Arrays.sort(posAfterMove);
+                        
+                        for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
+                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
+                                BadToGo = true;
+                                break;
                             }
                         }
+                        
+                        if ((!BadToGo)) {
+                            canMoveAgain = true;
+                            break;
+                        }
                     }
-
+                    // Didn't get to room or can't walk further
+                } else if (!canMoveAgain) {
+                    myTurn[myIndex] = false;
+                    
+                    int min = ROOM_MAX_DISTANCE;
+                    int minIndex = -1;
+                    
+                    for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+                        if (min >= partyThievesPos[x]) {
+                            min = partyThievesPos[x];
+                            minIndex = x;
+                        }
+                    }
+                    
+                    if (minIndex == myIndex) {
+                        boolean changed = true;
+                        while (changed) {
+                            changed = false;
+                            for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
+                                
+                                if (partyThievesPos[minIndex] + 1 == partyThievesPos[x] && partyThievesMaxDisp[minIndex] == 2) {
+                                    if (partyThievesPos[minIndex] + 1 == getDistOutsideRoom()) {
+                                        continue;
+                                    }
+                                    minIndex = x;
+                                    changed = true;
+                                }
+                            }
+                        }
+                        
+                    }
+                    myTurn[minIndex] = true;
+                    
+                    notifyAll();
                 }
-                myTurn[minIndex] = true;
-
-                notifyAll();
+                
+                ////System.out.println("Turns: " + Arrays.toString(myTurn));
             }
-
-            ////System.out.println("Turns: " + Arrays.toString(myTurn));
+        } catch (RemoteException ex) {
+            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        logSetAp();
+        try {
+            logSetAp();
+        } catch (RemoteException ex) {
+            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -257,9 +269,13 @@ public class AssaultParty implements APInterface{
                 Arrays.sort(posAfterMove);
 
                 for (int j = 0; j < posAfterMove.length - 1; j++) {
-                    if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
-                        tooFarOrOcupada = true;
-                        break;
+                    try {
+                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                            tooFarOrOcupada = true;
+                            break;
+                        }
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
@@ -289,9 +305,13 @@ public class AssaultParty implements APInterface{
                     Arrays.sort(posAfterMove);
 
                     for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
-                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
-                            tooFarOrOcupada = true;
-                            break;
+                        try {
+                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                                tooFarOrOcupada = true;
+                                break;
+                            }
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
 
@@ -338,7 +358,11 @@ public class AssaultParty implements APInterface{
             ////System.out.println("Turns: " + Arrays.toString(myTurn));
         }
 
-        logSetAp();
+        try {
+            logSetAp();
+        } catch (RemoteException ex) {
+            Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -349,7 +373,7 @@ public class AssaultParty implements APInterface{
      * @return True, if the operation was successful or false if otherwise
      */
     @Override
-    public synchronized boolean addThief(int thiefID, int maxDisp) {
+    public synchronized boolean addThief(int thiefID, int maxDisp) throws RemoteException {
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             if (partyThieves[i] == -1) {
                 partyThieves[i] = thiefID;
@@ -470,12 +494,11 @@ public class AssaultParty implements APInterface{
      * @return Returns distance from the Outside to the Room assigned to this
      * Assault Party
      */
-    public int getDistOutsideRoom() {
-        Room room = (Room) this.museum.getRoom(this.roomID);
-        return room.getDistOutside();
+    public int getDistOutsideRoom() throws RemoteException {
+        return this.museum.getDistRoom(this.roomID);
     }
 
-    private void logSetAp() {        
+    private void logSetAp() throws RemoteException {        
         this.log.setAssaultParty(this.id, this.partyThieves, this.partyThievesPos, this.roomID);
     }
 }

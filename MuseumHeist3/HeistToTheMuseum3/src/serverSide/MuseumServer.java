@@ -10,9 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import serverSide.Logger;
-import serverSide.Museum;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 public class MuseumServer {
 
@@ -26,17 +24,16 @@ public class MuseumServer {
     /**
      * Programa principal.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
 
         // nome do sistema onde está localizado o serviço de registos RMI
         String rmiRegHostName;
 
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
         /* instanciação e instalação do gestor de segurança */
         if (System.getSecurityManager() == null) {
@@ -45,10 +42,14 @@ public class MuseumServer {
 
         MuseumInterface museumi = null;
         LoggerInterface log = null;
+        
+        
+
+        System.out.println("Museum: get registry");
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            log = (LoggerInterface) registry.lookup(RegistryConfig.loggerNameEntry);
+            log = (LoggerInterface) registry.lookup(RegistryConfig.REGISTRY_LOGGER_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating log: " + e.getMessage() + "!");
             System.exit(1);
@@ -58,19 +59,21 @@ public class MuseumServer {
         }
 
         Museum museum = new Museum(log);
+        
+        System.out.println("Museum: generate stub");
 
         try {
-            museumi = (MuseumInterface) UnicastRemoteObject.exportObject(museum, rc.museumPort());
+            museumi = (MuseumInterface) UnicastRemoteObject.exportObject(museum, RegistryConfig.REGISTRY_MUSEUM_PORT);
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o bench: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para o museum: " + e.getMessage());
             System.exit(1);
         }
 
-        System.out.println("O stub para o logger foi gerado!");
+        System.out.println("O stub para o museum foi gerado!");
 
         /* seu registo no serviço de registo RMI */
-        String nameEntryBase = RegistryConfig.registerHandler;
-        String nameEntryObject = RegistryConfig.museumNameEntry;
+        String nameEntryBase = RegistryConfig.RMI_REGISTER_NAME;
+        String nameEntryObject = RegistryConfig.REGISTRY_MUSEUM_NAME;
         Registry registry = null;
         RegisterInterface reg = null;
 
@@ -103,6 +106,6 @@ public class MuseumServer {
             System.exit(1);
         }
 
-        System.out.println("O logger foi registado!");
+        System.out.println("O museum foi registado!");
     }
 }

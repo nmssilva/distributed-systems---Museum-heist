@@ -10,8 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import serverSide.ControlCollectionSite;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 public class ControlCollectionServer {
 
@@ -31,10 +30,9 @@ public class ControlCollectionServer {
 
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
         /* instanciação e instalação do gestor de segurança */
         if (System.getSecurityManager() == null) {
@@ -46,7 +44,7 @@ public class ControlCollectionServer {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[0] = (APInterface) registry.lookup(RegistryConfig.AP0NameEntry);
+            ap[0] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY0_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap0: " + e.getMessage() + "!");
             System.exit(1);
@@ -57,7 +55,7 @@ public class ControlCollectionServer {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[1] = (APInterface) registry.lookup(RegistryConfig.AP1NameEntry);
+            ap[1] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY1_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap1: " + e.getMessage() + "!");
             System.exit(1);
@@ -68,17 +66,17 @@ public class ControlCollectionServer {
 
         ControlCollectionSite ccs = new ControlCollectionSite(ap);
         try {
-            ccsi = (CCSInterface) UnicastRemoteObject.exportObject(ccs, rc.ccsPort());
+            ccsi = (CCSInterface) UnicastRemoteObject.exportObject(ccs, RegistryConfig.REGISTRY_COLLECTION_SITE_PORT);
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o bench: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para o CCS: " + e.getMessage());
             System.exit(1);
         }
 
-        System.out.println("O stub para o bench foi gerado!");
+        System.out.println("O stub para o CCS foi gerado!");
 
         /* seu registo no serviço de registo RMI */
-        String nameEntryBase = RegistryConfig.registerHandler;
-        String nameEntryObject = RegistryConfig.loggerNameEntry;
+        String nameEntryBase = RegistryConfig.RMI_REGISTER_NAME;
+        String nameEntryObject = RegistryConfig.REGISTRY_COLLECTION_SITE_NAME;
         Registry registry = null;
         RegisterInterface reg = null;
 

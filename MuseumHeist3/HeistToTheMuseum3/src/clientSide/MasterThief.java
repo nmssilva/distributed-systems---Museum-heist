@@ -1,6 +1,9 @@
 package clientSide;
 
 import static auxiliary.States.*;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,31 +20,40 @@ public class MasterThief extends Thread {
         status = PLANNING_THE_HEIST;
         this.log = log;
         this.cs = cs;
+        this.ccs = ccs;
     }
 
     @Override
     public void run() {
         boolean heistend = false;
-        startOfOperations();
+        try {
+            startOfOperations();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MasterThief.class.getName()).log(Level.SEVERE, null, ex);
+        }
         while (!heistend) {
-            switch (appraiseSit(getnAssaultThievesCS())) {
-                case 1:
-                    prepareAssaultParty();
-                    sendAssaultParty();
-                    break;
-                case 0:
-                    takeARest();
-                    collectCanvas();
-                    break;
-                case 2:
-                    sumUpResults();
-                    heistend = true;
-                    break;
+            try {
+                switch (appraiseSit(getnAssaultThievesCS())) {
+                    case 1:
+                        prepareAssaultParty();
+                        sendAssaultParty();
+                        break;
+                    case 0:
+                        takeARest();
+                        collectCanvas();
+                        break;
+                    case 2:
+                        sumUpResults();
+                        heistend = true;
+                        break;
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(MasterThief.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
-    private void startOfOperations() {
+    private void startOfOperations() throws RemoteException {
         
         this.cs.startOfOperations();
 
@@ -51,12 +63,12 @@ public class MasterThief extends Thread {
 
     }
 
-    private int getnAssaultThievesCS() {
+    private int getnAssaultThievesCS() throws RemoteException {
 
         return this.cs.getnAssaultThievesCS();
     }
 
-    private int appraiseSit(int nAssaultThievesCS) {
+    private int appraiseSit(int nAssaultThievesCS) throws RemoteException {
 
         int value = this.ccs.appraiseSit(nAssaultThievesCS);
 
@@ -68,7 +80,7 @@ public class MasterThief extends Thread {
         return value;
     }
 
-    private void prepareAssaultParty() {
+    private void prepareAssaultParty() throws RemoteException {
         
         this.cs.prepareAssaultParty();
 
@@ -78,7 +90,7 @@ public class MasterThief extends Thread {
         this.log.setMasterThief(DECIDING_WHAT_TO_DO);
     }
 
-    private void sendAssaultParty() {
+    private void sendAssaultParty() throws RemoteException {
         
         this.ccs.sendAssaultParty();
 
@@ -89,7 +101,7 @@ public class MasterThief extends Thread {
         
     }
 
-    private void takeARest() {
+    private void takeARest() throws RemoteException {
         
         this.ccs.takeARest();
 
@@ -100,7 +112,7 @@ public class MasterThief extends Thread {
 
     }
 
-    private void collectCanvas() {
+    private void collectCanvas() throws RemoteException {
         
         this.ccs.collectCanvas();
 
@@ -111,7 +123,7 @@ public class MasterThief extends Thread {
 
     }
 
-    private void sumUpResults() {
+    private void sumUpResults() throws RemoteException {
         this.ccs.sumUpResults();
         
         this.status = PRESENTING_REPORT;

@@ -5,12 +5,15 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface MuseumIAssaultThief {
+public interface MuseumIAssaultThief extends Remote {
 
-    public int rollACanvas(int roomID);
+    public int rollACanvas(int roomID) throws RemoteException;
     
 }

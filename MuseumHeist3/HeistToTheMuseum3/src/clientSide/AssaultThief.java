@@ -2,12 +2,15 @@ package clientSide;
 
 import static auxiliary.Heist.*;
 import static auxiliary.States.*;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class AssaultThief extends Thread {
+public class AssaultThief extends Thread  {
 
     private final int thiefID;
     private int status;
@@ -33,7 +36,7 @@ public class AssaultThief extends Thread {
      * @param museum Museum
      * @param log Logger
      */
-    public AssaultThief(int thiefID,interfaces.CSIAssaultThief cs,interfaces.CCSIAssaultThief ccs,interfaces.APIAssaultThief ap[],interfaces.MuseumIAssaultThief museum,interfaces.LogIAssaultThief log) {
+    public AssaultThief(int thiefID,interfaces.CSIAssaultThief cs,interfaces.CCSIAssaultThief ccs,interfaces.APIAssaultThief ap[],interfaces.MuseumIAssaultThief museum,interfaces.LogIAssaultThief log) throws RemoteException {
         super("Thief_" + thiefID);
         
         this.cs = cs;
@@ -58,17 +61,21 @@ public class AssaultThief extends Thread {
      */
     @Override
     public void run() {
-        while (amINeeded() != -1) {
-            prepareExcursion();
-            crawlIn();
-            rollACanvas(getRoomID());
-            reverseDirection();
-            crawlOut();
-            handCanvas();
+        try {
+            while (amINeeded() != -1) {
+                prepareExcursion();
+                crawlIn();
+                rollACanvas(getRoomID());
+                reverseDirection();
+                crawlOut();
+                handCanvas();
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(AssaultThief.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private int amINeeded() {
+    private int amINeeded() throws RemoteException {
         partyID = -1;
         hasCanvas = -1;
         status = OUTSIDE;
@@ -88,7 +95,7 @@ public class AssaultThief extends Thread {
         return party;
     }
 
-    private void prepareExcursion() {
+    private void prepareExcursion() throws RemoteException {
         
         this.ccs.prepareExcursion();
 
@@ -98,7 +105,7 @@ public class AssaultThief extends Thread {
 
     }
 
-    private void crawlIn() {
+    private void crawlIn() throws RemoteException {
         
         this.ap[this.partyID].crawlIn(this.thiefID);
 
@@ -108,11 +115,11 @@ public class AssaultThief extends Thread {
 
     }
 
-    private int getRoomID() {
+    private int getRoomID() throws RemoteException  {
         return this.ap[this.partyID].getRoomID();
     }
 
-    private void rollACanvas(int roomID) {
+    private void rollACanvas(int roomID) throws RemoteException {
 
         hasCanvas = this.museum.rollACanvas(roomID);
 
@@ -122,7 +129,7 @@ public class AssaultThief extends Thread {
 
     }
 
-    private void reverseDirection() {
+    private void reverseDirection() throws RemoteException {
         
         this.ap[this.partyID].reverseDirection(this.thiefID);
 
@@ -132,7 +139,7 @@ public class AssaultThief extends Thread {
 
     }
 
-    private void crawlOut() {
+    private void crawlOut() throws RemoteException {
         
         this.ap[this.partyID].crawlOut(this.thiefID);
 
@@ -142,7 +149,7 @@ public class AssaultThief extends Thread {
 
     }
 
-    private void handCanvas() {
+    private void handCanvas() throws RemoteException {
         
         this.ccs.handCanvas(this.thiefID, this.partyID, this.hasCanvas);
 
@@ -152,11 +159,11 @@ public class AssaultThief extends Thread {
 
     }
 
-    private void reportStatus() {
+    private void reportStatus() throws RemoteException {
         this.log.reportStatus();
     }
 
-    private void logSetThief() {
+    private void logSetThief() throws RemoteException {
         
         this.log.setAssaultThief(this.thiefID, this.status, this.maxDisp, this.partyID, this.hasCanvas);
     }

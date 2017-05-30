@@ -12,7 +12,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 /**
  * Client for AssaultThief
@@ -23,7 +23,7 @@ public class ThiefClient {
      * Programa principal.
      *
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         //int nIter;   // número de iterações do ciclo de vida dos clientes
 
         /* Obtenção dos parâmetros do problema */
@@ -38,20 +38,19 @@ public class ThiefClient {
         String rmiRegHostName;
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
         interfaces.CSInterface cs = null;
         interfaces.CCSInterface ccs = null;
-        interfaces.APInterface ap[] = null;
+        interfaces.APInterface ap[] = new interfaces.APInterface[auxiliary.Heist.MAX_ASSAULT_PARTIES];
         interfaces.MuseumInterface museum = null;
         interfaces.LoggerInterface log = null;
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            log = (LoggerInterface) registry.lookup(RegistryConfig.loggerNameEntry);
+            log = (LoggerInterface) registry.lookup(RegistryConfig.REGISTRY_LOGGER_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating log: " + e.getMessage() + "!");
             System.exit(1);
@@ -62,7 +61,7 @@ public class ThiefClient {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            cs = (CSInterface) registry.lookup(RegistryConfig.CSNameEntry);
+            cs = (CSInterface) registry.lookup(RegistryConfig.REGISTRY_CONCENTRATION_SITE_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating cs: " + e.getMessage() + "!");
             System.exit(1);
@@ -73,7 +72,7 @@ public class ThiefClient {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ccs = (CCSInterface) registry.lookup(RegistryConfig.CCSNameEntry);
+            ccs = (CCSInterface) registry.lookup(RegistryConfig.REGISTRY_COLLECTION_SITE_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ccs: " + e.getMessage() + "!");
             System.exit(1);
@@ -84,7 +83,7 @@ public class ThiefClient {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            museum = (MuseumInterface) registry.lookup(RegistryConfig.museumNameEntry);
+            museum = (MuseumInterface) registry.lookup(RegistryConfig.REGISTRY_MUSEUM_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating museum: " + e.getMessage() + "!");
             System.exit(1);
@@ -95,7 +94,7 @@ public class ThiefClient {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[0] = (APInterface) registry.lookup(RegistryConfig.AP0NameEntry);
+            ap[0] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY0_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap0: " + e.getMessage() + "!");
             System.exit(1);
@@ -106,7 +105,7 @@ public class ThiefClient {
         
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[1] = (APInterface) registry.lookup(RegistryConfig.AP1NameEntry);
+            ap[1] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY1_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap1: " + e.getMessage() + "!");
             System.exit(1);

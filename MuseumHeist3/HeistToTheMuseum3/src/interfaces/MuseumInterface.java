@@ -6,6 +6,7 @@
 package interfaces;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -13,6 +14,8 @@ import java.rmi.Remote;
  */
 public interface MuseumInterface extends MuseumIAssaultThief, Remote{
 
-    public Object getRoom(int roomID);
+    public Object getRoom(int roomID) throws RemoteException;
+
+    public int getDistRoom(int roomID) throws RemoteException;
     
 }

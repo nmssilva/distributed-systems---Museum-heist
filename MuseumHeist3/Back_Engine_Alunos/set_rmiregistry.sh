@@ -1,2 +1,2 @@
-rmiregistry -J-Djava.rmi.server.codebase="http://ruib-laptop1.ieeta.pt/ruib/classes/"\
+rmiregistry -J-Djava.rmi.server.codebase="localhost/mikael/classes/"\
             -J-Djava.rmi.server.useCodebaseOnly=true $1

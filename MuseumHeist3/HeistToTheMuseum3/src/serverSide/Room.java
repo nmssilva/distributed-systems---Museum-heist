@@ -6,12 +6,13 @@
 package serverSide;
 
 import static auxiliary.Heist.*;
+import java.io.Serializable;
 
 /**
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class Room {
+public class Room implements Serializable {
 
     int id;
     int nPaintings;
@@ -21,10 +22,6 @@ public class Room {
         this.id = id;
         nPaintings = (int) (Math.random() * (MAX_PAINTINGS - MIN_PAINTINGS) + 1) + MIN_PAINTINGS;
         distOutside = (int) (Math.random() * (MAX_DIST_OUTSIDE - MIN_DIST_OUTSIDE) + 1) + MIN_DIST_OUTSIDE;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getNPaintings() {

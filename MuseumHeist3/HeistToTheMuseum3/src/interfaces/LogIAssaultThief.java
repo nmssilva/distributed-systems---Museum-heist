@@ -5,14 +5,17 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface LogIAssaultThief {
+public interface LogIAssaultThief extends Remote{
 
-    public void reportStatus();
+    public void reportStatus() throws RemoteException;
 
-    public void setAssaultThief(int thiefID, int status, int maxDisp, int partyID, int hasCanvas);
+    public void setAssaultThief(int thiefID, int status, int maxDisp, int partyID, int hasCanvas) throws RemoteException;
     
 }

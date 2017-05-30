@@ -33,6 +33,7 @@ public class Logger implements LoggerInterface{
      *
      */
     public Logger(){
+        fileName = "logger.log";
         log = new TextFile();
         assaultThiefStatus = new String[THIEVES_NUMBER];
         assaultThiefMaxDisp = new int[THIEVES_NUMBER];

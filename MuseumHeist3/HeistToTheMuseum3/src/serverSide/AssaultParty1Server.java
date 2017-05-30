@@ -3,6 +3,7 @@ package serverSide;
 import serverSide.AssaultParty;
 import interfaces.RegisterInterface;
 import interfaces.APInterface;
+import interfaces.LoggerInterface;
 import interfaces.MuseumInterface;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
@@ -10,20 +11,19 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 public class AssaultParty1Server {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         // nome do sistema onde está localizado o serviço de registos RMI
         String rmiRegHostName;
 
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
         /* instanciação e instalação do gestor de segurança */
         if (System.getSecurityManager() == null) {
@@ -31,11 +31,12 @@ public class AssaultParty1Server {
         }
 
         APInterface api = null;
-        MuseumInterface museum = null;
-
+               MuseumInterface museum = null;
+        LoggerInterface log = null;
+        
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            museum = (MuseumInterface) registry.lookup(RegistryConfig.museumNameEntry);
+            museum = (MuseumInterface) registry.lookup(RegistryConfig.REGISTRY_MUSEUM_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating museum: " + e.getMessage() + "!");
             System.exit(1);
@@ -44,20 +45,31 @@ public class AssaultParty1Server {
             System.exit(1);
         }
         
-        AssaultParty ap = new AssaultParty(1, museum);
+        try {
+            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+            log = (LoggerInterface) registry.lookup(RegistryConfig.REGISTRY_LOGGER_NAME);
+        } catch (RemoteException e) {
+            System.out.println("Exception thrown while locating museum: " + e.getMessage() + "!");
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println("museum is not registered: " + e.getMessage() + "!");
+            System.exit(1);
+        }
+        
+        AssaultParty ap = new AssaultParty(1, museum, log);
         
         try {
-            api = (APInterface) UnicastRemoteObject.exportObject(ap, rc.ap1Port());
+            api = (APInterface) UnicastRemoteObject.exportObject(ap, RegistryConfig.REGISTRY_ASSAULT_PARTY_PORT+1);
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o bench: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para o AP1: " + e.getMessage());
             System.exit(1);
         }
 
-        System.out.println("O stub para o bench foi gerado!");
+        System.out.println("O stub para o AP1 foi gerado!");
 
         /* seu registo no serviço de registo RMI */
-        String nameEntryBase = RegistryConfig.registerHandler;
-        String nameEntryObject = RegistryConfig.AP1NameEntry;
+        String nameEntryBase = RegistryConfig.RMI_REGISTER_NAME;
+        String nameEntryObject = RegistryConfig.REGISTRY_ASSAULT_PARTY1_NAME;
         Registry registry = null;
         RegisterInterface reg = null;
 

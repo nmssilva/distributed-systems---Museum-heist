@@ -12,7 +12,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import serverSide.ConcentrationSite;
-import structures.RegistryConfig;
+import registry.RegistryConfig;
 
 public class ConcentrationSiteServer {
 
@@ -33,10 +33,9 @@ public class ConcentrationSiteServer {
 
         // port de escuta do serviço
         int rmiRegPortNumb;
-
-        RegistryConfig rc = new RegistryConfig("config.ini");
-        rmiRegHostName = rc.registryHost();
-        rmiRegPortNumb = rc.registryPort();
+        
+        rmiRegHostName = RegistryConfig.RMI_REGISTRY_HOSTNAME;
+        rmiRegPortNumb = RegistryConfig.RMI_REGISTRY_PORT;
 
         /* instanciação e instalação do gestor de segurança */
         if (System.getSecurityManager() == null) {
@@ -49,7 +48,7 @@ public class ConcentrationSiteServer {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ccs = (CCSInterface) registry.lookup(RegistryConfig.CCSNameEntry);
+            ccs = (CCSInterface) registry.lookup(RegistryConfig.REGISTRY_COLLECTION_SITE_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ccs: " + e.getMessage() + "!");
             System.exit(1);
@@ -60,7 +59,7 @@ public class ConcentrationSiteServer {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[0] = (APInterface) registry.lookup(RegistryConfig.AP0NameEntry);
+            ap[0] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY0_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap0: " + e.getMessage() + "!");
             System.exit(1);
@@ -71,7 +70,7 @@ public class ConcentrationSiteServer {
 
         try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            ap[1] = (APInterface) registry.lookup(RegistryConfig.AP1NameEntry);
+            ap[1] = (APInterface) registry.lookup(RegistryConfig.REGISTRY_ASSAULT_PARTY1_NAME);
         } catch (RemoteException e) {
             System.out.println("Exception thrown while locating ap1: " + e.getMessage() + "!");
             System.exit(1);
@@ -82,17 +81,17 @@ public class ConcentrationSiteServer {
 
         ConcentrationSite cs = new ConcentrationSite(ccs, ap);
         try {
-            csi = (CSInterface) UnicastRemoteObject.exportObject(cs, rc.csPort());
+            csi = (CSInterface) UnicastRemoteObject.exportObject(cs, RegistryConfig.REGISTRY_CONCENTRATION_SITE_PORT);
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o bench: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para o CS: " + e.getMessage());
             System.exit(1);
         }
 
-        System.out.println("O stub para o bench foi gerado!");
+        System.out.println("O stub para o CS foi gerado!");
 
         /* seu registo no serviço de registo RMI */
-        String nameEntryBase = RegistryConfig.registerHandler;
-        String nameEntryObject = RegistryConfig.CSNameEntry;
+        String nameEntryBase = RegistryConfig.RMI_REGISTER_NAME;
+        String nameEntryObject = RegistryConfig.REGISTRY_CONCENTRATION_SITE_NAME;
         Registry registry = null;
         RegisterInterface reg = null;
 

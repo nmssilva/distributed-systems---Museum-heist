@@ -1,0 +1,34 @@
+O stub para o logger foi gerado!
+O registo RMI foi criado!
+O logger foi registado!
+Museum: get registry
+Museum: generate stub
+O stub para o museum foi gerado!
+O registo RMI foi criado!
+O museum foi registado!
+O stub para o AP0 foi gerado!
+O registo RMI foi criado!
+O AP0 foi registado!
+O stub para o AP1 foi gerado!
+O registo RMI foi criado!
+O AP1 foi registado!
+O stub para o CCS foi gerado!
+O registo RMI foi criado!
+O CCS foi registado!
+O stub para o CS foi gerado!
+O registo RMI foi criado!
+O CS foi registado!
+Excepção na geração do stub para o logger: Port already in use: 22356; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+Museum: get registry
+Museum: generate stub
+Excepção na geração do stub para o museum: Port already in use: 22355; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+Excepção na geração do stub para o AP0: Port already in use: 22357; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+Excepção na geração do stub para o AP1: Port already in use: 22358; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+Excepção na geração do stub para o CCS: Port already in use: 22354; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+Excepção na geração do stub para o CS: Port already in use: 22353; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)

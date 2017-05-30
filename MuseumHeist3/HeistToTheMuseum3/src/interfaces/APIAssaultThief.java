@@ -5,18 +5,21 @@
  */
 package interfaces;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nuno Silva
  */
-public interface APIAssaultThief {
+public interface APIAssaultThief  extends Remote{
 
-    public void crawlIn(int thiefID);
+    public void crawlIn(int thiefID) throws RemoteException;
 
-    public int getRoomID();
+    public int getRoomID() throws RemoteException;
 
-    public void reverseDirection(int thiefID);
+    public void reverseDirection(int thiefID) throws RemoteException;
 
-    public void crawlOut(int thiefID);
+    public void crawlOut(int thiefID) throws RemoteException;
     
 }

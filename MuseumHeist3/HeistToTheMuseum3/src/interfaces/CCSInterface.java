@@ -6,6 +6,7 @@
 package interfaces;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -13,12 +14,12 @@ import java.rmi.Remote;
  */
 public interface CCSInterface extends CCSIAssaultThief, CCSIMasterThief, Remote{
     
-    public void isReady();
+    public void isReady() throws RemoteException;
 
-    public int nextEmptyRoom();
+    public int nextEmptyRoom() throws RemoteException;
 
-    public int getNextParty();
+    public int getNextParty() throws RemoteException;
 
-    public int getNextRoom();
+    public int getNextRoom() throws RemoteException;
     
 }
