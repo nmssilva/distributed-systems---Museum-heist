@@ -1,7 +1,6 @@
 package clientSide;
 
 import static auxiliary.Heist.*;
-import clientSide.AssaultThief;
 import genclass.*;
 import interfaces.APInterface;
 import interfaces.CCSInterface;

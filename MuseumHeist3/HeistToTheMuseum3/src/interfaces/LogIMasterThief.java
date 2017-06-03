@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,7 +14,11 @@ import java.rmi.RemoteException;
  * @author Nuno Silva
  */
 public interface LogIMasterThief  extends Remote{
+    
+    public void reportInitialStatus() throws RemoteException;
 
-    public void setMasterThief(int status) throws RemoteException;
+    public VectorTimestamp setMasterThief(int status, VectorTimestamp vt) throws RemoteException;
+
+    public void reportFinalStatus() throws RemoteException;
     
 }

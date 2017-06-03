@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package serverSide;
+package auxiliary;
 
 import static auxiliary.Heist.*;
 import java.io.Serializable;
@@ -16,7 +16,7 @@ public class Room implements Serializable {
 
     int id;
     int nPaintings;
-    int distOutside;
+    public int distOutside;
 
     public Room(int id) {
         this.id = id;

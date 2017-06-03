@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,10 +15,10 @@ import java.rmi.RemoteException;
  */
 public interface CSIMasterThief  extends Remote{
 
-    public int getnAssaultThievesCS() throws RemoteException;
+    public VectorTimestamp getnAssaultThievesCS( VectorTimestamp vt) throws RemoteException;
 
-    public void startOfOperations() throws RemoteException;
+    public VectorTimestamp startOfOperations( VectorTimestamp vt) throws RemoteException;
 
-    public void prepareAssaultParty() throws RemoteException;
+    public VectorTimestamp prepareAssaultParty( VectorTimestamp vt) throws RemoteException;
     
 }

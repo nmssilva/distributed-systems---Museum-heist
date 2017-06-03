@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,16 +15,16 @@ import java.rmi.RemoteException;
  */
 public interface APInterface extends APIAssaultThief, Remote{
 
-    public int[] getPartyThieves() throws RemoteException;
+    public VectorTimestamp getPartyThieves(VectorTimestamp vt) throws RemoteException; // int[]
 
-    public boolean addThief(int id, int maxdisp) throws RemoteException;
+    public VectorTimestamp addThief(int id, int maxdisp,VectorTimestamp vt) throws RemoteException; //boolean
 
-    public void setFirst() throws RemoteException;
+    public VectorTimestamp setFirst(VectorTimestamp vt) throws RemoteException;
 
-    public void setRoom(int roomID) throws RemoteException;
+    public VectorTimestamp setRoom(int roomID,VectorTimestamp vt) throws RemoteException;
 
-    public boolean isEmptyAP() throws RemoteException;
+    public VectorTimestamp isEmptyAP(VectorTimestamp vt) throws RemoteException; //boolean
 
-    public void setPartyThieves(int i, int i0) throws RemoteException;
+    public VectorTimestamp setPartyThieves(int i, int i0,VectorTimestamp vt) throws RemoteException;
     
 }

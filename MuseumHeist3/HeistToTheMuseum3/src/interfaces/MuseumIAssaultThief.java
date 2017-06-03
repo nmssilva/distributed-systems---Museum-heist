@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,6 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface MuseumIAssaultThief extends Remote {
 
-    public int rollACanvas(int roomID) throws RemoteException;
+    public VectorTimestamp rollACanvas(int roomID,  VectorTimestamp vt) throws RemoteException;
     
 }

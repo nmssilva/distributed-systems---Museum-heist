@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,14 +15,14 @@ import java.rmi.RemoteException;
  */
 public interface CCSIMasterThief  extends Remote{
 
-    public int appraiseSit(int nAssaultThievesCS) throws RemoteException;
+    public VectorTimestamp appraiseSit(int nAssaultThievesCS, VectorTimestamp vt) throws RemoteException;
 
-    public void sendAssaultParty() throws RemoteException;
+    public VectorTimestamp sendAssaultParty( VectorTimestamp vt) throws RemoteException;
 
-    public void takeARest() throws RemoteException;
+    public VectorTimestamp takeARest( VectorTimestamp vt) throws RemoteException;
 
-    public void collectCanvas() throws RemoteException;
+    public VectorTimestamp collectCanvas( VectorTimestamp vt) throws RemoteException;
 
-    public void sumUpResults() throws RemoteException;
+    public VectorTimestamp sumUpResults( VectorTimestamp vt) throws RemoteException;
     
 }

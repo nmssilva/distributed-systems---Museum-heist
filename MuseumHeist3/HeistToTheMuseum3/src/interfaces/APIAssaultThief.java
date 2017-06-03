@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,12 +15,12 @@ import java.rmi.RemoteException;
  */
 public interface APIAssaultThief  extends Remote{
 
-    public void crawlIn(int thiefID) throws RemoteException;
+    public VectorTimestamp crawlIn(int thiefID,VectorTimestamp vt) throws RemoteException;
 
-    public int getRoomID() throws RemoteException;
+    public VectorTimestamp getRoomID(VectorTimestamp vt) throws RemoteException;
 
-    public void reverseDirection(int thiefID) throws RemoteException;
+    public VectorTimestamp reverseDirection(int thiefID,VectorTimestamp vt) throws RemoteException;
 
-    public void crawlOut(int thiefID) throws RemoteException;
+    public VectorTimestamp crawlOut(int thiefID,VectorTimestamp vt) throws RemoteException;
     
 }

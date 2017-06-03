@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -17,9 +18,9 @@ public interface LoggerInterface extends LogIAssaultThief, LogIMasterThief, Remo
     
     public void signalShutdown() throws RemoteException;
 
-    public void setAssaultParty(int id, int[] partyThieves, int[] partyThievesPos, int roomID) throws RemoteException;
+    public VectorTimestamp setAssaultParty(int id, int[] partyThieves, int[] partyThievesPos, int roomID,VectorTimestamp vt) throws RemoteException;
 
-    public void setMuseum(int[] roomsdistance, int[] roomspaintings) throws RemoteException;
+    public VectorTimestamp setMuseum(int[] roomsdistance, int[] roomspaintings,VectorTimestamp vt) throws RemoteException;
     
     
 }

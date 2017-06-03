@@ -1,6 +1,8 @@
 package serverSide;
 
+import auxiliary.Heist;
 import static auxiliary.Heist.*;
+import auxiliary.VectorTimestamp;
 import interfaces.APInterface;
 import interfaces.LoggerInterface;
 import interfaces.MuseumInterface;
@@ -13,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Nuno Silva 72708, Pedro Coelho 59517
  */
-public class AssaultParty implements APInterface{
+public class AssaultParty implements APInterface {
 
     private int id;                         // ID of the assault party
     private int roomID;                     // ID of room assigned
@@ -24,16 +26,17 @@ public class AssaultParty implements APInterface{
     private boolean[] inRoom;               // Elements in room
     private int nThievesRoom;               // Number of assault thieves in room
     private int reverse;                    // Counter to inform all elements are Ready to crawlOut()
-    
+
     private MuseumInterface museum;
     private LoggerInterface log;
 
+    private VectorTimestamp clocks;
 
     public AssaultParty(int id, MuseumInterface museum, LoggerInterface log) throws RemoteException {
-        
+
         this.museum = museum;
         this.log = log;
-        
+
         this.id = id;
         roomID = -1;
         partyThieves = new int[MAX_ASSAULT_PARTY_THIEVES];
@@ -44,6 +47,8 @@ public class AssaultParty implements APInterface{
         nThievesRoom = 0;
         reverse = 0;
 
+        this.clocks = new VectorTimestamp(Heist.THIEVES_NUMBER + 1, 0);
+
         // Empty assault party
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             partyThieves[i] = -1;
@@ -53,7 +58,7 @@ public class AssaultParty implements APInterface{
             inRoom[i] = false;
         }
 
-        logSetAp();
+        logSetAp(this.clocks.clone());
 
     }
 
@@ -61,13 +66,15 @@ public class AssaultParty implements APInterface{
      *
      * Simulates the movement crawlIn of the Assault Thief current thread.
      *
-     *
      * @param thiefID ID of Assault Thief
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void crawlIn(int thiefID) {
+    public synchronized VectorTimestamp crawlIn(int thiefID, VectorTimestamp vt) {
+        this.clocks.update(vt);
         try {
-            while (partyThievesPos[getIndexParty(thiefID)] != getDistOutsideRoom()) {
+            while (partyThievesPos[getIndexParty(thiefID)] != getDistOutsideRoom(this.clocks.clone()).getInteger()) {
                 while (!myTurn[getIndexParty(thiefID)]) {
                     try {
                         wait();
@@ -75,12 +82,12 @@ public class AssaultParty implements APInterface{
                         //System.out.println(ex.getMessage());
                     }
                 }
-                
+
                 int myIndex = getIndexParty(thiefID);
                 int myPos = partyThievesPos[myIndex];
                 int myAgility = partyThievesMaxDisp[myIndex];
                 int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
-                
+
                 ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
                 int count = 0;
                 int i = 0;
@@ -90,9 +97,9 @@ public class AssaultParty implements APInterface{
                         count++;
                     }
                 }
-                
+
                 Arrays.sort(assaultThievesPos);
-                
+
                 // Predict maximum displacement
                 for (i = myAgility; i > 0; i--) {
                     boolean BadToGo = false;
@@ -101,9 +108,9 @@ public class AssaultParty implements APInterface{
                     posAfterMove[0] = myPos + i;
                     System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
                     Arrays.sort(posAfterMove);
-                    
+
                     for (int j = 0; j < posAfterMove.length - 1; j++) {
-                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()))) { //ultima condicao deve ser alterada
+                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom(this.clocks.clone()).getInteger()))) { //ultima condicao deve ser alterada
                             BadToGo = true;
                             break;
                         }
@@ -111,18 +118,18 @@ public class AssaultParty implements APInterface{
 
                     // Set new position
                     if ((!BadToGo)) {
-                        if (myPos + i >= getDistOutsideRoom()) {
-                            partyThievesPos[myIndex] = getDistOutsideRoom();
+                        if (myPos + i >= getDistOutsideRoom(this.clocks.clone()).getInteger()) {
+                            partyThievesPos[myIndex] = getDistOutsideRoom(this.clocks.clone()).getInteger();
                             nThievesRoom++;
                             inRoom[myIndex] = true;
                         } else {
                             partyThievesPos[myIndex] = myPos + i;
                         }
-                        
+
                         break;
                     }
                 }
-                
+
                 // Check if it is possible to move even further
                 boolean canMoveAgain = false;
                 if (!(myPos == partyThievesPos[myIndex] || inRoom[myIndex])) {
@@ -132,14 +139,14 @@ public class AssaultParty implements APInterface{
                         posAfterMove[0] = myPos + i;
                         System.arraycopy(assaultThievesPos, 0, posAfterMove, 1, assaultThievesPos.length);
                         Arrays.sort(posAfterMove);
-                        
+
                         for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
-                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
+                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != 0 && posAfterMove[j + 1] != getDistOutsideRoom(this.clocks.clone()).getInteger()) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) { //ultima condicao deve ser alterada
                                 BadToGo = true;
                                 break;
                             }
                         }
-                        
+
                         if ((!BadToGo)) {
                             canMoveAgain = true;
                             break;
@@ -148,25 +155,25 @@ public class AssaultParty implements APInterface{
                     // Didn't get to room or can't walk further
                 } else if (!canMoveAgain) {
                     myTurn[myIndex] = false;
-                    
+
                     int min = ROOM_MAX_DISTANCE;
                     int minIndex = -1;
-                    
+
                     for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
                         if (min >= partyThievesPos[x]) {
                             min = partyThievesPos[x];
                             minIndex = x;
                         }
                     }
-                    
+
                     if (minIndex == myIndex) {
                         boolean changed = true;
                         while (changed) {
                             changed = false;
                             for (int x = 0; x < MAX_ASSAULT_PARTY_THIEVES; x++) {
-                                
+
                                 if (partyThievesPos[minIndex] + 1 == partyThievesPos[x] && partyThievesMaxDisp[minIndex] == 2) {
-                                    if (partyThievesPos[minIndex] + 1 == getDistOutsideRoom()) {
+                                    if (partyThievesPos[minIndex] + 1 == getDistOutsideRoom(this.clocks.clone()).getInteger()) {
                                         continue;
                                     }
                                     minIndex = x;
@@ -174,13 +181,13 @@ public class AssaultParty implements APInterface{
                                 }
                             }
                         }
-                        
+
                     }
                     myTurn[minIndex] = true;
-                    
+
                     notifyAll();
                 }
-                
+
                 ////System.out.println("Turns: " + Arrays.toString(myTurn));
             }
         } catch (RemoteException ex) {
@@ -188,10 +195,13 @@ public class AssaultParty implements APInterface{
         }
 
         try {
-            logSetAp();
+            logSetAp(this.clocks.clone());
         } catch (RemoteException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return this.clocks.clone();
+
     }
 
     /**
@@ -201,9 +211,14 @@ public class AssaultParty implements APInterface{
      * Party executes this action.
      *
      * @param thiefID Id of Assault Thief
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void reverseDirection(int thiefID) {
+    public synchronized VectorTimestamp reverseDirection(int thiefID, VectorTimestamp vt) {
+
+        this.clocks.update(vt);
+
         myTurn[getIndexParty(thiefID)] = false;
         inRoom[getIndexParty(thiefID)] = false;
 
@@ -223,6 +238,8 @@ public class AssaultParty implements APInterface{
         }
 
         notifyAll();
+
+        return this.clocks.clone();
     }
 
     /**
@@ -230,9 +247,12 @@ public class AssaultParty implements APInterface{
      * Simulates the movement crawlOut of the Assault Thief current thread.
      *
      * @param thiefID ID of Assault Thief
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void crawlOut(int thiefID) {
+    public synchronized VectorTimestamp crawlOut(int thiefID, VectorTimestamp vt) {
+        this.clocks.update(vt);
         while (partyThievesPos[getIndexParty(thiefID)] != 0) {
             while (!myTurn[getIndexParty(thiefID)]) {
                 try {
@@ -247,7 +267,7 @@ public class AssaultParty implements APInterface{
             int myAgility = partyThievesMaxDisp[myIndex];
             int[] assaultThievesPos = new int[MAX_ASSAULT_PARTY_THIEVES - 1];
 
-            ////System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
+            //System.out.println("Thief: " + thiefID + " | Position: " + myPos + " | Disp: " + myAgility + " Party positions: " + Arrays.toString(partyThievesPos));
             int count = 0;
             int i = 0;
             for (i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
@@ -270,7 +290,7 @@ public class AssaultParty implements APInterface{
 
                 for (int j = 0; j < posAfterMove.length - 1; j++) {
                     try {
-                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                        if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom(this.clocks.clone()).getInteger() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
                             tooFarOrOcupada = true;
                             break;
                         }
@@ -306,7 +326,7 @@ public class AssaultParty implements APInterface{
 
                     for (int j = 0; j < posAfterMove.length - 1 && posAfterMove[j] != 0; j++) {
                         try {
-                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
+                            if ((posAfterMove[j + 1] - posAfterMove[j] > THIEVES_MAX_DISTANCE) || (posAfterMove[j + 1] - posAfterMove[j] == 0 && (posAfterMove[j + 1] != getDistOutsideRoom(this.clocks.clone()).getInteger() && posAfterMove[j + 1] != 0) && !(nThievesRoom == MAX_ASSAULT_PARTY_THIEVES - 1))) {
                                 tooFarOrOcupada = true;
                                 break;
                             }
@@ -359,10 +379,11 @@ public class AssaultParty implements APInterface{
         }
 
         try {
-            logSetAp();
+            logSetAp(this.clocks.clone());
         } catch (RemoteException ex) {
             Logger.getLogger(AssaultParty.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return this.clocks.clone();
     }
 
     /**
@@ -370,23 +391,28 @@ public class AssaultParty implements APInterface{
      *
      * @param thiefID ID of Assault Thief
      * @param maxDisp Maximum Displacement of Assault Thief
+     * @param vt VectorTimestamp
      * @return True, if the operation was successful or false if otherwise
+     * @throws java.rmi.RemoteException
      */
     @Override
-    public synchronized boolean addThief(int thiefID, int maxDisp) throws RemoteException {
+    public synchronized VectorTimestamp addThief(int thiefID, int maxDisp, VectorTimestamp vt) throws RemoteException {
+        this.clocks.update(vt);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             if (partyThieves[i] == -1) {
                 partyThieves[i] = thiefID;
                 partyThievesPos[i] = 0;
                 partyThievesMaxDisp[i] = maxDisp;
                 ////System.out.println("Added " + thiefID + " with disp " + maxDisp);
-                return true;
+                this.clocks.setBool(true);
+                return this.clocks.clone();
             }
         }
 
-        logSetAp();
+        logSetAp(this.clocks.clone());
 
-        return false;
+        this.clocks.setBool(false);
+        return this.clocks.clone();
     }
 
     /**
@@ -404,16 +430,20 @@ public class AssaultParty implements APInterface{
             }
         }
 
-        return -1;
+        return thiefID;
     }
 
     /**
      * Set the turn to crawl of the element of index 0 to true.
      *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public void setFirst() {
+    public VectorTimestamp setFirst(VectorTimestamp vt) {
+        this.clocks.update(vt);
         myTurn[0] = true;
+        return this.clocks.clone();
     }
 
     /**
@@ -421,20 +451,27 @@ public class AssaultParty implements APInterface{
      *
      * @param i Index
      * @param value Value to set
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public void setPartyThieves(int i, int value) {
+    public VectorTimestamp setPartyThieves(int i, int value, VectorTimestamp vt) {
+        this.clocks.update(vt);
         partyThieves[i] = value;
+        return this.clocks.clone();
     }
 
     /**
      * Get Assault Thieves ID of the current Assault Party.
      *
+     * @param vt VectorTimestamp
      * @return Returns array partyThieves ID of the current Assault Party
      */
     @Override
-    public int[] getPartyThieves() {
-        return partyThieves;
+    public VectorTimestamp getPartyThieves(VectorTimestamp vt) {
+        this.clocks.update(vt);
+        this.clocks.setArray(partyThieves);
+        return this.clocks.clone();
     }
 
     /**
@@ -446,15 +483,24 @@ public class AssaultParty implements APInterface{
         return partyThievesPos;
     }
 
-    public boolean isEmptyAP() {
+    /**
+     *
+     * @param vt
+     * @return
+     */
+    @Override
+    public VectorTimestamp isEmptyAP(VectorTimestamp vt) {
 
+        this.clocks.update(vt);
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             if (partyThieves[i] != -1) {
-                return false;
+                this.clocks.setBool(false);
+                return this.clocks.clone();
             }
         }
 
-        return true;
+        this.clocks.setBool(true);
+        return this.clocks.clone();
     }
 
     /**
@@ -471,20 +517,28 @@ public class AssaultParty implements APInterface{
      * Set a roomID to this Assault Party.
      *
      * @param roomID ID of Room
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public void setRoom(int roomID) {
+    public VectorTimestamp setRoom(int roomID, VectorTimestamp vt) {
+        this.clocks.update(vt);
         this.roomID = roomID;
+        this.clocks.setInteger(roomID);
+        return this.clocks.clone();
     }
 
     /**
      * Get the roomID assigned to the current Assault Party.
      *
+     * @param vt VectorTimestamp
      * @return Returns roomIDy
      */
     @Override
-    public int getRoomID() {
-        return roomID;
+    public VectorTimestamp getRoomID(VectorTimestamp vt) {
+        this.clocks.update(vt);
+        this.clocks.setInteger(this.roomID);
+        return this.clocks.clone();
     }
 
     /**
@@ -494,11 +548,15 @@ public class AssaultParty implements APInterface{
      * @return Returns distance from the Outside to the Room assigned to this
      * Assault Party
      */
-    public int getDistOutsideRoom() throws RemoteException {
-        return this.museum.getDistRoom(this.roomID);
+    public VectorTimestamp getDistOutsideRoom(VectorTimestamp vt) throws RemoteException {
+        this.clocks.update(vt);
+        this.clocks.setInteger(this.museum.getDistRoom(this.roomID, this.clocks.clone()).getInteger());
+        return this.clocks.clone();
     }
 
-    private void logSetAp() throws RemoteException {        
-        this.log.setAssaultParty(this.id, this.partyThieves, this.partyThievesPos, this.roomID);
+    private VectorTimestamp logSetAp(VectorTimestamp vt) throws RemoteException {
+        this.clocks.update(vt);
+        this.log.setAssaultParty(this.id, this.partyThieves, this.partyThievesPos, this.roomID, this.clocks.clone());
+        return this.clocks.clone();
     }
 }

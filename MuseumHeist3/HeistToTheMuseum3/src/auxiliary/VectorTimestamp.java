@@ -17,6 +17,10 @@ public class VectorTimestamp implements Cloneable, Serializable{
     
     private int ts[];
     private int localindex;
+    private int Integer;
+    private int[] Array;
+    private boolean bool;
+    private Room room;
     
     /**
      * Constructor to create an object of type VectorTimestamp
@@ -74,4 +78,39 @@ public class VectorTimestamp implements Cloneable, Serializable{
         copy.ts = ts.clone();
         return copy;
     }
+
+    public int getInteger() {
+        return Integer;
+    }
+
+    public int[] getArray() {
+        return Array;
+    }
+
+    public boolean getBool() {
+        return bool;
+    }
+
+    public void setInteger(int Integer) {
+        this.Integer = Integer;
+    }
+
+    public void setArray(int[] Array) {
+        this.Array = Array;
+    }
+
+    public void setBool(boolean bool) {
+        this.bool = bool;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+    
+    
+    
 }

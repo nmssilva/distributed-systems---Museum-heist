@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,8 +15,8 @@ import java.rmi.RemoteException;
  */
 public interface CCSIAssaultThief  extends Remote{
 
-    public void prepareExcursion()  throws RemoteException;
+    public VectorTimestamp prepareExcursion( VectorTimestamp vt)  throws RemoteException;
 
-    public boolean handCanvas(int thiefID, int partyID, int hasCanvas)  throws RemoteException;
+    public VectorTimestamp handCanvas(int thiefID, int partyID, int hasCanvas, VectorTimestamp vt)  throws RemoteException;
     
 }

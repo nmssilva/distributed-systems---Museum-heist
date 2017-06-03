@@ -1,9 +1,12 @@
 package serverSide;
 
+import auxiliary.Heist;
 import static auxiliary.Heist.*;
+import auxiliary.VectorTimestamp;
 import genclass.*;
 import interfaces.LoggerInterface;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.stream.IntStream;
 
 /**
@@ -26,6 +29,8 @@ public class Logger implements LoggerInterface{
     private int[][] assparties;
     private int[] asspartiesRoomID;
     private String lastLine, lastLine2;
+    
+    private VectorTimestamp clocks;
 
     private int nIter; // ver o que podemos fazer
 
@@ -33,7 +38,8 @@ public class Logger implements LoggerInterface{
      *
      */
     public Logger(){
-        fileName = "logger.log";
+        Date date = new Date();
+        fileName = date.toString()+".log";
         log = new TextFile();
         assaultThiefStatus = new String[THIEVES_NUMBER];
         assaultThiefMaxDisp = new int[THIEVES_NUMBER];
@@ -43,6 +49,8 @@ public class Logger implements LoggerInterface{
         //rooms = new Room[ROOMS_NUMBER];
         lastLine = "";
         lastLine2 = "";
+
+        this.clocks = new VectorTimestamp(Heist.THIEVES_NUMBER+1, 0);
 
         assparties = new int[2][MAX_ASSAULT_PARTY_THIEVES];
         for (int i = 0; i < 2; i++) {
@@ -75,19 +83,30 @@ public class Logger implements LoggerInterface{
      * @param elements Assault Party int array of thieves IDs
      * @param positions Assault Party int array of thieves positions
      * @param roomID Assault Party designated room ID
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
-    public void setAssaultParty(int id, int[] elements, int[] positions, int roomID) {
+    @Override
+    public VectorTimestamp setAssaultParty(int id, int[] elements, int[] positions, int roomID, VectorTimestamp vt) {
+        this.clocks.update(vt);
+        
         assparties[id] = elements;
         asspartiesPos[id] = positions;
         asspartiesRoomID[id] = roomID;
+        
+        return this.clocks.clone();
     }
 
     /**
      * Set the Master Thief in the General Repository of Information.
      *
      * @param status Status of Master Thief to be set
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
-    public void setMasterThief(int status) {
+    @Override
+    public VectorTimestamp setMasterThief(int status, VectorTimestamp vt) {
+        this.clocks.update(vt);
         switch (status) {
             case 1000:
                 masterThiefStatus = "PLAN";
@@ -106,6 +125,7 @@ public class Logger implements LoggerInterface{
                 break;
 
         }
+        return this.clocks.clone();
     }
 
     /**
@@ -116,8 +136,14 @@ public class Logger implements LoggerInterface{
      * @param maxDisp Maximum Displacement of Assault Thief
      * @param partyID Party ID of Assault Thief
      * @param hasCanvas 1 if Assault Thief has canvas, 0 if otherwise
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
-    public void setAssaultThief(int thiefID, int status, int maxDisp, int partyID, int hasCanvas) {
+    @Override
+    public VectorTimestamp setAssaultThief(int thiefID, int status, int maxDisp, int partyID, int hasCanvas, VectorTimestamp vt) {
+        
+        this.clocks.update(vt);
+        
         switch (status) {
             case 1000:
                 assaultThiefStatus[thiefID] = "OUTS";
@@ -149,6 +175,8 @@ public class Logger implements LoggerInterface{
             assaultThiefSituation[thiefID] = "" + partyID;
         }
         this.hasCanvas[thiefID] = hasCanvas;
+        
+        return this.clocks.clone();
     }
 
     /**
@@ -156,14 +184,19 @@ public class Logger implements LoggerInterface{
      *
      * @param roomsd Rooms Distances Array
      * @param roomsp Rooms Number of Paintings Array
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
-    public void setMuseum(int[] roomsd, int[] roomsp) {
+    @Override
+    public VectorTimestamp setMuseum(int[] roomsd, int[] roomsp, VectorTimestamp vt) {
+        this.clocks.update(vt);
         this.roomsdistance = roomsd;
         this.roomspaintings = roomsp;
         int p = IntStream.of(roomsp).sum();
         if (p > this.nPaintings) {
             this.nPaintings = p;
         }
+        return this.clocks.clone();
     }
 
     /**
@@ -171,7 +204,6 @@ public class Logger implements LoggerInterface{
      * changes to the main attributes of the Heist.
      *
      * @param fileName Logger File Name
-     * @param nIter Number of Iterations
      */
     public synchronized void setFileName(String fileName, int nIter) {
         if ((fileName != null) && !("".equals(fileName))) {
@@ -181,21 +213,22 @@ public class Logger implements LoggerInterface{
             this.nIter = nIter;
         }
         reportInitialStatus();
-        reportStatus();
+        reportStatus(this.clocks.clone());
     }
 
     /**
      * Log the initial status of the Heist.
      *
      */
+    @Override
     public void reportInitialStatus() {
         if (!log.openForWriting(".", fileName)) {
             GenericIO.writelnString("2 A operação de criação do ficheiro " + fileName + " falhou!");
             System.exit(1);
         }
         log.writelnString("                             Heist to the Museum - Description of the internal state\n\n");
-        log.writelnString("MstT   Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6");
-        log.writelnString("Stat  Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD");
+        log.writelnString("MstT   Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6                VCk");
+        log.writelnString("Stat  Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    0   1   2   3   4   5   6");
         log.writelnString("                   Assault party 1                       Assault party 2                       Museum");
         log.writelnString("           Elem 1     Elem 2     Elem 3          Elem 1     Elem 2     Elem 3   Room 1  Room 2  Room 3  Room 4  Room 5");
         log.writelnString("    RId  Id Pos Cv  Id Pos Cv  Id Pos Cv  RId  Id Pos Cv  Id Pos Cv  Id Pos Cv   NP DT   NP DT   NP DT   NP DT   NP DT");
@@ -208,8 +241,12 @@ public class Logger implements LoggerInterface{
     /**
      * Log the status of everything in the General Repository of Information.
      *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
-    public synchronized void reportStatus() {
+    @Override
+    public synchronized VectorTimestamp reportStatus(VectorTimestamp vt) {
+        this.clocks.update(vt);
         boolean dontPrint = false;
         if (!log.openForAppending(".", fileName)) {
             GenericIO.writelnString("3 A operação de criação do ficheiro " + fileName + " falhou!");
@@ -228,6 +265,11 @@ public class Logger implements LoggerInterface{
                 dontPrint = true;
             }
         }
+                
+        for (int i = 0; i < this.clocks.toIntArray().length;i++){
+            line += String.format("%03d   ",  this.clocks.toIntArray()[i]);
+        }        
+        
 
         line2 += "     ";
 
@@ -271,12 +313,14 @@ public class Logger implements LoggerInterface{
             GenericIO.writelnString("A operação de fecho do ficheiro " + fileName + " falhou!");
             System.exit(1);
         }
+        return this.clocks.clone();
     }
 
     /**
      * Log the final status of the Heist.
      *
      */
+    @Override
     public synchronized void reportFinalStatus() {
         if (!log.openForAppending(".", fileName)) {
             GenericIO.writelnString("A operação de criação do ficheiro " + fileName + " falhou!");

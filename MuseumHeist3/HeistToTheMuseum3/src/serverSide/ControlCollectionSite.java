@@ -1,6 +1,8 @@
 package serverSide;
 
+import auxiliary.Heist;
 import static auxiliary.Heist.*;
+import auxiliary.VectorTimestamp;
 import interfaces.APInterface;
 import interfaces.CCSInterface;
 import java.rmi.RemoteException;
@@ -29,13 +31,15 @@ public class ControlCollectionSite implements CCSInterface {
     private boolean rest;
     private boolean ready;
     private boolean collectCanvas;
-    
+
     private APInterface ap[];
 
+    private VectorTimestamp clocks;
+
     public ControlCollectionSite(APInterface ap[]) {
-        
+
         this.ap = ap;
-        
+
         roomOcupied = new boolean[ROOMS_NUMBER];
         emptyRooms = new boolean[ROOMS_NUMBER];
         nPaintings = 0;
@@ -48,6 +52,7 @@ public class ControlCollectionSite implements CCSInterface {
         nextParty = -1;
         partyReady = 0;
 
+        this.clocks = new VectorTimestamp(Heist.THIEVES_NUMBER+1, 0);
 
         for (int i = 0; i < MAX_ASSAULT_PARTY_THIEVES; i++) {
             partiesArrived[i] = 0;
@@ -64,35 +69,41 @@ public class ControlCollectionSite implements CCSInterface {
      * returning the operation.
      *
      * @param nAssaultThievesCS Nuber of Assault Thieves in Concentration site
+     * @param vt VectorTimestamp
      * @return ID of the operation to execute.
      */
     @Override
-    public synchronized int appraiseSit(int nAssaultThievesCS) {
-
+    public synchronized VectorTimestamp appraiseSit(int nAssaultThievesCS, VectorTimestamp vt) {
+        this.clocks.update(vt);
         try {
-            nextParty = nextEmptyParty();
+            nextParty = nextEmptyParty(this.clocks.clone()).getInteger();
         } catch (RemoteException ex) {
             Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
         }
-        nextRoom = nextEmptyRoom();
+        nextRoom = nextEmptyRoom(this.clocks.clone()).getInteger();
 
         ////System.out.println(nextParty + " - " + nextRoom + " - " + nAssaultThievesCS + " - " + nPaintings);
         if (nextParty == -1) {
-            return 0;                                                // takeARest()
+            this.clocks.setInteger(0);
+            return this.clocks.clone();                                                // takeARest()
         }
         if (nAssaultThievesCS >= MAX_ASSAULT_PARTY_THIEVES) {
             if (nextRoom != -1) {
                 ////System.out.println("prepareAssaultParty()");
-                return 1;                                            // prepareAssaultParty()
+                this.clocks.setInteger(1);
+                return this.clocks.clone();                                           // prepareAssaultParty()
             } else if (nAssaultThievesCS != THIEVES_NUMBER) {
                 ////System.out.println("takeARest()");
-                return 0;                                            // takeARest()
+                this.clocks.setInteger(0);
+                return this.clocks.clone();                                            // takeARest()
             } else {
                 ////System.out.println("sumUpResults()");
-                return 2;                                            // sumUpResults()
+                this.clocks.setInteger(2);
+                return this.clocks.clone();                                            // sumUpResults()
             }
         } else {
-            return 0;                                                // takeARest()        
+            this.clocks.setInteger(0);
+            return this.clocks.clone();                                                // takeARest()        
         }
     }
 
@@ -103,15 +114,21 @@ public class ControlCollectionSite implements CCSInterface {
      * Assault Party to execute this operation and blocks until the Master Thief
      * finalizes executing sendAssaultParty. The Assault Thief sets its status
      * to WAITING_FOR_SENT_ASSAULT_PARTY.
+     *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void prepareExcursion() {
+    public synchronized VectorTimestamp prepareExcursion(VectorTimestamp vt) {
+
+        this.clocks.update(vt);
+
         partyReady++;
 
         if (partyReady == MAX_ASSAULT_PARTY_THIEVES) {
             notifyAll();
         }
-
+        
         while (!sentAssaultParty) {
             try {
                 wait();
@@ -126,14 +143,22 @@ public class ControlCollectionSite implements CCSInterface {
             sentAssaultParty = false;
             good = 0;
         }
+
+        return this.clocks.clone();
+
     }
 
     /**
      * Master Thief sends a ready Assault Party. The Master Thief sets it's
      * status to DECIDING_WHAT_TO_DO.
+     *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void sendAssaultParty() {
+    public synchronized VectorTimestamp sendAssaultParty(VectorTimestamp vt) {
+
+        this.clocks.update(vt);
 
         while (partyReady != MAX_ASSAULT_PARTY_THIEVES) {
             try {
@@ -144,20 +169,28 @@ public class ControlCollectionSite implements CCSInterface {
             }
         }
 
-        int roomToSend = nextEmptyRoom();
+        int roomToSend = nextEmptyRoom(this.clocks.clone()).getInteger();
         roomOcupied[roomToSend] = true;
         sentAssaultParty = true;
         partyReady = 0;
 
         notifyAll();
+
+        return this.clocks.clone();
     }
 
     /**
      * Master Thief blocks until an Assault Thief executes handACanvas and
      * AmINeeded. The Master Thief sets its status to WAITING_FOR_GROUP_ARRIVAL.
+     *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void takeARest() {
+    public synchronized VectorTimestamp takeARest(VectorTimestamp vt) {
+
+        this.clocks.update(vt);
+
         rest = true;
 
         notifyAll();
@@ -182,79 +215,100 @@ public class ControlCollectionSite implements CCSInterface {
         collectCanvas = false;
 
         notifyAll();
+
+        return this.clocks.clone();
     }
 
     /**
      * Get next Party available for assignment.
      *
-     * @return nextParty
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp with nextParty
      */
     @Override
-    public int getNextParty() {
-        return nextParty;
+    public VectorTimestamp getNextParty(VectorTimestamp vt) {
+        this.clocks.update(vt);
+        this.clocks.setInteger(nextParty);
+        return this.clocks.clone();
     }
 
     /**
      * Discover next empty Assault Party.
      *
+     * @param vt VectorTimestamp
      * @return the ID of the Assault Party or -1 if there is no empty Assault.
      * Party
+     * @throws java.rmi.RemoteException
      */
-    public synchronized int nextEmptyParty() throws RemoteException {
-        
-        if (this.ap[0].isEmptyAP() == true) {
-            return 0;
-        }
-        
-        if (this.ap[1].isEmptyAP() == true) {
-            return 1;
+    public synchronized VectorTimestamp nextEmptyParty(VectorTimestamp vt) throws RemoteException {
+        this.clocks.update(vt);
+        if (this.ap[0].isEmptyAP(this.clocks.clone()).getBool() == true) {
+            this.clocks.setInteger(0);
+            return this.clocks.clone();
         }
 
-        return -1;
+        if (this.ap[1].isEmptyAP(this.clocks.clone()).getBool() == true) {
+            this.clocks.setInteger(1);
+            return this.clocks.clone();
+        }
+
+        this.clocks.setInteger(-1);
+        return this.clocks.clone();
     }
 
     /**
      * Checks for an unoccupied and empty Room.
      *
+     * @param vt VectorTimestamp
      * @return Returns the first available Room ID to raid.
      */
     @Override
-    public synchronized int nextEmptyRoom() {
+    public synchronized VectorTimestamp nextEmptyRoom(VectorTimestamp vt) {
+        this.clocks.update(vt);
         for (int i = 0; i < ROOMS_NUMBER; i++) {
             if (!emptyRooms[i] && !roomOcupied[i]) {
-                return i;
+                this.clocks.setInteger(i);
+                return this.clocks.clone();
             }
         }
 
-        return -1;
+        this.clocks.setInteger(-1);
+        return this.clocks.clone();
     }
 
     /**
      * Operation to wake Master Thief that the Assault Thief current Thread is
      * ready.
      *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void isReady() {
+    public synchronized VectorTimestamp isReady(VectorTimestamp vt) {
+        this.clocks.update(vt);
         ready = true;
 
         notifyAll();
+        return this.clocks.clone();
     }
 
     /**
      * Assault thieves hands a canvas to the Master Thief or shows up empty
      * handed.
      *
-     * 
+     *
      * @param thiefID ID of Assault Thief
      * @param partyID ID of Assault Thief Party
      * @param hasCanvas 1 if Assault Thief has canvas, 0 if otherwise
+     * @param vt VectorTimestamp
      * @return true if operation successful, false if otherwise
      * @throws java.rmi.RemoteException
      */
     @Override
-    public synchronized boolean handCanvas(int thiefID, int partyID, int hasCanvas) throws RemoteException {
+    public synchronized VectorTimestamp handCanvas(int thiefID, int partyID, int hasCanvas, VectorTimestamp vt) throws RemoteException {
 
+        this.clocks.update(vt);
+        
         while (!rest) {
             try {
                 wait();
@@ -265,7 +319,7 @@ public class ControlCollectionSite implements CCSInterface {
 
         rest = false;
 
-        int roomID = this.ap[partyID].getRoomID();
+        int roomID = this.ap[partyID].getRoomID(this.clocks.clone()).getInteger();
 
         if (hasCanvas == 0) {
             emptyRooms[roomID] = true;
@@ -287,46 +341,56 @@ public class ControlCollectionSite implements CCSInterface {
 
             int[] pthieves = null;
             try {
-                pthieves = this.ap[partyID].getPartyThieves();
+                pthieves = this.ap[partyID].getPartyThieves(this.clocks.clone()).getArray();
             } catch (RemoteException ex) {
                 Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             if (pthieves[i] == thiefID) {
-                
+
                 try {
-                    this.ap[partyID].setPartyThieves(i,-1);
+                    this.ap[partyID].setPartyThieves(i, -1, this.clocks.clone());
                 } catch (RemoteException ex) {
                     Logger.getLogger(ControlCollectionSite.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         }
 
         notifyAll();
 
-        return true;
+        this.clocks.setBool(true);
+        return this.clocks.clone();
     }
 
     /**
      * Master Thief collects a canvas. The Master Thief sets its status to
      * DECIDING_WHAT_TO_DO.
      *
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void collectCanvas() {
+    public synchronized VectorTimestamp collectCanvas(VectorTimestamp vt) {
+        
+        this.clocks.update(vt);
         collectCanvas = false;
 
         notifyAll();
+        return this.clocks.clone();
 
     }
 
     /**
      * Master Thief presents the final heist report. The Master Thief sets its
      * status to PRESENTING_THE_REPORT.
+     * @param vt VectorTimestamp
+     * @return VectorTimestamp
      */
     @Override
-    public synchronized void sumUpResults() {
+    public synchronized VectorTimestamp sumUpResults(VectorTimestamp vt) {
+        this.clocks.update(vt);
+        return this.clocks.clone();
         ////System.out.println("Got " + nPaintings + " paintings!");
     }
 
@@ -351,11 +415,14 @@ public class ControlCollectionSite implements CCSInterface {
     /**
      * Get the ID of the next Room to be assigned.
      *
+     * @param vt VectorTimestamp
      * @return ID of the next Room to be assigned
      */
     @Override
-    public int getNextRoom() {
-        return nextRoom;
+    public VectorTimestamp getNextRoom(VectorTimestamp vt) {
+        this.clocks.update(vt);
+        this.clocks.setInteger(nextRoom);
+        return this.clocks.clone();
     }
 
     /**

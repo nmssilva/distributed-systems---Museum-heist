@@ -9,11 +9,11 @@ package registry;
  * This class contains all the constants related with the Registry.
  */
 public class RegistryConfig {
-    public static final String RMI_REGISTRY_HOSTNAME = "localhost";
+    public static final String RMI_REGISTRY_HOSTNAME = "l040101-ws01.ua.pt";
     public static final int RMI_REGISTRY_PORT = 22350;
  
     public static final String RMI_REGISTER_NAME = "RegisterHandler";
-    public static final String RMI_REGISTER_HOSTNAME = "localhost";
+    public static final String RMI_REGISTER_HOSTNAME = "l040101-ws01.ua.pt";
     public static final int RMI_REGISTER_PORT = 22351;
  
     public static final String REGISTRY_GRI_NAME = "REGISTRY_GRI";

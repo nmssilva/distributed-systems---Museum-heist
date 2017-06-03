@@ -1,6 +1,7 @@
 package serverSide;
 
 import static auxiliary.Heist.PORT_CS;
+import auxiliary.VectorTimestamp;
 import interfaces.RegisterInterface;
 import interfaces.APInterface;
 import interfaces.CCSInterface;
@@ -22,6 +23,8 @@ public class ConcentrationSiteServer {
      * @serialField portNumb
      */
     private static final int portNumb = PORT_CS;
+    
+    private VectorTimestamp clocks;
 
     /**
      * Programa principal.

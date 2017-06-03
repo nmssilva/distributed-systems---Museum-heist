@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import auxiliary.VectorTimestamp;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,8 +15,8 @@ import java.rmi.RemoteException;
  */
 public interface MuseumInterface extends MuseumIAssaultThief, Remote{
 
-    public Object getRoom(int roomID) throws RemoteException;
+    public VectorTimestamp getRoom(int roomID, VectorTimestamp vt) throws RemoteException;
 
-    public int getDistRoom(int roomID) throws RemoteException;
+    public VectorTimestamp getDistRoom(int roomID, VectorTimestamp vt) throws RemoteException;
     
 }
