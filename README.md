@@ -1,4 +1,4 @@
-# distributed-systems---Museum-heist
+# museum-heist 🤑🖼️🎨
 ### Assignments for Distributed Systems in Computer and Telematics Engineering course
 
 ## <b>HEIST TO THE MUSEUM </b>
